@@ -6870,3 +6870,132 @@ body[data-product-slug="5-amino-1mq"] .product-choice-group .spec-card-button.is
 body[data-product-slug="5-amino-1mq"] .product-choice-group .pack-choice.is-selected {
   background: linear-gradient(125deg, rgba(146, 239, 210, 0.18), rgba(255, 131, 181, 0.07)), #102630;
 }
+
+/* Product-page browsing and purchase controls. */
+.product-back-link,
+.product-document-link,
+.product-related-actions a {
+  color: var(--shop-pink);
+}
+.product-back-link:hover,
+.product-document-link:hover,
+.product-related-actions a:hover { color: #ffb2d1; }
+.product-related-heading > p:not(.eyebrow) {
+  margin: 0 0 18px;
+  color: #a9c2c6;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+.product-related-list { gap: 14px; }
+.product-related-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(146, 239, 210, 0.23);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(108, 220, 186, 0.1), transparent 45%),
+    radial-gradient(circle at 100% 90%, rgba(255, 131, 181, 0.08), transparent 50%),
+    #0d222c;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
+}
+.product-related-list .product-related-image {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #dfe5e8;
+}
+.product-related-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.2;
+  object-fit: cover;
+}
+.product-related-content { display: flex; flex-direction: column; gap: 11px; padding: 15px; }
+.product-related-list .product-related-name {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: 700 1rem/1.28 "Space Grotesk", sans-serif;
+}
+.product-related-list .product-related-name:hover { color: var(--shop-pink); }
+.product-related-selection { display: grid; gap: 4px; min-height: 3em; margin: 0; color: #a9c2c6; font-size: 0.72rem; }
+.product-related-selection strong { color: var(--text); font: 700 1.08rem "Space Grotesk", sans-serif; }
+.product-related-actions { display: grid; gap: 8px; margin-top: auto; }
+.product-related-actions button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--shop-mint);
+  color: #0a2027;
+  font: 800 0.8rem "Manrope", sans-serif;
+  cursor: pointer;
+}
+.product-related-actions button:hover,
+.product-related-actions button:focus-visible { background: #b6f7df; }
+.product-related-list .product-related-actions a {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--shop-pink);
+  font: 800 0.74rem "Manrope", sans-serif;
+  text-align: center;
+}
+.product-related-list .product-related-actions a:hover { color: #ffb2d1; }
+
+.product-sticky-bar {
+  position: fixed;
+  z-index: 125;
+  right: 16px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  left: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(170px, 220px);
+  align-items: center;
+  gap: 20px;
+  width: min(calc(100% - 32px), 940px);
+  margin: 0 auto;
+  padding: 13px 15px;
+  border: 1px solid rgba(29, 51, 59, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 250, 244, 0.97);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(16px);
+  color: #10242d;
+}
+.product-sticky-bar[hidden] { display: none; }
+.product-sticky-summary { display: grid; gap: 3px; min-width: 0; }
+.product-sticky-summary strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 0.95rem "Space Grotesk", sans-serif; }
+.product-sticky-summary span { color: #53686d; font-size: 0.72rem; }
+.product-sticky-total { font: 700 1.1rem "Space Grotesk", sans-serif; }
+.product-sticky-action { min-height: 46px; padding: 0 18px; border-radius: 13px; }
+.product-sticky-action:disabled { opacity: 0.5; cursor: not-allowed; }
+body.product-sticky-visible { padding-bottom: 100px; }
+
+@media (max-width: 640px) {
+  .product-related-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .product-related-image img { aspect-ratio: 1; }
+  .product-related-content { gap: 8px; padding: 11px; }
+  .product-related-list .product-related-name { font-size: 0.84rem; overflow-wrap: anywhere; }
+  .product-related-selection { font-size: 0.67rem; }
+  .product-related-selection strong { font-size: 0.95rem; }
+  .product-related-actions button { font-size: 0.72rem; }
+  .product-sticky-bar {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 16px calc(11px + env(safe-area-inset-bottom));
+    border-radius: 19px 19px 0 0;
+  }
+  .product-sticky-action { grid-column: 1 / -1; width: 100%; }
+  body.product-sticky-visible { padding-bottom: 150px; }
+}

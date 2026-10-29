@@ -316,6 +316,21 @@ function renderProductPage() {
   const selectedTotal = document.querySelector('[data-selected-total]');
   const addToCartButton = document.querySelector('[data-add-to-cart]');
   const buyNowButton = document.querySelector('[data-buy-now]');
+  const purchaseActions = document.querySelector('.product-choice-group .purchase-actions');
+  const stickyBar = document.createElement('div');
+  stickyBar.className = 'product-sticky-bar';
+  stickyBar.hidden = true;
+  stickyBar.innerHTML = `
+    <div class="product-sticky-summary">
+      <strong data-sticky-product-name>${escapeHtml(displayName)}</strong>
+      <span data-sticky-selection></span>
+    </div>
+    <strong class="product-sticky-total" data-sticky-total></strong>
+    <button class="button primary product-sticky-action" type="button" data-sticky-action>Add to cart</button>`;
+  document.body.appendChild(stickyBar);
+  const stickySelection = stickyBar.querySelector('[data-sticky-selection]');
+  const stickyTotal = stickyBar.querySelector('[data-sticky-total]');
+  const stickyAction = stickyBar.querySelector('[data-sticky-action]');
 
   document.title = siteLibrary?.getProductPageTitle ? siteLibrary.getProductPageTitle(product) : `${product.name} | Jonezie Labs`;
   const meta = document.querySelector('meta[name="description"]');
@@ -330,7 +345,11 @@ function renderProductPage() {
     bullets: []
   };
   const productFaqs = siteLibrary?.getProductFaqs(product, productContent) || [];
-  const relatedProducts = siteLibrary?.getRelatedProducts(product, catalogData, 4) || [];
+  const relatedCandidates = siteLibrary?.getRelatedProducts(product, catalogData, 12) || [];
+  const relatedProducts = [
+    ...relatedCandidates.filter((candidate) => siteLibrary.getProductDisplayName(candidate).length <= 24),
+    ...relatedCandidates.filter((candidate) => siteLibrary.getProductDisplayName(candidate).length > 24)
+  ].slice(0, 4);
   const comparisonCandidates = siteLibrary?.getComparisonCandidates(product, catalogData, 3) || [];
   const categoryGuide = siteLibrary?.getGuideForProduct(product) || null;
   const relatedTools = productProfile?.relatedTools || siteLibrary?.TOOL_LIBRARY?.slice(0, 4) || [];
@@ -573,6 +592,7 @@ function renderProductPage() {
     const disabled = unitPrice === null || isSoldOut;
     if (addToCartButton) addToCartButton.disabled = disabled;
     if (buyNowButton) buyNowButton.disabled = disabled;
+    syncStickyBar();
     updateProductSeo();
   }
 
@@ -617,12 +637,41 @@ function renderProductPage() {
   let lastAddedSelectionKey = '';
   const cartSelectionKey = (item) => `${item.code}:${item.packKey}:${item.quantity}`;
 
+  function syncStickyBar() {
+    const item = getSelectedCartItem();
+    if (stickySelection) stickySelection.textContent = item ? `${item.mgOption} · ${item.packLabel} · Qty ${item.quantity}` : 'Choose an available option';
+    if (stickyTotal) stickyTotal.textContent = item ? formatMoney(item.unitPrice * item.quantity) : 'Unavailable';
+    if (stickyAction) {
+      stickyAction.disabled = !item;
+      stickyAction.textContent = item && lastAddedSelectionKey === cartSelectionKey(item) ? 'Go to checkout' : 'Add to cart';
+    }
+  }
+
+  function updateStickyVisibility() {
+    const show = Boolean(purchaseActions && purchaseActions.getBoundingClientRect().bottom < 0);
+    stickyBar.hidden = !show;
+    document.body.classList.toggle('product-sticky-visible', show);
+  }
+
+  stickyAction?.addEventListener('click', () => {
+    const item = getSelectedCartItem();
+    if (!item) return;
+    if (lastAddedSelectionKey === cartSelectionKey(item)) {
+      buyNowButton?.click();
+    } else {
+      addToCartButton?.click();
+    }
+  });
+  window.addEventListener('scroll', updateStickyVisibility, { passive: true });
+  window.addEventListener('resize', updateStickyVisibility);
+
   addToCartButton?.addEventListener('click', () => {
     const item = getSelectedCartItem();
     if (!item) return;
     addItemToCart(item);
     lastAddedSelectionKey = cartSelectionKey(item);
     window.JONEZIE_ANALYTICS?.addToCart(item);
+    syncStickyBar();
     addToCartButton.textContent = 'Added To Cart';
     window.setTimeout(() => {
       addToCartButton.textContent = 'Add to cart';
@@ -657,21 +706,65 @@ function renderProductPage() {
   }
 
   if (resourcesNode) {
+    const quickAdds = new Map();
     resourcesNode.innerHTML = relatedProducts.length ? `
-      <div class="product-related-heading"><p class="eyebrow">More products</p><h2>Explore the catalog</h2></div>
+      <div class="product-related-heading"><p class="eyebrow">Explore more</p><h2>More products to browse</h2><p>Quick add a listed single vial, or open a product to choose another strength or pack.</p></div>
       <div class="product-related-list">
-        ${relatedProducts.map((relatedProduct) => `
-          <a href="${siteLibrary.getProductUrl(relatedProduct.slug)}">
-            <strong>${escapeHtml(siteLibrary.getProductDisplayName(relatedProduct))}</strong>
-            <span>View product &rarr;</span>
-          </a>`).join('')}
+        ${relatedProducts.map((relatedProduct) => {
+          const option = (relatedProduct.options || []).find((candidate) =>
+            getInventoryStatus(candidate) === 'in_stock' && getAvailablePacks(candidate).some((pack) => parsePrice(pack.price) > 0));
+          const pack = option && getAvailablePacks(option).find((candidate) => parsePrice(candidate.price) > 0);
+          if (option && pack) quickAdds.set(relatedProduct.slug, { product: relatedProduct, option, pack });
+          const href = siteLibrary.getProductUrl(relatedProduct.slug);
+          const name = siteLibrary.getProductDisplayName(relatedProduct);
+          return `
+            <article class="product-related-card">
+              <a class="product-related-image" href="${escapeHtml(href)}" aria-label="View ${escapeHtml(name)} options">
+                <img src="${escapeHtml(getProductImageSrc(relatedProduct.image))}" alt="${escapeHtml(name)} product image" loading="lazy" />
+              </a>
+              <div class="product-related-content">
+                <a class="product-related-name" href="${escapeHtml(href)}">${escapeHtml(name)}</a>
+                ${pack ? `<p class="product-related-selection">${escapeHtml(option.mgOption)} · ${escapeHtml(pack.label)}<strong>${escapeHtml(pack.price)}</strong></p>` : '<p class="product-related-selection">View available options</p>'}
+                <div class="product-related-actions">
+                  ${pack ? `<button type="button" data-related-add="${escapeHtml(relatedProduct.slug)}">+ Add to cart</button>` : ''}
+                  <a href="${escapeHtml(href)}">View options &rarr;</a>
+                </div>
+              </div>
+            </article>`;
+        }).join('')}
       </div>` : '';
+    resourcesNode.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-related-add]');
+      if (!button) return;
+      const selection = quickAdds.get(button.dataset.relatedAdd);
+      if (!selection) return;
+      const { product: relatedProduct, option, pack } = selection;
+      const item = {
+        slug: relatedProduct.slug,
+        name: relatedProduct.name,
+        code: option.code,
+        mgOption: option.mgOption,
+        packKey: pack.key,
+        packLabel: pack.label,
+        unitPrice: parsePrice(pack.price),
+        unitPriceDisplay: pack.price,
+        quantity: 1,
+        image: relatedProduct.image,
+        inventoryStatus: 'in_stock',
+        backorderNote: ''
+      };
+      addItemToCart(item);
+      window.JONEZIE_ANALYTICS?.addToCart(item);
+      button.textContent = 'Added';
+      window.setTimeout(() => { button.textContent = '+ Add to cart'; }, 1400);
+    });
   }
 
   ensureSelectedPack();
   renderOptionCards();
   renderPackPicker();
   renderSelectionSummary();
+  updateStickyVisibility();
 }
 
 renderProductPage();
