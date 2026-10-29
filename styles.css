@@ -6831,3 +6831,42 @@ body.resource-page {
     box-shadow: 0 18px 38px rgba(255, 95, 169, 0.2);
   }
 }
+
+/* Color-fill study: one catalog card and its matching product page. */
+.catalog-card.catalog-color-study {
+  border-color: rgba(146, 239, 210, 0.36);
+  background:
+    radial-gradient(circle at 8% 78%, rgba(108, 220, 186, 0.15), transparent 42%),
+    radial-gradient(circle at 96% 72%, rgba(255, 131, 181, 0.12), transparent 40%),
+    linear-gradient(165deg, #112b35, #0a1b24 74%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 42px rgba(0, 0, 0, 0.22);
+}
+
+.catalog-card.catalog-color-study .catalog-copy {
+  border-top: 1px solid rgba(146, 239, 210, 0.22);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(108, 220, 186, 0.1), transparent 52%),
+    radial-gradient(circle at 92% 58%, rgba(255, 131, 181, 0.09), transparent 46%);
+}
+
+body[data-product-slug="5-amino-1mq"] .product-page-top {
+  border-color: rgba(146, 239, 210, 0.29);
+  background:
+    radial-gradient(circle at 82% 11%, rgba(255, 131, 181, 0.11), transparent 32%),
+    radial-gradient(circle at 11% 88%, rgba(108, 220, 186, 0.13), transparent 38%),
+    linear-gradient(160deg, #102934, #091a23 76%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 18px 50px rgba(0, 0, 0, 0.23);
+}
+
+body[data-product-slug="5-amino-1mq"] .product-page-media {
+  border: 1px solid rgba(146, 239, 210, 0.2);
+}
+
+body[data-product-slug="5-amino-1mq"] .product-choice-group {
+  border-top-color: rgba(146, 239, 210, 0.24);
+}
+
+body[data-product-slug="5-amino-1mq"] .product-choice-group .spec-card-button.is-selected,
+body[data-product-slug="5-amino-1mq"] .product-choice-group .pack-choice.is-selected {
+  background: linear-gradient(125deg, rgba(146, 239, 210, 0.18), rgba(255, 131, 181, 0.07)), #102630;
+}

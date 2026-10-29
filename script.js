@@ -266,7 +266,7 @@ function renderCatalog() {
     const imageSrc = getImageSrc(product.image);
     const fallbackImageSrc = `${PRODUCT_FALLBACK_IMAGE}?v=${IMAGE_ASSET_VERSION}`;
     return `
-      <article class="catalog-card" data-updated-label="${Boolean(product.hasUpdatedLabel)}">
+      <article class="catalog-card${product.slug === '5-amino-1mq' ? ' catalog-color-study' : ''}" data-updated-label="${Boolean(product.hasUpdatedLabel)}">
       <a class="card-link-shell card-main-link" data-product-slug="${escapeHtml(product.slug)}" href="${getProductUrl(product.slug)}" aria-label="Open ${escapeHtml(getCardTitle(product))} product page">
         ${product.hasUpdatedLabel ? '<div class="product-card-media">' : ''}
         <img src="${imageSrc}" alt="${escapeHtml(product.name)} product visual" loading="lazy" decoding="async" fetchpriority="low" onerror="this.onerror=null;this.src='${fallbackImageSrc}'" />
