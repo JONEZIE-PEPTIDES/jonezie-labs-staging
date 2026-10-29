@@ -1,5 +1,5 @@
 (() => {
-  const ROOT = location.pathname.includes('/products/') ? '../' : '';
+  const ROOT = '';
   const FOOTER_STYLE_ID = 'jonezie-site-footer-styles';
   const FOOTER_CSS = ``;
   const FOOTER_HTML = `

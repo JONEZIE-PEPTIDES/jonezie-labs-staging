@@ -72,7 +72,7 @@
   if (hasFooter || window.JONEZIE_FOOTER_LOADER_ADDED) return;
   window.JONEZIE_FOOTER_LOADER_ADDED = true;
 
-  const root = location.pathname.includes('/products/') ? '../' : '';
+  const root = '';
   const script = document.createElement('script');
   script.src = `${root}site-footer.js?v=20260603g`;
   script.defer = true;
