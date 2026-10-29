@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product | Jonezie Peptides</title>
+  <meta name="description" content="Jonezie Peptides product page." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <script src="/jonezie-labs-staging/preview-guard.js"></script>
+</head>
+<body>
+  <div class="announcement-bar">
+    <div class="announcement-inner">
+      <span>Jonezie Peptides product page.</span>
+      <strong>No active promotions.</strong>
+    </div>
+  </div>
+  <div class="page-shell">
+    <header class="site-header product-header">
+      <a class="brand" href="../index.html" aria-label="Jonezie Peptides home">
+        <img src="../JONEZIE pepper logo.png" alt="Jonezie Peptides logo" />
+        <span>
+          <strong>Jonezie Peptides</strong>
+          <em>Research compounds with attitude.</em>
+        </span>
+      </a>
+      <nav class="site-nav product-nav-static">
+        <a href="../index.html#featured">Featured</a>
+        <a href="../index.html#full-catalog">Catalog</a>
+        <a href="../checkout.html">Checkout</a>
+        <a href="../index.html#contact" class="nav-cta">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero section-shell product-hero block-section">
+        <div class="hero-copy">
+          <p class="eyebrow" data-product-category>Research</p>
+          <h1 data-product-title>Product</h1>
+          <p class="hero-text" data-product-description>Catalog data is loading into this product page.</p>
+          <div class="hero-actions">
+            <a class="button primary" data-product-checkout href="../checkout.html">Checkout Now</a>
+            <a class="button secondary" href="../index.html#full-catalog">Back To Catalog</a>
+          </div>
+        </div>
+        <div class="product-visual-stack">
+          <img class="product-logo-panel" data-product-image src="../Peptide vials from Jonezie Peptides MOCK UP.png" alt="Jonezie product visual" />
+          <div class="product-price-panel">
+            <span class="catalog-price-rule">pricing loaded</span>
+            <strong data-product-starting-price>Pricing loading</strong>
+            <p data-product-price-blurb>Official pricing is loading into this product page.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell block-section product-purchase-layout">
+        <div>
+          <div class="section-heading compact">
+            <p class="eyebrow">Choose Your Option</p>
+            <h2>Select strength and pack size</h2>
+            <p>Pick the MG option you want first, then use the purchase panel to choose single-vial, 8-pack, or 10-pack pricing.</p>
+          </div>
+          <div class="spec-grid product-summary-grid" data-product-options></div>
+        </div>
+        <aside class="purchase-panel" data-purchase-panel>
+          <div class="purchase-top">
+            <p class="eyebrow">Order Panel</p>
+            <h2 data-selected-title>Choose an option</h2>
+            <p data-selected-subtitle>Select a product strength to see the live pricing and checkout actions.</p>
+          </div>
+          <div class="pack-picker" data-pack-picker></div>
+          <div class="quantity-row">
+            <label for="quantity-input">Quantity</label>
+            <div class="quantity-control">
+              <button type="button" data-qty-minus>-</button>
+              <input id="quantity-input" type="number" min="1" value="1" data-quantity-input />
+              <button type="button" data-qty-plus>+</button>
+            </div>
+          </div>
+          <div class="selection-summary">
+            <div>
+              <span>Selected Price</span>
+              <strong data-selected-price>Choose an option</strong>
+            </div>
+            <div>
+              <span>Total</span>
+              <strong data-selected-total>Choose an option</strong>
+            </div>
+          </div>
+          <div class="purchase-actions">
+            <button class="button primary purchase-button" type="button" data-add-to-cart>Add To Cart</button>
+            <button class="button secondary purchase-button" type="button" data-buy-now>Checkout This Item</button>
+          </div>
+          <p class="purchase-note">Checkout is handled through a simple order cart and email-ready checkout page for now while we keep building the full storefront.</p>
+        </aside>
+      </section>
+
+      <section class="section-shell block-section product-detail-grid" data-product-highlights></section>
+
+      <section class="section-shell block-section faq-section">
+        <div class="section-heading compact">
+          <p class="eyebrow">Page Notes</p>
+          <h2>What gets added later</h2>
+        </div>
+        <div class="faq-list" data-product-faq></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Jonezie Peptides</p>
+      <span>Research Use Only. Not for human consumption.</span>
+    </footer>
+  </div>
+
+  <script src="../catalog-data.js"></script>
+  <script src="../product-page.js"></script>
+</body>
+</html>

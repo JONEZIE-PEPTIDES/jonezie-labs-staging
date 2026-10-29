@@ -1,0 +1,890 @@
+[
+  {
+    "CatNo": "MT1",
+    "ProductName": "MT-1",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$180.00"
+  },
+  {
+    "CatNo": "ML10",
+    "ProductName": "MT-2 (Melanotan 2 Acetate)",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$180.00"
+  },
+  {
+    "CatNo": "P41",
+    "ProductName": "PT-141",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "SK5",
+    "ProductName": "Selank",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "SK11",
+    "ProductName": "Selank",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "OT2",
+    "ProductName": "Oxytocin Acetate",
+    "Specification": "2mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$120.00"
+  },
+  {
+    "CatNo": "ET10",
+    "ProductName": "Epithalon",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$180.00"
+  },
+  {
+    "CatNo": "ET50",
+    "ProductName": "Epithalon",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$440.00"
+  },
+  {
+    "CatNo": "BC5",
+    "ProductName": "BPC157",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "BC10",
+    "ProductName": "BPC157",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$260.00"
+  },
+  {
+    "CatNo": "BB10",
+    "ProductName": "BPC 5mg + TB 5mg",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "BB20",
+    "ProductName": "BPC 10mg + TB 10mg",
+    "Specification": "20mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$540.00"
+  },
+  {
+    "CatNo": "XA5",
+    "ProductName": "Semax",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "XA11",
+    "ProductName": "Semax",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$180.00"
+  },
+  {
+    "CatNo": "SM5",
+    "ProductName": "Semaglutide",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "SM10",
+    "ProductName": "Semaglutide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "SM15",
+    "ProductName": "Semaglutide",
+    "Specification": "15mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$240.00"
+  },
+  {
+    "CatNo": "SM20",
+    "ProductName": "Semaglutide",
+    "Specification": "20mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$300.00"
+  },
+  {
+    "CatNo": "SM30",
+    "ProductName": "Semaglutide",
+    "Specification": "30mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$380.00"
+  },
+  {
+    "CatNo": "2S10",
+    "ProductName": "SS-31",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$280.00"
+  },
+  {
+    "CatNo": "2S50",
+    "ProductName": "SS-31",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$1,160.00"
+  },
+  {
+    "CatNo": "SHB",
+    "ProductName": "SUPER Human Blend",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "HHB",
+    "ProductName": "Healthy Hair Skin Nails Blend",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "TR5",
+    "ProductName": "Tirzepatide",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "TR10",
+    "ProductName": "Tirzepatide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "TR15",
+    "ProductName": "Tirzepatide",
+    "Specification": "15mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$260.00"
+  },
+  {
+    "CatNo": "TR20",
+    "ProductName": "Tirzepatide",
+    "Specification": "20mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "TR30",
+    "ProductName": "Tirzepatide",
+    "Specification": "30mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$380.00"
+  },
+  {
+    "CatNo": "TR40",
+    "ProductName": "Tirzepatide",
+    "Specification": "40mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$480.00"
+  },
+  {
+    "CatNo": "TR45",
+    "ProductName": "Tirzepatide",
+    "Specification": "45mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$520.00"
+  },
+  {
+    "CatNo": "TR50",
+    "ProductName": "Tirzepatide",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$580.00"
+  },
+  {
+    "CatNo": "TR60",
+    "ProductName": "Tirzepatide",
+    "Specification": "60mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$660.00"
+  },
+  {
+    "CatNo": "CND5",
+    "ProductName": "CJC-1295 Without DAC",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$260.00"
+  },
+  {
+    "CatNo": "CND10",
+    "ProductName": "CJC-1295 Without DAC",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$440.00"
+  },
+  {
+    "CatNo": "CP10",
+    "ProductName": "CJC-1295 without DAC 5mg + IPA 5mg",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "CD5",
+    "ProductName": "CJC-1295 with DAC",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$540.00"
+  },
+  {
+    "CatNo": "SMO5",
+    "ProductName": "Sermorelin Acetate",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "SMO10",
+    "ProductName": "Sermorelin Acetate",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$360.00"
+  },
+  {
+    "CatNo": "G5K",
+    "ProductName": "HCG",
+    "Specification": "5000iu*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$300.00"
+  },
+  {
+    "CatNo": "G10K",
+    "ProductName": "HCG",
+    "Specification": "10000iu/10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$540.00"
+  },
+  {
+    "CatNo": "5AD",
+    "ProductName": "AOD",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$360.00"
+  },
+  {
+    "CatNo": "IGD",
+    "ProductName": "IGF-DES",
+    "Specification": "2mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "TSM5",
+    "ProductName": "Tesamorelin",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "TSM10",
+    "ProductName": "Tesamorelin",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$580.00"
+  },
+  {
+    "CatNo": "TSM15",
+    "ProductName": "Tesamorelin",
+    "Specification": "15mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$800.00"
+  },
+  {
+    "CatNo": "CU50",
+    "ProductName": "GHK-CU",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$120.00"
+  },
+  {
+    "CatNo": "CU100",
+    "ProductName": "GHK-CU",
+    "Specification": "100mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "KS5",
+    "ProductName": "KissPeptin-10",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "KS10",
+    "ProductName": "KissPeptin-10",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "MS10",
+    "ProductName": "MOTS-c",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "MS40",
+    "ProductName": "MOTS-c",
+    "Specification": "40mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$600.00"
+  },
+  {
+    "CatNo": "375",
+    "ProductName": "LL37",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$300.00"
+  },
+  {
+    "CatNo": "RT5",
+    "ProductName": "Retatrutide",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "RT10",
+    "ProductName": "Retatrutide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$340.00"
+  },
+  {
+    "CatNo": "RT15",
+    "ProductName": "Retatrutide",
+    "Specification": "15mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$460.00"
+  },
+  {
+    "CatNo": "RT20",
+    "ProductName": "Retatrutide",
+    "Specification": "20mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$580.00"
+  },
+  {
+    "CatNo": "RT24",
+    "ProductName": "Retatrutide",
+    "Specification": "24mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$680.00"
+  },
+  {
+    "CatNo": "RT30",
+    "ProductName": "Retatrutide",
+    "Specification": "30mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$800.00"
+  },
+  {
+    "CatNo": "RT60",
+    "ProductName": "Retatrutide",
+    "Specification": "60mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$1,400.00"
+  },
+  {
+    "CatNo": "DR5",
+    "ProductName": "Dermorphin",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "GTT600",
+    "ProductName": "Glutathione",
+    "Specification": "600mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "GTT1200",
+    "ProductName": "Glutathione",
+    "Specification": "1200mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "GTT1500",
+    "ProductName": "Glutathione",
+    "Specification": "1500mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$240.00"
+  },
+  {
+    "CatNo": "WA3",
+    "ProductName": "BAC Water",
+    "Specification": "3ml/10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$40.00"
+  },
+  {
+    "CatNo": "WA10",
+    "ProductName": "BAC Water",
+    "Specification": "10ml/10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$60.00"
+  },
+  {
+    "CatNo": "CS5",
+    "ProductName": "Cagrilintide2.5mg+Semaglutide2.5mg",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "CS10",
+    "ProductName": "Cagrilintide5mg+Semaglutide5mg",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$540.00"
+  },
+  {
+    "CatNo": "5AM",
+    "ProductName": "5-amino-1mq",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "50AM",
+    "ProductName": "5-amino-1mq",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$400.00"
+  },
+  {
+    "CatNo": "G75",
+    "ProductName": "HMG",
+    "Specification": "75iu*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$240.00"
+  },
+  {
+    "CatNo": "CBL60",
+    "ProductName": "cerebrolysin",
+    "Specification": "60mg*6vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$100.00"
+  },
+  {
+    "CatNo": "CGL5",
+    "ProductName": "Cagrilintide",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$440.00"
+  },
+  {
+    "CatNo": "CGL10",
+    "ProductName": "Cagrilintide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$640.00"
+  },
+  {
+    "CatNo": "RA10",
+    "ProductName": "Ara-290",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "NP810",
+    "ProductName": "SNAP-8",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "PI5",
+    "ProductName": "Pinealon",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "PI10",
+    "ProductName": "Pinealon",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "PI20",
+    "ProductName": "Pinealon",
+    "Specification": "20mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "PC5",
+    "ProductName": "PNC27",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "PC10",
+    "ProductName": "PNC27",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$520.00"
+  },
+  {
+    "CatNo": "KLOW",
+    "ProductName": "CU50+TB10+BC10+KPV10",
+    "Specification": "80mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$760.00"
+  },
+  {
+    "CatNo": "TB10",
+    "ProductName": "TB500(Thymosin B4 ACETATE)",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$440.00"
+  },
+  {
+    "CatNo": "TB5",
+    "ProductName": "TB500(Thymosin B4 ACETATE)",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$240.00"
+  },
+  {
+    "CatNo": "IP5",
+    "ProductName": "Ipamorelin",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "IP10",
+    "ProductName": "Ipamorelin",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$260.00"
+  },
+  {
+    "CatNo": "NJ100",
+    "ProductName": "NAD",
+    "Specification": "100mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "NJ500",
+    "ProductName": "NAD",
+    "Specification": "500mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$240.00"
+  },
+  {
+    "CatNo": "NJ1000",
+    "ProductName": "NAD",
+    "Specification": "1000mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$480.00"
+  },
+  {
+    "CatNo": "BBG70",
+    "ProductName": "BPC 157 10mg+GHK-CU 50mg+TB500 10mg",
+    "Specification": "70mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$600.00"
+  },
+  {
+    "CatNo": "SUR10",
+    "ProductName": "Survodutide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$940.00"
+  },
+  {
+    "CatNo": "322",
+    "ProductName": "SLU-PP-322",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$400.00"
+  },
+  {
+    "CatNo": "KPV5",
+    "ProductName": "Lysine-Proline-Valine",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "IG01",
+    "ProductName": "IGF-1LR3",
+    "Specification": "0.1mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$140.00"
+  },
+  {
+    "CatNo": "IG1",
+    "ProductName": "IGF-1LR3",
+    "Specification": "1mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$680.00"
+  },
+  {
+    "CatNo": "VIP5",
+    "ProductName": "VIP5",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$280.00"
+  },
+  {
+    "CatNo": "VIP10",
+    "ProductName": "VIP10",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$480.00"
+  },
+  {
+    "CatNo": "G65",
+    "ProductName": "GHRP-6 Acetate",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$100.00"
+  },
+  {
+    "CatNo": "G610",
+    "ProductName": "GHRP-6 Acetate",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$168.00"
+  },
+  {
+    "CatNo": "MDT",
+    "ProductName": "Mazdutide",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$640.00"
+  },
+  {
+    "CatNo": "LC120",
+    "ProductName": "LC120",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "TY10",
+    "ProductName": "Thymalin",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$200.00"
+  },
+  {
+    "CatNo": "DS5",
+    "ProductName": "DSIP",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "DS15",
+    "ProductName": "DSIP",
+    "Specification": "15mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$320.00"
+  },
+  {
+    "CatNo": "TA5",
+    "ProductName": "Thymosin Alpha-1",
+    "Specification": "5mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$300.00"
+  },
+  {
+    "CatNo": "TA10",
+    "ProductName": "Thymosin Alpha-1",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$540.00"
+  },
+  {
+    "CatNo": "LC216",
+    "ProductName": "LC216",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "B12",
+    "ProductName": "B12,??10ml,?ml?1?B12",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$160.00"
+  },
+  {
+    "CatNo": "GLOW50",
+    "ProductName": "CU:35+TB10+BPC5",
+    "Specification": "50mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$520.00"
+  },
+  {
+    "CatNo": "GKP70",
+    "ProductName": "CU50+KPV10+BPC10",
+    "Specification": "70mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$440.00"
+  },
+  {
+    "CatNo": "KPV10",
+    "ProductName": "KPV",
+    "Specification": "10mg*10vials",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$220.00"
+  },
+  {
+    "CatNo": "B1210K",
+    "ProductName": "B12 10000mcg 10ml",
+    "Specification": "10000mcg/10ml vial",
+    "OriginalUnitPrice": "",
+    "Markup": "",
+    "PriceP": "$350.00"
+  }
+]

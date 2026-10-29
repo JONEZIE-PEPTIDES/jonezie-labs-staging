@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merchandise Checkout | Jonezie Labs Standards</title>
+  <meta name="description" content="Review and submit a Jonezie Labs merchandise order request." />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <link rel="canonical" href="https://www.jonezielabs.com/standards/checkout.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../favicon.png?v=20260728a" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=20260728a" />
+  <script src="merch-data.js?v=20261028redirecton1"></script>
+  <script>
+    const standardsRedirect = window.JONEZIE_STANDARDS_MERCH?.redirect || {};
+
+    if (!standardsRedirect.enabled && standardsRedirect.hideMainSiteLinksWhenDisabled !== false) {
+      document.documentElement.classList.add('rs-hide-main-site-entrances');
+    }
+
+    if (standardsRedirect.enabled) {
+      window.setTimeout(() => {
+        window.location.replace(standardsRedirect.target || '../index.html#featured');
+      }, Number(standardsRedirect.delayMs) || 0);
+    }
+  </script>
+  <link rel="stylesheet" href="storefront.css?v=20261008promo25preview1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <script src="/jonezie-labs-staging/preview-guard.js"></script>
+</head>
+<body>
+  <div class="store-page checkout-page" data-standards-checkout>
+    <header class="store-header">
+      <div class="store-shell store-header-inner">
+        <a class="store-logo" href="index.html" aria-label="Jonezie Labs Standards storefront">
+          <img src="../jonezie-labs-logo.webp?v=20261029" alt="Jonezie Labs" />
+        </a>
+        <nav class="store-nav" aria-label="Standards merchandise checkout">
+          <a href="index.html#merchandise">Store</a>
+          <a href="../catalog.html" data-main-site-entry>Research Catalog</a>
+        </nav>
+        <a class="store-cart-link" href="checkout.html" aria-label="Open merchandise checkout">
+          <span>Cart</span>
+          <strong data-merch-cart-count>0</strong>
+        </a>
+      </div>
+    </header>
+
+    <main class="store-shell checkout-layout">
+      <section class="checkout-main">
+        <p class="store-kicker">Merchandise Checkout</p>
+        <h1>Review your Standards cart.</h1>
+        <p class="checkout-promo-message" data-merch-promo-checkout hidden></p>
+        <div data-merch-checkout-items></div>
+
+        <form class="checkout-form" data-merch-checkout-form>
+          <h2>Shipping Contact</h2>
+          <div class="field-grid">
+            <label>First Name<input name="firstName" autocomplete="given-name" required /></label>
+            <label>Last Name<input name="lastName" autocomplete="family-name" required /></label>
+            <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+            <label>Phone<input name="phone" type="tel" autocomplete="tel" required /></label>
+            <label class="span-2">Street Address<input name="street" autocomplete="shipping street-address" required /></label>
+            <label>City<input name="city" autocomplete="shipping address-level2" required /></label>
+            <label>State<input name="state" autocomplete="shipping address-level1" maxlength="2" required /></label>
+            <label>ZIP<input name="zip" autocomplete="shipping postal-code" inputmode="numeric" required /></label>
+            <label class="span-2">Order Notes<textarea name="notes" rows="4" placeholder="Optional sizing, delivery, or invoice notes"></textarea></label>
+          </div>
+
+          <h2>Shipping Method</h2>
+          <label class="shipping-select">Shipping<select name="shipping" data-merch-shipping></select></label>
+
+          <div class="tax-note">
+            <strong>Tax behavior:</strong>
+            <span>Sales tax is not collected in this staging checkout. Any applicable tax is calculated during invoice review.</span>
+          </div>
+
+          <button class="store-button primary" type="submit">Submit Merchandise Order Request</button>
+          <p>Review our <a href="../terms.html">Terms</a>, <a href="../privacy.html">Privacy Policy</a>, and <a href="../returns-refunds.html">Returns &amp; Refunds Policy</a> before submitting.</p>
+          <p class="form-feedback" data-merch-checkout-feedback aria-live="polite"></p>
+        </form>
+
+        <section class="checkout-success" data-merch-checkout-success hidden></section>
+      </section>
+
+      <aside class="checkout-summary">
+        <p class="store-kicker">Summary</p>
+        <div class="summary-line"><span>Items</span><strong data-summary-items>0</strong></div>
+        <div class="summary-line"><span>Subtotal</span><strong data-summary-subtotal>$0.00</strong></div>
+        <div class="summary-line promotion" data-summary-discount-line hidden><span data-summary-discount-label>Standards Store promotion</span><strong data-summary-discount>-$0.00</strong></div>
+        <div class="summary-line"><span>Shipping</span><strong data-summary-shipping>$0.00</strong></div>
+        <div class="summary-line"><span>Tax</span><strong data-summary-tax>Calculated on invoice</strong></div>
+        <div class="summary-line total"><span>Estimated Due Before Tax</span><strong data-summary-total>$0.00</strong></div>
+        <p class="summary-note">Payment is handled by invoice after order review. This staging checkout does not collect card details.</p>
+      </aside>
+    </main>
+
+    <footer class="store-footer">
+      <div class="store-shell">
+        <p>Jonezie Labs Standards</p>
+        <span>Dedicated merchandise checkout. Research-product checkout is unchanged.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="merch-store.js?v=20261008promolabel1"></script>
+</body>
+</html>
