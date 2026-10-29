@@ -27,11 +27,11 @@
   [...(catalog?.featured || []), ...(catalog?.products || [])].forEach((product) => {
     if (!product?.slug || seen.has(product.slug)) return;
     seen.add(product.slug);
+    const name = library?.getProductDisplayName?.(product) || product.name;
     products.push({
-      name: product.name,
+      name,
       slug: product.slug,
-      category: product.category || 'Product',
-      searchTerms: [product.name, product.slug, product.sourceName, ...(product.searchAliases || [])]
+      searchTerms: [name, product.name, product.slug, product.sourceName, ...(product.searchAliases || [])]
         .filter(Boolean)
         .map((value) => String(value).toLowerCase())
     });
@@ -59,21 +59,14 @@
 
     const listId = input.getAttribute('list');
     const list = listId ? document.getElementById(listId) : null;
-    if (list) {
-      list.innerHTML = products.map((product) => `<option value="${escapeHtml(product.name)}"></option>`).join('');
-    }
+    input.removeAttribute('list');
+    list?.remove();
 
     input.addEventListener('input', () => {
       input.setCustomValidity('');
       updateMenu();
     });
     input.addEventListener('focus', updateMenu);
-    input.addEventListener('change', () => {
-      navigateToProduct(input);
-    });
-    input.addEventListener('search', () => {
-      navigateToProduct(input, { reportMissing: true });
-    });
     input.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowDown') {
         event.preventDefault();
@@ -121,12 +114,18 @@
     function updateMenu() {
       const query = input.value.trim().toLowerCase();
       activeIndex = -1;
-      matches = (query
-        ? products.filter((product) => {
-            return product.searchTerms.some((term) => term.includes(query));
-          })
-        : products
-      ).slice(0, 8);
+      if (!query) {
+        hideMenu();
+        return;
+      }
+      matches = products
+        .filter((product) => product.searchTerms.some((term) => term.includes(query)))
+        .sort((a, b) => {
+          const aStarts = a.name.toLowerCase().startsWith(query);
+          const bStarts = b.name.toLowerCase().startsWith(query);
+          return Number(bStarts) - Number(aStarts) || a.name.localeCompare(b.name);
+        })
+        .slice(0, 8);
 
       if (!matches.length) {
         hideMenu();
@@ -136,7 +135,7 @@
       menu.innerHTML = matches.map((product, index) => `
         <button class="nav-search-option" type="button" role="option" id="${menuId}-option-${index}" data-product-slug="${escapeHtml(product.slug)}" aria-selected="false">
           <span>${escapeHtml(product.name)}</span>
-          <small>${escapeHtml(product.category)}</small>
+          <small aria-hidden="true">View →</small>
         </button>
       `).join('');
       menu.hidden = false;
@@ -146,6 +145,7 @@
 
     function hideMenu() {
       menu.hidden = true;
+      matches = [];
       activeIndex = -1;
       input.setAttribute('aria-expanded', 'false');
       input.removeAttribute('aria-activedescendant');
