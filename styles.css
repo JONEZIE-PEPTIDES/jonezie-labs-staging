@@ -5366,7 +5366,7 @@ body.lightbox-open {
   .site-header-home .brand-dropdown {
     position: static;
     flex: 1 1 auto;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .site-header-home .brand-menu-trigger {
     display: none !important;
@@ -5462,10 +5462,10 @@ body.lightbox-open {
     height: 48px;
   }
   .brand .brand-master-logo {
-    height: 44px;
-    max-width: 44px;
+    height: 48px;
+    max-width: min(42vw, 160px);
     transform: none;
-    mix-blend-mode: multiply;
+    mix-blend-mode: normal;
   }
   .brand-menu-icon {
     width: 30px;
