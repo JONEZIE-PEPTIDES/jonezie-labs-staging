@@ -1,5 +1,5 @@
 .legal-page {
-  background: #07151c;
+  background: #07151d;
 }
 
 .legal-header,
@@ -13,8 +13,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 112px;
-  border-bottom: 1px solid rgba(131, 242, 255, 0.18);
+  min-height: 78px;
+  margin-top: 24px;
+  padding: 12px 24px;
+  border: 1px solid rgba(6, 16, 24, 0.08);
+  border-radius: 22px;
+  background: #fffaf4;
 }
 
 .legal-header img {
@@ -33,19 +37,19 @@
 .legal-index a,
 .legal-article a,
 .legal-contact a {
-  color: #83f2ff;
+  color: #92efd2;
   text-underline-offset: 3px;
 }
 
 .legal-header-nav a {
-  color: #f4fbff;
+  color: #20232b;
   font-weight: 700;
   text-decoration: none;
 }
 
 .legal-header-nav a:hover,
 .legal-header-nav a:focus-visible {
-  color: #83f2ff;
+  color: #237d67;
 }
 
 .legal-layout {
@@ -66,7 +70,7 @@
 
 .legal-index strong {
   margin-bottom: 12px;
-  color: #ff9bc6;
+  color: #92efd2;
   font-family: "Space Grotesk", sans-serif;
   font-size: 0.82rem;
   text-transform: uppercase;
@@ -81,9 +85,9 @@
 }
 
 .legal-index a[aria-current="page"] {
-  border-left-color: #ff79bc;
+  border-left-color: #92efd2;
   color: #fff;
-  background: rgba(255, 121, 188, 0.08);
+  background: rgba(146, 239, 210, 0.08);
 }
 
 .legal-article {
@@ -93,7 +97,7 @@
 
 .legal-eyebrow {
   margin: 0 0 16px;
-  color: #ff9bc6;
+  color: #ffaccd;
   font-weight: 800;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -128,7 +132,7 @@
 .legal-article section {
   padding-top: 28px;
   margin-top: 30px;
-  border-top: 1px solid rgba(131, 242, 255, 0.15);
+  border-top: 1px solid rgba(194, 232, 229, 0.16);
 }
 
 .legal-article h2 {
@@ -159,7 +163,7 @@
 .legal-contact {
   margin-top: 34px;
   padding-top: 24px;
-  border-top: 1px solid rgba(131, 242, 255, 0.15);
+  border-top: 1px solid rgba(194, 232, 229, 0.16);
 }
 
 @media (max-width: 760px) {
@@ -208,7 +212,7 @@
 
   .legal-index a[aria-current="page"] {
     border-left: 0;
-    border-bottom-color: #ff79bc;
+    border-bottom-color: #92efd2;
   }
 }
 
