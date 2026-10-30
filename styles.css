@@ -7355,6 +7355,12 @@ body.product-sticky-visible { padding-bottom: 100px; }
   box-shadow: 0 0 0 3px rgba(146, 239, 210, 0.15);
 }
 @media (max-width: 520px) {
+  .checkout-panel {
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
   .checkout-summary-card { padding: 20px 18px; }
   .checkout-form { padding: 20px 18px; }
 }
