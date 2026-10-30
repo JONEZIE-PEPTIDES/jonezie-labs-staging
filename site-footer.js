@@ -1,13 +1,26 @@
 (() => {
   const ROOT = '';
   const FOOTER_STYLE_ID = 'jonezie-site-footer-styles';
-  const FOOTER_CSS = ``;
+  const FOOTER_CSS = `
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: min(244px, 100%);
+      padding: 9px 12px;
+      border: 1px solid rgba(6, 32, 43, 0.12);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 250, 244, 0.98), rgba(255, 248, 240, 0.96));
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+    }
+    .footer-logo img { display: block; }
+  `;
   const FOOTER_HTML = `
     <div class="footer-panel">
       <div class="footer-grid">
         <section class="footer-brand" aria-label="Jonezie Labs">
           <a class="footer-logo" href="${ROOT}index.html" aria-label="Jonezie Labs home">
-            <img src="${ROOT}jonezie-labs-white-logo.webp?v=20261029" alt="Jonezie Labs" loading="lazy" decoding="async" />
+            <img src="${ROOT}jonezie-labs-nav-pink.webp?v=20261029pinknav1" alt="Jonezie Labs" loading="lazy" decoding="async" />
           </a>
           <p>Clear product information, straightforward ordering, and real support.</p>
           <a class="footer-email" href="mailto:customerservice@jonezielabs.com?subject=Jonezie%20Labs%20Support">customerservice@jonezielabs.com</a>
