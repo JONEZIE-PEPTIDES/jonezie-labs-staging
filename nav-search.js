@@ -6,14 +6,14 @@
     ['research-guides.html', 'Research Guides'],
     ['comparison.html', 'Comparisons'],
     ['michigan-peptides.html', 'Michigan'],
-    ['index.html#merch', 'Merch'],
     ['index.html#faq', 'FAQ'],
-    ['index.html#process', 'Ordering']
+    ['terms.html', 'Policies']
   ];
 
   installStickyHeaderRule();
   installSearchResultsStyle();
   syncSiteNavigation();
+  installDesktopHeaderAutoHide();
   syncWhyJonezieHomepage();
 
   const catalog = window.JONEZIE_CATALOG || null;
@@ -230,7 +230,6 @@
       const productPill = nav.querySelector('.nav-products-pill');
       nav.querySelectorAll('.site-nav-mobile-link').forEach((link) => link.remove());
       const mobileMarkup = NAV_CATEGORY_LINKS
-        .map(([href, label]) => label === 'Merch' ? ['terms.html', 'Policies'] : [href, label])
         .map(([href, label]) => `<a href="${normalizeHref(href)}" class="site-nav-mobile-link">${label}</a>`)
         .join('');
       if (productPill) {
@@ -238,6 +237,30 @@
         productPill.href = normalizeHref('catalog.html');
       }
     });
+  }
+
+  function installDesktopHeaderAutoHide() {
+    const header = document.querySelector('.site-header-home');
+    if (!header) return;
+    let scrollAnchor = window.scrollY;
+
+    const update = () => {
+      const scrollY = window.scrollY;
+      const menuOpen = Boolean(header.querySelector('.brand-menu-panel:not([hidden]), .site-nav.is-open'));
+      if (window.innerWidth <= 860 || scrollY < 180 || menuOpen || header.matches(':focus-within')) {
+        header.classList.remove('header-desktop-hidden');
+        scrollAnchor = scrollY;
+        return;
+      }
+      if (Math.abs(scrollY - scrollAnchor) < 14) return;
+      header.classList.toggle('header-desktop-hidden', scrollY > scrollAnchor);
+      scrollAnchor = scrollY;
+    };
+
+    header.addEventListener('focusin', () => header.classList.remove('header-desktop-hidden'));
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   }
 
   function installStickyHeaderRule() {

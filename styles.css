@@ -7447,3 +7447,27 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .trust-points-home .trust-point-icon { flex-basis: 40px; width: 40px; height: 40px; border-radius: 13px; }
   .trust-point-icon svg { width: 21px; height: 21px; }
 }
+
+/* Let the desktop header yield to content and return when scrolling up. */
+@media (min-width: 861px) {
+  .home-shell > .site-header-home.site-header-home-sticky,
+  .page-shell > .site-header-home.site-header-home-sticky,
+  .page-shell > .site-header-home.product-header {
+    transition: transform 240ms ease, opacity 240ms ease;
+  }
+  .home-shell > .site-header-home.site-header-home-sticky.header-desktop-hidden:not(:focus-within) {
+    transform: translate(-50%, calc(-100% - 70px));
+    opacity: 0;
+    pointer-events: none;
+  }
+  .page-shell > .site-header-home.header-desktop-hidden:not(:focus-within) {
+    transform: translateY(calc(-100% - 38px));
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-shell > .site-header-home.site-header-home-sticky,
+  .page-shell > .site-header-home.site-header-home-sticky,
+  .page-shell > .site-header-home.product-header { transition: none; }
+}
