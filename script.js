@@ -22,6 +22,26 @@ if (menuToggle && siteNav && !menuToggle.dataset.menuBound) {
   });
 }
 
+const browsingHeader = document.querySelector('.site-header-home-sticky');
+let browsingHeaderScrollAnchor = window.scrollY;
+function updateBrowsingHeaderVisibility() {
+  if (!browsingHeader) return;
+  const scrollY = window.scrollY;
+  if (window.innerWidth > 860 || scrollY < 180 || siteNav?.classList.contains('is-open')) {
+    browsingHeader.classList.remove('header-scrolled-away');
+    browsingHeaderScrollAnchor = scrollY;
+    return;
+  }
+  if (Math.abs(scrollY - browsingHeaderScrollAnchor) < 14) return;
+  browsingHeader.classList.toggle('header-scrolled-away', scrollY > browsingHeaderScrollAnchor);
+  browsingHeaderScrollAnchor = scrollY;
+}
+menuToggle?.addEventListener('click', () => browsingHeader?.classList.remove('header-scrolled-away'));
+browsingHeader?.addEventListener('focusin', () => browsingHeader.classList.remove('header-scrolled-away'));
+window.addEventListener('scroll', updateBrowsingHeaderVisibility, { passive: true });
+window.addEventListener('resize', updateBrowsingHeaderVisibility);
+updateBrowsingHeaderVisibility();
+
 function initBrandMenus() {
   const menus = document.querySelectorAll('[data-brand-menu]');
   if (!menus.length) return;
@@ -195,7 +215,7 @@ function renderCardPricing(product) {
   const promo = getActiveCardPromo();
   const promoPrice = promo ? formatDiscountedPrice(price, promo.rate) : '';
   const promoLine = promoPrice
-    ? `<span class="card-promo-price">${escapeHtml(promoPrice)} when you use code ${escapeHtml(promo.code.toLowerCase())}</span>`
+    ? `<span class="card-promo-price">${escapeHtml(promoPrice)} with code ${escapeHtml(promo.code)}</span>`
     : '';
   return `
     <div class="card-pricing">
