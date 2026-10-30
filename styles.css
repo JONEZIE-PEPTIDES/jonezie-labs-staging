@@ -7287,3 +7287,17 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .home-shell > .site-header-home.site-header-home-sticky,
   .page-shell > .site-header-home.site-header-home-sticky { transition: none; }
 }
+
+/* Product names sit between the compact card type and the bolder home headline. */
+.featured-shop-card h3,
+.product-related-list .product-related-name {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.product-page-order h1 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.07;
+}
