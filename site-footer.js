@@ -39,6 +39,7 @@
   `;
 
   function renderFooter() {
+    document.getElementById('jonezie-site-footer-styles')?.remove();
     const existingFooters = Array.from(document.querySelectorAll('footer.site-footer, footer.why-page-footer'));
     const existingFooter = existingFooters[0];
     existingFooters.slice(1).forEach((duplicateFooter) => duplicateFooter.remove());
