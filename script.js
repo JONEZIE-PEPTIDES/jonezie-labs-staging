@@ -209,8 +209,8 @@ function formatDiscountedPrice(price, rate) {
   return `$${(numeric * (1 - rate)).toFixed(2)}`;
 }
 
-function renderCardPricing(product) {
-  const price = getLowestOfferedPrice(product);
+function renderCardPricing(product, selectedPrice) {
+  const price = selectedPrice || getLowestOfferedPrice(product);
   if (!price) return '<span class="catalog-price-rule">View all pricing</span>';
   const promo = getActiveCardPromo();
   const promoPrice = promo ? formatDiscountedPrice(price, promo.rate) : '';
@@ -224,35 +224,88 @@ function renderCardPricing(product) {
     </div>`;
 }
 
+function getFeaturedQuickAdd(product) {
+  for (const option of product.options || []) {
+    if (String(option.inventoryStatus || 'in_stock').toLowerCase() !== 'in_stock') continue;
+    const packs = [
+      { key: 'singleVialPrice', label: 'Single Vial', price: option.singleVialPrice },
+      { key: 'eightVialPrice', label: '8-Kit', price: option.eightVialPrice },
+      { key: 'tenVialPrice', label: 'Full 10-Kit', price: option.tenVialPrice }
+    ];
+    const pack = packs.find((candidate) => parsePrice(candidate.price) > 0);
+    if (pack) return { option, pack };
+  }
+  return null;
+}
+
 function renderFeatured() {
   const grid = document.querySelector('[data-featured-grid]');
   if (!grid || !catalogData) return;
 
   const featured = (catalogData.featured || []).filter(Boolean);
   grid.innerHTML = featured.map((product, index) => {
-    const strengthChips = renderStrengthChips(product.options);
-    const pricing = renderCardPricing(product);
+    const selection = getFeaturedQuickAdd(product);
+    const pricing = renderCardPricing(product, selection?.pack.price);
     const imageSrc = getImageSrc(product.image);
     const fallbackImageSrc = `${PRODUCT_FALLBACK_IMAGE}?v=${IMAGE_ASSET_VERSION}`;
     const loadingMode = index < 3 ? 'eager' : 'lazy';
     const fetchPriority = index < 3 ? 'high' : 'low';
     const imageDimensions = product.hasUpdatedLabel ? 'width="1254" height="1254"' : '';
+    const productUrl = getProductUrl(product.slug);
+    const title = getCardTitle(product);
+    const selectionLabel = selection
+      ? `${selection.option.mgOption} · ${selection.pack.label}`
+      : getCardStockLabel(product);
     return `
-      <article class="product-card ${getAccent(product.category)}" data-updated-label="${Boolean(product.hasUpdatedLabel)}">
-      <a class="card-link-shell card-main-link" data-product-slug="${escapeHtml(product.slug)}" href="${getProductUrl(product.slug)}" aria-label="Open ${escapeHtml(getCardTitle(product))} product page">
+      <article class="product-card featured-shop-card ${getAccent(product.category)}" data-updated-label="${Boolean(product.hasUpdatedLabel)}">
+      <a class="featured-card-image" data-product-slug="${escapeHtml(product.slug)}" href="${productUrl}" aria-label="View ${escapeHtml(title)} options">
         ${product.hasUpdatedLabel ? '<div class="product-card-media">' : ''}
         <img src="${imageSrc}" ${imageDimensions} alt="${escapeHtml(product.name)} product visual" loading="${loadingMode}" decoding="async" fetchpriority="${fetchPriority}" onerror="this.onerror=null;this.src='${fallbackImageSrc}'" />
         ${product.hasUpdatedLabel ? '</div>' : ''}
-        <div class="product-copy">
-          <h3>${escapeHtml(getCardTitle(product))}</h3>
-          <div class="product-top product-top-price">${pricing}</div>
-          <div class="option-chips">${strengthChips}</div>
-          <span class="card-availability">${escapeHtml(getCardStockLabel(product))}</span>
-          <span class="catalog-link">View product</span>
+      </a>
+      <div class="product-copy">
+        <a class="featured-card-name" data-product-slug="${escapeHtml(product.slug)}" href="${productUrl}"><h3>${escapeHtml(title)}</h3></a>
+        <p class="featured-card-selection">${escapeHtml(selectionLabel)}</p>
+        <div class="product-top product-top-price">${pricing}</div>
+        <div class="featured-card-actions">
+          ${selection ? `<button type="button" data-featured-add="${escapeHtml(product.slug)}" aria-label="Add ${escapeHtml(title)}, ${escapeHtml(selectionLabel)}, to cart">+ Add to cart</button>` : ''}
+          <a data-product-slug="${escapeHtml(product.slug)}" href="${productUrl}">View options <span aria-hidden="true">&rarr;</span></a>
         </div>
-      </a>${renderCardCoa(product)}
+      </div>
+      ${renderCardCoa(product)}
       </article>`;
   }).join('');
+}
+
+function bindFeaturedQuickAdds() {
+  const grid = document.querySelector('[data-featured-grid]');
+  if (!grid) return;
+  grid.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-featured-add]');
+    if (!button || !grid.contains(button)) return;
+    const product = (catalogData?.featured || []).find((item) => item.slug === button.dataset.featuredAdd);
+    const selection = product && getFeaturedQuickAdd(product);
+    if (!selection) return;
+    const { option, pack } = selection;
+    const item = {
+      slug: product.slug,
+      name: product.name,
+      code: option.code,
+      mgOption: option.mgOption,
+      packKey: pack.key,
+      packLabel: pack.label,
+      unitPrice: parsePrice(pack.price),
+      unitPriceDisplay: pack.price,
+      quantity: 1,
+      image: product.image,
+      inventoryStatus: 'in_stock',
+      backorderNote: ''
+    };
+    addItemToCart(item);
+    window.JONEZIE_ANALYTICS?.addToCart(item);
+    button.textContent = 'Added to cart';
+    window.setTimeout(() => { if (button.isConnected) button.textContent = '+ Add to cart'; }, 1400);
+  });
 }
 
 function renderCatalog() {
@@ -580,6 +633,7 @@ function initDeferredCatalogRender() {
 renderCounts();
 initCatalogControls();
 renderFeatured();
+bindFeaturedQuickAdds();
 bindProductClickTracking(document.querySelector('[data-featured-grid]'));
 document.addEventListener('jonezie:promo-updated', handlePromoUpdated);
 initDeferredCatalogRender();

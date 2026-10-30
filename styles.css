@@ -7147,6 +7147,126 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .catalog-grid .catalog-card .card-from-price { font-size: 0.9rem; }
 }
 
+/* Home picks share the clear, two-action layout of product-page recommendations. */
+.featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.featured-shop-card {
+  min-width: 0;
+  border-color: rgba(146, 239, 210, 0.23);
+  background:
+    radial-gradient(circle at 12% 12%, rgba(108, 220, 186, 0.1), transparent 45%),
+    radial-gradient(circle at 100% 90%, rgba(255, 131, 181, 0.08), transparent 50%),
+    #0d222c;
+}
+.featured-card-image { display: block; overflow: hidden; background: #dfe5e8; }
+.featured-card-image > img,
+.featured-card-image .product-card-media {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 24vw, 300px);
+  object-fit: cover;
+  object-position: center;
+}
+.featured-card-image .product-card-media { display: grid; }
+.featured-shop-card .product-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0;
+  padding: 20px;
+}
+.featured-card-name { display: block; color: var(--text); text-decoration: none; }
+.featured-card-name:hover,
+.featured-card-name:focus-visible { color: var(--shop-pink); }
+.featured-shop-card h3 { margin: 0; color: inherit; font-size: clamp(1.1rem, 1.6vw, 1.4rem); }
+.featured-card-selection { min-height: 0; margin: 13px 0 5px; color: #a9c2c6; font-size: 0.91rem; line-height: 1.45; }
+.featured-shop-card .product-top { margin: 0 0 16px; }
+.featured-shop-card .card-pricing { gap: 4px; }
+.featured-shop-card .card-from-price {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--text);
+  font: 800 clamp(1.35rem, 2vw, 1.8rem)/1.15 "Manrope", sans-serif;
+}
+.featured-shop-card .card-from-price::before { content: none; }
+.featured-shop-card .card-promo-price { color: var(--shop-mint); font-size: 0.8rem; }
+.featured-card-actions { display: grid; gap: 9px; margin-top: auto; }
+.featured-card-actions button,
+.featured-card-actions a,
+.product-related-actions button,
+.product-related-list .product-related-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 12px;
+  border-radius: 11px;
+  font: 800 0.86rem/1.25 "Manrope", sans-serif;
+  text-align: center;
+  text-decoration: none;
+}
+.featured-card-actions button,
+.product-related-actions button {
+  border: 0;
+  background: var(--shop-mint);
+  color: #08241e;
+  cursor: pointer;
+}
+.featured-card-actions a,
+.product-related-list .product-related-actions a {
+  gap: 5px;
+  border: 0;
+  background: var(--shop-pink);
+  color: #251825;
+}
+.featured-card-actions button:hover,
+.featured-card-actions button:focus-visible,
+.product-related-actions button:hover,
+.product-related-actions button:focus-visible { background: #b6f7df; }
+.featured-card-actions a:hover,
+.featured-card-actions a:focus-visible,
+.product-related-list .product-related-actions a:hover,
+.product-related-list .product-related-actions a:focus-visible {
+  background: #ffaccd;
+  color: #251825;
+}
+.featured-card-actions button:focus-visible,
+.featured-card-actions a:focus-visible,
+.product-related-actions button:focus-visible,
+.product-related-actions a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 640px) {
+  .featured-grid { gap: 10px; }
+  .featured-card-image > img,
+  .featured-card-image .product-card-media { height: clamp(132px, 38vw, 180px); }
+  .featured-shop-card .product-copy { padding: 13px 11px 14px; }
+  .featured-shop-card h3 { font-size: 1rem; line-height: 1.18; overflow-wrap: anywhere; }
+  .featured-card-selection { margin: 9px 0 5px; font-size: 0.73rem; }
+  .featured-shop-card .product-top { margin-bottom: 11px; }
+  .featured-shop-card .card-from-price { font-size: 1.23rem; }
+  .featured-shop-card .card-promo-price { font-size: 0.68rem; line-height: 1.3; }
+  .featured-card-actions { gap: 7px; }
+  .featured-card-actions button,
+  .featured-card-actions a,
+  .product-related-actions button,
+  .product-related-list .product-related-actions a {
+    min-height: 40px;
+    padding: 6px 5px;
+    font-size: 0.72rem;
+  }
+}
+@media (max-width: 360px) {
+  .featured-grid { gap: 8px; }
+  .featured-shop-card .product-copy { padding: 11px 9px 12px; }
+  .featured-shop-card h3 { font-size: 0.93rem; }
+  .featured-shop-card .card-from-price { font-size: 1.1rem; }
+  .featured-card-actions button,
+  .featured-card-actions a { font-size: 0.69rem; }
+}
+
 @media (max-width: 860px) {
   .home-shell > .site-header-home.site-header-home-sticky,
   .page-shell > .site-header-home.site-header-home-sticky {
