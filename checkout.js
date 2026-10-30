@@ -732,8 +732,9 @@ function renderSubmittedOrderPremium() {
       <div class="checkout-complete-hero">
         <div class="checkout-complete-icon" aria-hidden="true">&#10003;</div>
         <div>
-          <h2>Order request received.</h2>
+          <h1>Order request received.</h1>
           <p class="checkout-complete-thanks">Thanks, ${escapeHtml(submittedOrderSnapshot.customerFirstName)} - we're reviewing your order now.</p>
+          <p class="checkout-complete-id">Request ID <strong>${escapeHtml(submittedOrderSnapshot.orderId)}</strong></p>
           <p>No payment was collected on this page. Once your order is reviewed and confirmed, Jonezie Labs will email a secure invoice link to the email address on your order. Please check your inbox and spam folder.</p>
           <p class="checkout-payment-options"><strong>Payment options include:</strong> credit or debit card, Apple Pay, Google Pay, Cash App Pay, ACH bank transfer, and Afterpay.</p>
         </div>
@@ -1194,6 +1195,7 @@ form?.addEventListener('submit', async (event) => {
   window.JONEZIE_ANALYTICS?.orderRequestSubmit(payload);
   if (promo.isValid && promo.firstOrderOnly) markFirstOrderCodeRedeemed(email, promo.code);
   submittedOrderSnapshot = buildSubmittedOrderSnapshot(payload);
+  document.body.classList.add('checkout-order-complete');
   if (successCard) {
     successCard.hidden = false;
     successCard.innerHTML = `
@@ -1212,6 +1214,7 @@ form?.addEventListener('submit', async (event) => {
 clearCartButton?.addEventListener('click', () => {
   if (isSubmittingOrderRequest) return;
   submittedOrderSnapshot = null;
+  document.body.classList.remove('checkout-order-complete');
   if (successCard) successCard.hidden = true;
   if (form) form.hidden = false;
   clearFeedback();
