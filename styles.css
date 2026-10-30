@@ -7455,12 +7455,12 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .page-shell > .site-header-home.product-header {
     transition: transform 240ms ease, opacity 240ms ease;
   }
-  .home-shell > .site-header-home.site-header-home-sticky.header-desktop-hidden:not(:focus-within) {
+  .home-shell > .site-header-home.site-header-home-sticky.header-desktop-hidden {
     transform: translate(-50%, calc(-100% - 70px));
     opacity: 0;
     pointer-events: none;
   }
-  .page-shell > .site-header-home.header-desktop-hidden:not(:focus-within) {
+  .page-shell > .site-header-home.header-desktop-hidden {
     transform: translateY(calc(-100% - 38px));
     opacity: 0;
     pointer-events: none;

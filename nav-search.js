@@ -247,7 +247,9 @@
     const update = () => {
       const scrollY = window.scrollY;
       const menuOpen = Boolean(header.querySelector('.brand-menu-panel:not([hidden]), .site-nav.is-open'));
-      if (window.innerWidth <= 860 || scrollY < 180 || menuOpen || header.matches(':focus-within')) {
+      const focusedControl = header.contains(document.activeElement)
+        && document.activeElement !== header.querySelector('.brand-menu-trigger');
+      if (window.innerWidth <= 860 || scrollY < 180 || menuOpen || focusedControl) {
         header.classList.remove('header-desktop-hidden');
         scrollAnchor = scrollY;
         return;
