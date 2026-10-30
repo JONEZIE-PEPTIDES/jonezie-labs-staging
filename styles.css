@@ -7364,3 +7364,86 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .checkout-summary-card { padding: 20px 18px; }
   .checkout-form { padding: 20px 18px; }
 }
+
+/* Home research standards, styled as a compact brand band. */
+.trust-section-home {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(146, 239, 210, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(115deg, #102b35, #0a1d27 58%, #132631);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16);
+}
+.trust-section-home::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--shop-mint), var(--shop-pink));
+}
+.trust-points-home { background: transparent; border-radius: 0; }
+.trust-points-home .trust-point {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  min-height: 98px;
+  padding: 20px clamp(18px, 2.5vw, 36px);
+}
+.trust-points-home .trust-point + .trust-point::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 21px;
+  bottom: 21px;
+  width: 1px;
+  background: rgba(146, 239, 210, 0.2);
+}
+.trust-points-home .trust-point-icon {
+  display: grid;
+  flex: 0 0 46px;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid rgba(146, 239, 210, 0.3);
+  border-radius: 15px;
+  background: rgba(146, 239, 210, 0.1);
+  color: var(--shop-mint);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.trust-points-home .trust-point:nth-child(2) .trust-point-icon {
+  border-color: rgba(255, 121, 188, 0.34);
+  background: rgba(255, 121, 188, 0.11);
+  color: var(--shop-pink);
+}
+.trust-point-icon svg {
+  width: 23px;
+  height: 23px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.trust-points-home .trust-point strong {
+  color: #f4fbff;
+  font: 800 clamp(0.92rem, 1.35vw, 1.08rem)/1.35 "Manrope", sans-serif;
+  letter-spacing: -0.02em;
+}
+@media (max-width: 720px) {
+  .trust-points-home { grid-template-columns: 1fr; }
+  .trust-points-home .trust-point { min-height: 70px; padding: 13px 20px; }
+  .trust-points-home .trust-point + .trust-point::before {
+    left: 20px;
+    right: 20px;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+  }
+  .trust-points-home .trust-point-icon { flex-basis: 40px; width: 40px; height: 40px; border-radius: 13px; }
+  .trust-point-icon svg { width: 21px; height: 21px; }
+}
