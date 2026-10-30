@@ -6676,16 +6676,15 @@ body.resource-page {
 
 /* Shared footer: one surface, restrained accents, and clear navigation. */
 .site-footer {
-  width: min(calc(100% - 32px), 1200px);
-  margin: clamp(44px, 7vw, 80px) auto 24px;
-  margin-left: auto;
+  width: 100vw;
+  max-width: none;
+  margin: clamp(44px, 7vw, 80px) 0 0 calc(50% - 50vw);
   transform: none;
 }
 
 .footer-panel {
   overflow: hidden;
-  border: 1px solid var(--shop-stroke);
-  border-radius: 22px;
+  border-top: 1px solid var(--shop-stroke);
   background: #0b1d26;
 }
 
@@ -6693,6 +6692,8 @@ body.resource-page {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) repeat(2, minmax(0, 0.8fr));
   gap: clamp(28px, 5vw, 76px);
+  width: min(100%, 1200px);
+  margin-inline: auto;
   padding: clamp(30px, 4.2vw, 56px);
 }
 
@@ -6702,8 +6703,9 @@ body.resource-page {
 }
 
 .footer-logo {
-  display: inline-block;
-  width: min(220px, 100%);
+  display: inline-flex;
+  align-items: center;
+  width: min(244px, 100%);
 }
 
 .footer-logo img {
@@ -6725,38 +6727,6 @@ body.resource-page {
   font-weight: 700;
   overflow-wrap: anywhere;
   text-underline-offset: 3px;
-}
-
-.footer-socials {
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-}
-
-.footer-socials a {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--shop-stroke);
-  border-radius: 10px;
-  color: var(--shop-mint);
-}
-
-.footer-socials a:hover,
-.footer-socials a:focus-visible {
-  border-color: var(--shop-mint);
-  background: rgba(146, 239, 210, 0.08);
-}
-
-.footer-socials svg {
-  width: 19px;
-  height: 19px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .footer-nav {
@@ -6793,6 +6763,8 @@ body.resource-page {
   align-items: start;
   justify-content: space-between;
   gap: 24px;
+  width: min(100%, 1200px);
+  margin-inline: auto;
   padding: 19px clamp(30px, 4.2vw, 56px) 22px;
   border-top: 1px solid var(--shop-stroke);
 }
@@ -6811,7 +6783,6 @@ body.resource-page {
 }
 
 @media (max-width: 760px) {
-  .site-footer { width: min(calc(100% - 24px), 620px); }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 18px; padding: 28px 24px; }
   .footer-brand { grid-column: 1 / -1; }
   .footer-brand p { margin-top: 16px; }

@@ -74,7 +74,7 @@
 
   const root = '';
   const script = document.createElement('script');
-  script.src = `${root}site-footer.js?v=20260603g`;
+  script.src = `${root}site-footer.js?v=20261030footerwide1`;
   script.defer = true;
   document.head.appendChild(script);
 })();
