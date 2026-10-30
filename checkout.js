@@ -1,7 +1,6 @@
 ﻿const CART_KEY = 'jonezie_cart';
 const menuToggle = document.querySelector('.menu-toggle');
 const siteNav = document.querySelector('.site-nav');
-const checkoutHeader = document.querySelector('.product-header');
 const cartRoot = document.querySelector('[data-checkout-cart]');
 const summaryItems = document.querySelector('[data-summary-items]');
 const summarySubtotal = document.querySelector('[data-summary-subtotal]');
@@ -207,25 +206,6 @@ if (menuToggle && siteNav && !menuToggle.dataset.menuBound) {
     });
   });
 }
-
-let checkoutHeaderScrollAnchor = window.scrollY;
-function updateCheckoutHeaderVisibility() {
-  if (!checkoutHeader) return;
-  const scrollY = window.scrollY;
-  if (window.innerWidth > 860 || scrollY < 180 || siteNav?.classList.contains('is-open')) {
-    checkoutHeader.classList.remove('product-header-hidden');
-    checkoutHeaderScrollAnchor = scrollY;
-    return;
-  }
-  if (Math.abs(scrollY - checkoutHeaderScrollAnchor) < 14) return;
-  checkoutHeader.classList.toggle('product-header-hidden', scrollY > checkoutHeaderScrollAnchor);
-  checkoutHeaderScrollAnchor = scrollY;
-}
-menuToggle?.addEventListener('click', () => checkoutHeader?.classList.remove('product-header-hidden'));
-checkoutHeader?.addEventListener('focusin', () => checkoutHeader.classList.remove('product-header-hidden'));
-window.addEventListener('scroll', updateCheckoutHeaderVisibility, { passive: true });
-window.addEventListener('resize', updateCheckoutHeaderVisibility);
-updateCheckoutHeaderVisibility();
 
 function initBrandMenus() {
   const menus = document.querySelectorAll('[data-brand-menu]');

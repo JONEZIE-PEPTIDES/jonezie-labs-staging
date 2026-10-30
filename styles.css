@@ -7079,3 +7079,25 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .site-header-home .mobile-cart-shortcut { right: 12px; width: 44px; height: 44px; }
   .site-header-home .brand-master-logo { height: 50px; max-width: min(48vw, 150px); }
 }
+
+.checkout-page .checkout-field-help a {
+  color: var(--shop-pink);
+  text-decoration-color: currentColor;
+  text-underline-offset: 3px;
+}
+.checkout-page .checkout-field-help a:hover,
+.checkout-page .checkout-field-help a:focus-visible { color: #ffb2d1; }
+
+@media (max-width: 860px) {
+  body.checkout-page .page-shell > .site-header-home.product-header {
+    position: relative !important;
+    top: auto !important;
+    left: auto;
+    width: 100%;
+    margin-top: 14px;
+    transform: none !important;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  body.checkout-page .page-shell > .site-header-home.product-header + main { padding-top: 0; }
+}
