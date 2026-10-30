@@ -6999,3 +6999,18 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .product-sticky-action { grid-column: 1 / -1; width: 100%; }
   body.product-sticky-visible { padding-bottom: 150px; }
 }
+
+@media (max-width: 860px) {
+  .page-shell > .site-header-home.product-header {
+    transition: transform 240ms ease, opacity 240ms ease;
+  }
+  .page-shell > .site-header-home.product-header.product-header-hidden:not(:focus-within) {
+    transform: translate(-50%, calc(-100% - 56px));
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-shell > .site-header-home.product-header { transition: none; }
+}

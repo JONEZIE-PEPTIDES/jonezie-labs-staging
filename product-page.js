@@ -317,6 +317,7 @@ function renderProductPage() {
   const addToCartButton = document.querySelector('[data-add-to-cart]');
   const buyNowButton = document.querySelector('[data-buy-now]');
   const purchaseActions = document.querySelector('.product-choice-group .purchase-actions');
+  const productHeader = document.querySelector('.product-header');
   const stickyBar = document.createElement('div');
   stickyBar.className = 'product-sticky-bar';
   stickyBar.hidden = true;
@@ -653,6 +654,23 @@ function renderProductPage() {
     document.body.classList.toggle('product-sticky-visible', show);
   }
 
+  let headerScrollAnchor = window.scrollY;
+  function updateProductHeaderVisibility() {
+    if (!productHeader) return;
+    const scrollY = window.scrollY;
+    if (window.innerWidth > 860 || scrollY < 180 || siteNav?.classList.contains('is-open')) {
+      productHeader.classList.remove('product-header-hidden');
+      headerScrollAnchor = scrollY;
+      return;
+    }
+    if (Math.abs(scrollY - headerScrollAnchor) < 14) return;
+    productHeader.classList.toggle('product-header-hidden', scrollY > headerScrollAnchor);
+    headerScrollAnchor = scrollY;
+  }
+
+  menuToggle?.addEventListener('click', () => productHeader?.classList.remove('product-header-hidden'));
+  productHeader?.addEventListener('focusin', () => productHeader.classList.remove('product-header-hidden'));
+
   stickyAction?.addEventListener('click', () => {
     const item = getSelectedCartItem();
     if (!item) return;
@@ -663,7 +681,9 @@ function renderProductPage() {
     }
   });
   window.addEventListener('scroll', updateStickyVisibility, { passive: true });
+  window.addEventListener('scroll', updateProductHeaderVisibility, { passive: true });
   window.addEventListener('resize', updateStickyVisibility);
+  window.addEventListener('resize', updateProductHeaderVisibility);
 
   addToCartButton?.addEventListener('click', () => {
     const item = getSelectedCartItem();
@@ -765,6 +785,7 @@ function renderProductPage() {
   renderPackPicker();
   renderSelectionSummary();
   updateStickyVisibility();
+  updateProductHeaderVisibility();
 }
 
 renderProductPage();
