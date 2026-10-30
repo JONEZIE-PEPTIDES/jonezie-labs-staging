@@ -743,7 +743,7 @@ function renderSubmittedOrderPremium() {
         <span>48 HR</span>
         <div>
           <strong>Invoice must be paid before your order ships.</strong>
-          <p>Unpaid order requests automatically cancel after 48 hours.</p>
+          <p>Orders with unpaid invoices for more than 48 hours may be automatically canceled.</p>
         </div>
       </div>
 
@@ -1129,6 +1129,9 @@ form?.addEventListener('submit', async (event) => {
   const notes = formData.get('customerNotes') || '';
   const promo = getPromoDetails();
   if (promo.isValid && promo.firstOrderOnly && hasRedeemedFirstOrderCode(email, promo.code)) {
+    isSubmittingOrderRequest = false;
+    if (submitButton) submitButton.disabled = false;
+    if (clearCartButton) clearCartButton.disabled = false;
     setFeedback(`${promo.code} has already been used with this email address.`, 'error');
     return;
   }
