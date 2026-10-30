@@ -113,68 +113,88 @@
     }
   </script>
   <style>
-    .disclaimer-panel { padding: 30px 34px; }
-    .disclaimer-copy { display: grid; gap: 16px; }
-    .disclaimer-copy p { margin: 0; color: rgba(244, 251, 255, 0.9); font-size: 1rem; line-height: 1.55; }
-    .vendor-grid { display: grid; grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr); gap: 22px; margin-top: 24px; }
-    .vendor-card { border: 1px solid rgba(98, 219, 240, 0.18); border-radius: 30px; box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34); }
-    .vendor-card-updates { padding: 30px; background: radial-gradient(circle at 20% 18%, rgba(40, 216, 239, 0.16), transparent 28%), linear-gradient(180deg, rgba(9, 20, 27, 0.98), rgba(5, 13, 18, 0.98)); }
-    .vendor-card-supplier { padding: 30px; background: radial-gradient(circle at top right, rgba(255, 95, 169, 0.14), transparent 24%), radial-gradient(circle at 22% 14%, rgba(40, 216, 239, 0.12), transparent 20%), linear-gradient(180deg, rgba(13, 27, 35, 0.98), rgba(7, 17, 23, 0.98)); }
+    .contact-section { padding: 0; border: 0; background: transparent; box-shadow: none; }
+    .disclaimer-panel { padding: 22px 26px; border-color: var(--shop-stroke); background: #0d222b; box-shadow: none; }
+    .disclaimer-copy { display: grid; gap: 10px; }
+    .disclaimer-copy p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
+    .vendor-grid { display: grid; grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr); gap: 18px; margin-top: 18px; }
+    .vendor-card { border: 1px solid var(--shop-stroke); border-radius: 24px; background: #0d222b; box-shadow: none; }
+    .vendor-card-updates { padding: 28px; background: radial-gradient(circle at top left, rgba(146, 239, 210, 0.08), transparent 42%), #0d222b; }
+    .vendor-card-supplier { padding: 28px; background: radial-gradient(circle at top right, rgba(255, 131, 181, 0.08), transparent 42%), #0d222b; }
     .vendor-card-updates h2, .vendor-card-supplier h2 { margin: 0 0 20px; font-family: "Space Grotesk", sans-serif; font-size: clamp(1.5rem, 2.6vw, 2.15rem); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; max-width: 100%; }
     .vendor-card-updates h2 { max-width: 16ch; }
     .vendor-card-supplier h2 { max-width: 18ch; margin-bottom: 18px; }
     .vendor-form { display: grid; gap: 14px; }
     .vendor-form label { display: grid; gap: 8px; }
     .vendor-form span { color: #a6c6cf; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-    .vendor-form input { width: 100%; min-height: 56px; padding: 0 18px; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.96); color: #20232b; font: inherit; font-size: 1rem; }
-    .vendor-form input::placeholder { color: #6d737d; }
-    .vendor-submit { width: 100%; margin-top: 6px; }
+    .vendor-form input { width: 100%; min-height: 50px; padding: 0 16px; border: 1px solid var(--shop-stroke); border-radius: 14px; background: #102630; color: var(--text); font: inherit; font-size: 0.95rem; }
+    .vendor-form input::placeholder { color: #8fa7ad; }
+    .vendor-form input:focus { outline: 2px solid var(--shop-mint); outline-offset: 2px; }
+    .vendor-submit { width: 100%; min-height: 50px; margin-top: 6px; border-radius: 14px; background: var(--shop-mint) !important; box-shadow: none !important; }
     .vendor-checklist { display: grid; gap: 12px; margin-bottom: 22px; }
-    .vendor-checklist label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; align-items: start; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; background: rgba(255,255,255,0.04); }
+    .vendor-checklist label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--shop-stroke); border-radius: 14px; background: #102630; }
     .vendor-checklist input { margin-top: 3px; accent-color: #ff5fa9; }
     .vendor-checklist span { color: rgba(244, 251, 255, 0.92); line-height: 1.5; }
     .vendor-form-supplier { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .vendor-form-supplier label:first-child, .vendor-form-supplier label:nth-child(3) { grid-column: 1 / -1; }
-    .vendor-rfp-note { display: grid; gap: 14px; margin-top: 22px; padding: 18px 20px; border: 1px solid rgba(255, 95, 169, 0.18); border-radius: 22px; background: linear-gradient(180deg, rgba(28, 18, 28, 0.52), rgba(10, 20, 27, 0.3)); }
+    .vendor-rfp-note { display: grid; gap: 14px; margin-top: 22px; padding: 18px 20px; border: 1px solid var(--shop-stroke); border-radius: 16px; background: #102630; }
     .vendor-rfp-note p { margin: 0; color: rgba(244, 251, 255, 0.92); }
-    .vendor-rfp-note a { color: #83f2ff; }
-    .vendor-rfp-note a:hover { color: #ff9bc6; }
+    .vendor-rfp-note a { color: var(--shop-pink); }
+    .vendor-rfp-note a:hover { color: #ffaccd; }
     .vendor-rfp-link { width: fit-content; }
-    .faq-shell { display: grid; gap: 28px; }
-    .faq-header-band { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr); gap: 22px; align-items: stretch; }
-    .faq-heading { margin: 0; padding: 34px; border: 1px solid rgba(98, 219, 240, 0.18); border-radius: 30px; background: radial-gradient(circle at top left, rgba(255, 95, 169, 0.16), transparent 30%), radial-gradient(circle at 82% 20%, rgba(40, 216, 239, 0.18), transparent 26%), linear-gradient(180deg, rgba(14, 28, 37, 0.98), rgba(8, 18, 24, 0.98)); box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34); display: grid; align-items: center; min-height: 240px; }
-    .faq-title-word { color: #ff5fa9; font-family: "Caveat", cursive; font-size: clamp(5rem, 12vw, 8rem); font-weight: 700; line-height: 0.9; letter-spacing: 0.01em; text-shadow: 0 0 2px rgba(255, 78, 165, 0.65), 0 0 18px rgba(255, 78, 165, 0.45), 0 0 42px rgba(255, 78, 165, 0.2); }
-    .faq-support-card { display: grid; align-content: start; gap: 14px; padding: 28px; border: 1px solid rgba(255, 95, 169, 0.22); border-radius: 30px; background: radial-gradient(circle at top right, rgba(255, 95, 169, 0.16), transparent 32%), linear-gradient(180deg, rgba(24, 18, 27, 0.96), rgba(10, 20, 27, 0.98)); box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34); }
-    .faq-support-label { display: inline-flex; align-items: center; width: fit-content; min-height: 32px; padding: 0 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); color: #ff9bc6; font-size: 0.76rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-    .faq-support-card strong { font-family: "Space Grotesk", sans-serif; font-size: 1.45rem; line-height: 1.15; }
-    .faq-support-card p { margin: 0; }
-    .faq-support-link { margin-top: 6px; }
-    .faq-list { display: grid; gap: 14px; }
-    .faq-list details { overflow: hidden; border-radius: 24px; border: 1px solid rgba(98, 219, 240, 0.18); background: linear-gradient(135deg, rgba(40, 216, 239, 0.06), transparent 32%), linear-gradient(180deg, rgba(13, 27, 35, 0.98), rgba(7, 17, 23, 0.98)); box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24); transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
-    .faq-list details[open] { border-color: rgba(255, 95, 169, 0.32); box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28); }
-    .faq-list details:hover { transform: translateY(-2px); }
-    .faq-list summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 22px 24px; list-style: none; cursor: pointer; }
+    .faq-section { padding: clamp(20px, 3vw, 36px); border-color: var(--shop-stroke); background: #0b1d26; box-shadow: none; }
+    .faq-shell { display: grid; gap: 20px; }
+    .faq-header-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr); gap: 18px; align-items: stretch; }
+    .faq-heading { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; margin: 0; padding: 16px 20px; border: 0; background: none; box-shadow: none; }
+    .faq-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; color: var(--shop-mint); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+    .faq-kicker span { width: 22px; height: 1px; background: var(--shop-pink); }
+    .faq-heading h2 { margin: 0; color: var(--text); font-family: "Sora", "Space Grotesk", sans-serif; font-size: clamp(2rem, 3.8vw, 3.6rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.055em; }
+    .faq-heading h2 span { color: var(--shop-pink); }
+    .faq-heading .faq-intro { max-width: 34ch; margin: 14px 0 0; color: var(--muted); font-size: 0.98rem; line-height: 1.6; }
+    .faq-support-card { display: grid; align-content: center; gap: 12px; padding: 24px; border: 1px solid rgba(255, 131, 181, 0.2); border-radius: 22px; background: radial-gradient(circle at top right, rgba(255, 131, 181, 0.1), transparent 48%), #102630; box-shadow: none; }
+    .faq-support-label { color: var(--shop-pink); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+    .faq-support-card strong { max-width: 22ch; font-family: "Sora", "Space Grotesk", sans-serif; font-size: 1.2rem; line-height: 1.28; letter-spacing: -0.03em; }
+    .faq-support-card p { margin: 0; color: var(--muted); font-size: 0.91rem; line-height: 1.55; }
+    .faq-support-link { width: fit-content; min-height: 44px; margin-top: 4px; border: 1px solid rgba(255, 131, 181, 0.3) !important; border-radius: 13px; background: rgba(255, 131, 181, 0.06) !important; color: var(--text) !important; box-shadow: none !important; }
+    .faq-list { display: grid; gap: 10px; }
+    .faq-list details { overflow: hidden; border: 1px solid var(--shop-stroke); border-radius: 17px; background: #102630; box-shadow: none; transition: border-color 180ms ease, background 180ms ease; }
+    .faq-list details[open] { border-color: rgba(146, 239, 210, 0.38); background: #112a33; box-shadow: none; }
+    .faq-list details:hover { border-color: rgba(146, 239, 210, 0.38); }
+    .faq-list summary { display: grid; grid-template-columns: 38px minmax(0, 1fr) 34px; gap: 16px; align-items: center; padding: 17px 20px; list-style: none; cursor: pointer; }
     .faq-list summary::-webkit-details-marker { display: none; }
-    .faq-index { display: inline-flex; align-items: center; justify-content: center; min-width: 54px; min-height: 54px; border-radius: 18px; background: linear-gradient(135deg, #8fdfff, #ff79bc); color: #08151d; font-family: "Space Grotesk", sans-serif; font-size: 0.92rem; font-weight: 700; letter-spacing: 0.1em; box-shadow: 0 16px 30px rgba(255, 121, 188, 0.2); }
-    .faq-question-copy { display: grid; gap: 6px; }
-    .faq-question-copy strong { color: #f4fbff; font-family: "Space Grotesk", sans-serif; font-size: 1.18rem; line-height: 1.2; }
-    .faq-question-copy small { color: #a6c6cf; font-size: 0.92rem; line-height: 1.45; }
-    .faq-toggle { position: relative; width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.04); }
-    .faq-toggle::before, .faq-toggle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 16px; height: 2px; border-radius: 999px; background: #83f2ff; transform: translate(-50%, -50%); transition: transform 180ms ease, opacity 180ms ease, background 180ms ease; }
+    .faq-list summary:focus-visible { outline: 2px solid var(--shop-mint); outline-offset: -4px; }
+    .faq-index { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1px solid rgba(146, 239, 210, 0.3); border-radius: 11px; background: rgba(146, 239, 210, 0.07); color: var(--shop-mint); font-family: "Space Grotesk", sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; box-shadow: none; }
+    .faq-question-copy { display: grid; gap: 4px; }
+    .faq-question-copy strong { color: var(--text); font-family: "Sora", "Space Grotesk", sans-serif; font-size: 1.03rem; line-height: 1.35; letter-spacing: -0.02em; }
+    .faq-question-copy small { color: var(--muted); font-size: 0.84rem; line-height: 1.4; }
+    .faq-toggle { position: relative; width: 34px; height: 34px; border: 1px solid var(--shop-stroke); border-radius: 50%; background: rgba(255, 255, 255, 0.03); }
+    .faq-toggle::before, .faq-toggle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 12px; height: 2px; border-radius: 999px; background: var(--shop-mint); transform: translate(-50%, -50%); transition: transform 180ms ease, opacity 180ms ease; }
     .faq-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
-    .faq-list details[open] .faq-toggle::before { background: #ff9bc6; }
     .faq-list details[open] .faq-toggle::after { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scaleX(0.2); }
-    .faq-list details p { margin: 0; padding: 0 24px 24px 96px; max-width: 78ch; }
-    .faq-list details a { color: #83f2ff; }
-    .faq-list details a:hover { color: #ff9bc6; }
+    .faq-list details p { max-width: 78ch; margin: 0; padding: 0 20px 20px 74px; font-size: 0.91rem; line-height: 1.6; }
+    .faq-list details a { color: var(--shop-pink); }
+    .faq-list details a:hover { color: #ffaccd; }
     @media (max-width: 980px) { .faq-header-band, .vendor-grid, .vendor-form-supplier { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) {
+      .home-shell #faq, .home-shell #contact { width: calc(100% + 32px); margin-left: -16px; margin-right: -16px; }
+      .contact-section { padding-inline: 16px; }
+    }
     @media (max-width: 720px) {
-      .faq-heading, .faq-support-card { padding: 24px; border-radius: 24px; }
-      .faq-list summary { grid-template-columns: 1fr auto; gap: 14px; padding: 18px; }
-      .faq-index { min-width: 46px; min-height: 46px; grid-column: 1 / 2; grid-row: 1 / 2; margin-bottom: 4px; }
-      .faq-question-copy { grid-column: 1 / 2; grid-row: 2 / 3; }
-      .faq-toggle { grid-column: 2 / 3; grid-row: 1 / span 2; align-self: center; }
-      .faq-list details p { padding: 0 18px 20px; }
+      .faq-section { padding: 18px 16px; }
+      .faq-header-band { display: contents; }
+      .faq-heading { padding: 2px 4px 0; }
+      .faq-heading h2 { font-size: clamp(1.9rem, 8vw, 2.4rem); }
+      .faq-support-card { order: 3; padding: 20px; border-radius: 18px; }
+      .faq-list { order: 2; }
+      .faq-support-link { width: 100%; }
+      .faq-list summary { grid-template-columns: 34px minmax(0, 1fr) 30px; gap: 11px; padding: 15px; }
+      .faq-index { width: 34px; height: 34px; }
+      .faq-question-copy strong { font-size: 0.94rem; }
+      .faq-question-copy small { display: none; }
+      .faq-toggle { width: 30px; height: 30px; }
+      .faq-list details p { padding: 0 16px 18px; }
+      .disclaimer-panel { padding: 20px; }
+      .vendor-card-updates, .vendor-card-supplier { padding: 20px; }
     }
   </style>
   <meta name="robots" content="noindex,nofollow,noarchive" />
@@ -518,16 +538,18 @@
         </div>
       </section>
 
-      <section id="faq" class="section-shell block-section faq-section">
+      <section id="faq" class="section-shell block-section faq-section" aria-labelledby="faq-title">
         <div class="faq-shell">
           <div class="faq-header-band">
             <div class="section-heading compact faq-heading">
-              <div class="faq-title-word">FAQ</div>
+              <p class="faq-kicker">FAQ <span aria-hidden="true"></span> Here to help</p>
+              <h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2>
+              <p class="faq-intro">The details you need before placing an order request.</p>
             </div>
             <aside class="faq-support-card">
               <span class="faq-support-label">Fast Support</span>
               <strong>Need a direct answer before checkout?</strong>
-              <p>Reach out and get help with product navigation, COA questions, order flow, or shipping details without the runaround.</p>
+              <p>Get help with products, COAs, orders, or shipping from our team.</p>
               <a class="button secondary faq-support-link" href="mailto:customerservice@jonezielabs.com">Email Jonezie</a>
             </aside>
           </div>
