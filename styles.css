@@ -7301,3 +7301,60 @@ body.product-sticky-visible { padding-bottom: 100px; }
   letter-spacing: -0.045em;
   line-height: 1.07;
 }
+
+/* Give checkout controls clearer groups and room to scan. */
+.checkout-summary-card { padding: 24px; }
+.checkout-summary-card > .eyebrow { margin-bottom: 18px; }
+.checkout-summary-row { margin-top: 16px; line-height: 1.4; }
+.checkout-freebies { margin-top: 22px; padding: 16px 18px; }
+.checkout-promo,
+.checkout-shipping { margin-top: 22px; gap: 10px; }
+.checkout-promo input { min-height: 50px; }
+.checkout-shipping select { min-height: 52px; }
+.checkout-summary-totals {
+  margin-top: 22px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(146, 239, 210, 0.18);
+}
+.checkout-summary-totals .checkout-summary-row:last-child {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  font-weight: 800;
+}
+.checkout-summary-totals .checkout-summary-row:last-child strong {
+  color: var(--shop-mint);
+  font-size: 1.16rem;
+}
+.checkout-form { margin-top: 22px; padding: 24px; gap: 20px; }
+.checkout-form-heading { margin-bottom: 2px; }
+.checkout-form-heading .eyebrow { margin: 0 0 8px; }
+.checkout-form-heading h2 {
+  margin: 0;
+  color: var(--text);
+  font: 800 1.34rem/1.25 "Manrope", sans-serif;
+  letter-spacing: -0.03em;
+}
+.checkout-form-heading p:last-child { margin: 8px 0 0; color: var(--muted); line-height: 1.55; }
+.checkout-form-row { gap: 18px; }
+.checkout-form label { gap: 10px; font-weight: 700; }
+.checkout-form input,
+.checkout-form textarea {
+  min-height: 52px;
+  border-color: rgba(146, 239, 210, 0.18);
+  background: rgba(255, 255, 255, 0.045);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.checkout-form textarea { min-height: 112px; resize: vertical; }
+.checkout-form input:focus-visible,
+.checkout-form textarea:focus-visible,
+.checkout-promo input:focus-visible {
+  outline: none;
+  border-color: var(--shop-mint);
+  box-shadow: 0 0 0 3px rgba(146, 239, 210, 0.15);
+}
+@media (max-width: 520px) {
+  .checkout-summary-card { padding: 20px 18px; }
+  .checkout-form { padding: 20px 18px; }
+}

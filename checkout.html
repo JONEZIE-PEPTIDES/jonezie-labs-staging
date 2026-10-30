@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="favicon.png?v=20260728a" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260728a" />
-  <link rel="stylesheet" href="styles.css?v=20261030producttype1" />
+  <link rel="stylesheet" href="styles.css?v=20261030checkoutpolish1" />
   <style>
     .checkout-complete-card {
       padding: 28px;
@@ -216,7 +216,7 @@
             </div>
             <div class="checkout-promo">
               <label for="checkout-promo-code">Promo Code</label>
-              <input id="checkout-promo-code" type="text" data-promo-code placeholder="Enter promo code" />
+              <input id="checkout-promo-code" type="text" data-promo-code autocomplete="off" />
               <p data-active-promo-copy>Active code: <strong>FALL25</strong> (25% off)</p>
             </div>
             <div class="checkout-shipping">
@@ -226,9 +226,11 @@
               </div>
               <p data-shipping-help>Select a shipping option to update your estimated total.</p>
             </div>
-            <div class="checkout-summary-row"><span>Discount</span><strong data-summary-discount>$0.00</strong></div>
-            <div class="checkout-summary-row"><span>Shipping</span><strong data-summary-shipping>$0.00</strong></div>
-            <div class="checkout-summary-row"><span>Estimated Total</span><strong data-summary-total>$0.00</strong></div>
+            <div class="checkout-summary-totals">
+              <div class="checkout-summary-row"><span>Discount</span><strong data-summary-discount>$0.00</strong></div>
+              <div class="checkout-summary-row"><span>Shipping</span><strong data-summary-shipping>$0.00</strong></div>
+              <div class="checkout-summary-row"><span>Estimated Total</span><strong data-summary-total>$0.00</strong></div>
+            </div>
           </div>
 
           <div class="checkout-invoice-card">
@@ -236,46 +238,51 @@
           </div>
 
           <form class="checkout-form" data-checkout-form>
+            <div class="checkout-form-heading">
+              <p class="eyebrow">Your details</p>
+              <h2>Contact &amp; shipping</h2>
+              <p>We’ll use these details for your order and invoice updates.</p>
+            </div>
             <div class="checkout-form-row">
               <label>
                 First Name
-                <input type="text" name="customerFirstName" placeholder="First name" autocomplete="given-name" required />
+                <input type="text" name="customerFirstName" autocomplete="given-name" required />
               </label>
               <label>
                 Last Name
-                <input type="text" name="customerLastName" placeholder="Last name" autocomplete="family-name" required />
+                <input type="text" name="customerLastName" autocomplete="family-name" required />
               </label>
             </div>
             <label>
               Email Address
-              <input type="email" name="customerEmail" placeholder="Email address" autocomplete="email" required />
+              <input type="email" name="customerEmail" autocomplete="email" required />
             </label>
             <label>
               Phone Number
-              <input type="tel" name="customerPhone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" maxlength="14" required />
+              <input type="tel" name="customerPhone" inputmode="tel" autocomplete="tel" maxlength="14" required />
               <span class="checkout-field-help">Required for order confirmation and invoice delivery updates.</span>
             </label>
             <label>
               Street Address
-              <input type="text" name="shippingStreetAddress" placeholder="123 Lab Street" autocomplete="address-line1" required />
+              <input type="text" name="shippingStreetAddress" autocomplete="address-line1" required />
             </label>
             <div class="checkout-form-row checkout-form-row-address">
               <label>
                 City
-                <input type="text" name="shippingCity" placeholder="Detroit" autocomplete="address-level2" required />
+                <input type="text" name="shippingCity" autocomplete="address-level2" required />
               </label>
               <label>
                 State
-                <input type="text" name="shippingState" placeholder="MI" autocomplete="address-level1" maxlength="2" required />
+                <input type="text" name="shippingState" autocomplete="address-level1" maxlength="2" required />
               </label>
               <label>
                 ZIP Code
-                <input type="text" name="shippingZip" placeholder="48201" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}(-[0-9]{4})?" required />
+                <input type="text" name="shippingZip" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}(-[0-9]{4})?" required />
               </label>
             </div>
             <label>
               Order Notes (Optional)
-              <textarea name="customerNotes" rows="5" placeholder="can i pay by venmo"></textarea>
+              <textarea name="customerNotes" rows="5"></textarea>
             </label>
             <div class="purchase-actions checkout-actions">
               <button class="button primary purchase-button" type="submit">Submit Order Request</button>
