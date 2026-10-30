@@ -167,11 +167,6 @@ function getCardStockLabel(product) {
   return 'Check availability';
 }
 
-function renderCardCoa(product) {
-  if (!siteLibrary?.getCoaImageForSlug?.(product.slug)) return '';
-  return `<a class="card-coa-link" href="${getProductUrl(product.slug)}#product-coa" aria-label="View ${escapeHtml(getCardTitle(product))} test report">View test report</a>`;
-}
-
 function getLowestOfferedPrice(product) {
   const candidates = [];
   (product.options || []).forEach((option) => {
@@ -272,7 +267,6 @@ function renderFeatured() {
           <a data-product-slug="${escapeHtml(product.slug)}" href="${productUrl}">View options <span aria-hidden="true">&rarr;</span></a>
         </div>
       </div>
-      ${renderCardCoa(product)}
       </article>`;
   }).join('');
 }
@@ -351,7 +345,7 @@ function renderCatalog() {
           <span class="card-availability">${escapeHtml(getCardStockLabel(product))}</span>
           <span class="catalog-link">View product</span>
         </div>
-      </a>${renderCardCoa(product)}
+      </a>
       </article>`;
   }).join('');
 }
