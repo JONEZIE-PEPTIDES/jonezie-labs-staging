@@ -7147,8 +7147,9 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .catalog-grid .catalog-card .card-from-price { font-size: 0.9rem; }
 }
 
-/* Home picks share the clear, two-action layout of product-page recommendations. */
-.featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+/* Home picks and the full catalog share one responsive card layout. */
+.featured-grid,
+.catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .featured-shop-card {
   min-width: 0;
   border-color: rgba(146, 239, 210, 0.23);
@@ -7261,8 +7262,13 @@ body.product-sticky-visible { padding-bottom: 100px; }
 .button.primary.product-sticky-action:focus-visible { filter: brightness(1.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 rgba(17, 83, 66, 0.18), 0 10px 17px rgba(17, 83, 66, 0.22); }
 .button.primary.product-sticky-action:active { transform: translateY(1px); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.13), 0 1px 2px rgba(17, 83, 66, 0.16); }
 .button.primary.product-sticky-action:disabled { filter: none; transform: none; box-shadow: none; }
+@media (max-width: 1023px) {
+  .featured-grid,
+  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 640px) {
-  .featured-grid { gap: 10px; }
+  .featured-grid,
+  .catalog-grid { gap: 10px; }
   .featured-card-image > img,
   .featured-card-image .product-card-media { height: clamp(132px, 38vw, 180px); }
   .featured-shop-card .product-copy { padding: 13px 11px 14px; }
@@ -7283,7 +7289,10 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .product-sticky-bar .product-sticky-action { width: calc(100% - 12px); max-width: 420px; justify-self: center; }
 }
 @media (max-width: 360px) {
-  .featured-grid { gap: 8px; }
+  .featured-grid,
+  .catalog-grid { grid-template-columns: 1fr; gap: 12px; }
+  .featured-card-image > img,
+  .featured-card-image .product-card-media { height: 220px; }
   .featured-shop-card .product-copy { padding: 11px 9px 12px; }
   .featured-shop-card h3 { font-size: 0.93rem; }
   .featured-shop-card .card-from-price { font-size: 1.1rem; }
