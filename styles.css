@@ -7065,3 +7065,17 @@ body.product-sticky-visible { padding-bottom: 100px; }
   .checkout-item-topline strong { font-size: 1rem; }
   .checkout-item-controls { grid-column: 1 / -1; }
 }
+
+/* Balance the mobile header around the centered Jonezie wordmark. */
+@media (max-width: 860px) {
+  .site-header-home .menu-toggle { right: auto; left: 16px; }
+  .site-header-home .mobile-cart-shortcut { right: 16px; }
+  .site-header-home .brand-dropdown { min-width: 0; justify-content: center; }
+  .site-header-home .brand-master-link { margin: 0; transform: none; }
+  .site-header-home .brand-master-logo { height: 56px; max-width: min(49vw, 170px); }
+}
+@media (max-width: 360px) {
+  .site-header-home .menu-toggle { left: 12px; width: 44px; height: 44px; }
+  .site-header-home .mobile-cart-shortcut { right: 12px; width: 44px; height: 44px; }
+  .site-header-home .brand-master-logo { height: 50px; max-width: min(48vw, 150px); }
+}
