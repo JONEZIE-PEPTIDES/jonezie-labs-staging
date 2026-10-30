@@ -285,7 +285,7 @@ function renderShopCard(product, index, prioritizeImage = false, selectionOverri
 function renderFeatured() {
   const grid = document.querySelector('[data-featured-grid]');
   if (!grid || !catalogData) return;
-  grid.innerHTML = (catalogData.featured || []).filter(Boolean)
+  grid.innerHTML = (catalogData.featured || []).filter((product) => product && !product.hideUntilNewImage)
     .map((product, index) => renderShopCard(product, index, true)).join('');
 }
 
@@ -330,6 +330,7 @@ function renderCatalog() {
   const format = document.querySelector('[data-catalog-format]')?.value || '';
   const products = [...(catalogData.products || [])]
     .filter((product) => {
+      if (product.hideUntilNewImage) return false;
       const options = product.options || [];
       const searchTerms = [getCardTitle(product), product.name, product.sourceName, product.slug, ...(product.searchAliases || []), ...options.map((option) => option.mgOption)]
         .filter(Boolean).join(' ').toLowerCase();
@@ -354,7 +355,7 @@ function renderCatalog() {
 function initCatalogControls() {
   const strengthSelect = document.querySelector('[data-catalog-strength]');
   if (!strengthSelect || !catalogData) return;
-  const strengths = [...new Set((catalogData.products || []).flatMap((product) =>
+  const strengths = [...new Set((catalogData.products || []).filter((product) => !product.hideUntilNewImage).flatMap((product) =>
     (product.options || []).map((option) => option.mgOption).filter(Boolean)))];
   strengths.sort((a, b) => (parsePrice(a) || 0) - (parsePrice(b) || 0) || a.localeCompare(b));
   strengthSelect.insertAdjacentHTML('beforeend', strengths.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join(''));
@@ -396,11 +397,12 @@ function handlePromoUpdated(event) {
 
 function renderCounts() {
   if (!catalogData) return;
+  const visibleProducts = (catalogData.products || []).filter((product) => !product.hideUntilNewImage);
   document.querySelectorAll('[data-total-products]').forEach((node) => {
-    node.textContent = String(catalogData.totalProducts || 0);
+    node.textContent = String(visibleProducts.length);
   });
   document.querySelectorAll('[data-total-configurations]').forEach((node) => {
-    node.textContent = String(catalogData.totalConfigurations || 0);
+    node.textContent = String(visibleProducts.reduce((total, product) => total + (product.options || []).length, 0));
   });
 }
 

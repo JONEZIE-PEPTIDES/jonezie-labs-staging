@@ -25,7 +25,7 @@
   const products = [];
   const seen = new Set();
   [...(catalog?.featured || []), ...(catalog?.products || [])].forEach((product) => {
-    if (!product?.slug || seen.has(product.slug)) return;
+    if (!product?.slug || product.hideUntilNewImage || seen.has(product.slug)) return;
     seen.add(product.slug);
     const name = library?.getProductDisplayName?.(product) || product.name;
     products.push({

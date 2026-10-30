@@ -484,7 +484,7 @@ window.JONEZIE_SITE_LIBRARY = (() => {
     const products = [];
     const seen = new Set();
     [...(catalog?.featured || []), ...(catalog?.products || [])].forEach((product) => {
-      if (!product?.slug || seen.has(product.slug)) return;
+      if (!product?.slug || product.hideUntilNewImage || seen.has(product.slug)) return;
       seen.add(product.slug);
       products.push(product);
     });

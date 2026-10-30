@@ -107,6 +107,8 @@
       const override = IMAGE_OVERRIDES_BY_SLUG[product?.slug];
       if (override) product.image = override;
       product.hasUpdatedLabel = approvedSlugs.has(product.slug);
+      // Keep older artwork out of discovery until an approved new label is added.
+      product.hideUntilNewImage = !product.hasUpdatedLabel;
       const displayName = DISPLAY_NAME_OVERRIDES[product?.slug];
       if (displayName) product.name = displayName;
       if (product?.slug === 'retatrutide') product.searchAliases = ['reta', 'retatrutide'];

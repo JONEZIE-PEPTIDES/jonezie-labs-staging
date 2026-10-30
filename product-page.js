@@ -284,6 +284,17 @@ function renderProductPage() {
   const product = (catalogData.products || []).find((item) => item.slug === slug)
     || (catalogData.featured || []).find((item) => item.slug === slug);
   if (!product) return;
+  if (product.hideUntilNewImage) {
+    let robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.append(robots);
+    }
+    robots.content = 'noindex, nofollow';
+    window.location.replace(new URL(window.location.pathname.includes('/products/') ? '../catalog.html' : 'catalog.html', window.location.href));
+    return;
+  }
   const displayName = siteLibrary?.getProductDisplayName?.(product) || product.name;
 
   const firstAvailableOption = product.options.find((option) => getInventoryStatus(option) !== 'sold_out');
