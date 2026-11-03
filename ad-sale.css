@@ -1,0 +1,53 @@
+/* The automatic fall offer is scoped to the ad entry, store, product, and checkout path. */
+body.ad-sale-mode .ad-offer {
+  border-color: rgba(150, 239, 209, .43);
+  background: radial-gradient(circle at 85% 15%, rgba(146, 239, 210, .17), transparent 38%),
+    linear-gradient(130deg, #0c2630, #102b32 54%, #241827);
+}
+body.ad-sale-mode .ad-offer strong { color: #a7f3d9; }
+body.ad-sale-mode .ad-card-pricing { gap: 2px; }
+body.ad-sale-mode .ad-card-original { color: #a5b9bc; font-size: .76rem; }
+body.ad-sale-mode .ad-card-original s { text-decoration-color: #ed79ad; text-decoration-thickness: 1.5px; }
+body.ad-sale-mode .ad-card-sale {
+  color: #a5f2d8;
+  font: 700 clamp(1.25rem, 2vw, 1.55rem)/1.1 "Space Grotesk", sans-serif;
+  letter-spacing: -.03em;
+}
+body.ad-sale-mode .ad-card-sale-note { color: #ffa4c9; font-size: .68rem; font-weight: 700; line-height: 1.3; }
+body.ad-sale-mode .ad-product-offer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 13px;
+  margin: 16px 0 20px;
+  padding: 13px 16px;
+  border: 1px solid rgba(146, 239, 210, .37);
+  border-radius: 15px;
+  background: linear-gradient(115deg, rgba(51, 145, 126, .18), rgba(255, 115, 179, .10));
+  box-shadow: inset 0 1px rgba(255,255,255,.06);
+}
+body.ad-sale-mode .ad-product-offer b { color: #a4f3d7; font: 700 .88rem "Space Grotesk", sans-serif; }
+body.ad-sale-mode .ad-product-offer span { color: #c6d8da; font-size: .79rem; line-height: 1.4; }
+body.ad-sale-mode .ad-price-pair { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 3px 8px; }
+body.ad-sale-mode .ad-price-pair s { color: #9db0b4; font-size: .75em; font-weight: 500; text-decoration-color: #f587b9; }
+body.ad-sale-mode .ad-price-pair strong { color: #a3f3d8; font: inherit; }
+body.ad-sale-mode .product-choice-group .pack-choice .ad-price-pair { display: flex; }
+body.ad-sale-mode .product-choice-group .pack-choice .ad-price-pair strong { font-weight: 700; }
+body.ad-sale-mode .product-choice-group .selection-summary .ad-price-pair { justify-content: flex-end; }
+body.ad-sale-mode .product-choice-group .selection-summary .ad-price-pair strong { color: #a3f3d8; }
+body.ad-sale-mode .checkout-promo input { display: none; }
+body.ad-sale-mode .checkout-promo {
+  border: 1px solid rgba(146, 239, 210, .36);
+  border-radius: 15px;
+  padding: 14px 16px;
+  background: linear-gradient(110deg, rgba(68, 165, 139, .14), rgba(240, 99, 166, .07));
+}
+body.ad-sale-mode .checkout-promo label { color: #a4f3d7; }
+body.ad-sale-mode .checkout-promo p { margin-bottom: 0; line-height: 1.45; }
+body.ad-sale-mode .ad-checkout-price { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 3px 8px; }
+body.ad-sale-mode .ad-checkout-price s { color: #9db0b4; font-size: .75em; font-weight: 500; text-decoration-color: #f587b9; }
+body.ad-sale-mode .ad-checkout-price strong { color: #a3f3d8; font: inherit; }
+@media (max-width: 680px) {
+  body.ad-sale-mode .product-choice-group .pack-choice .ad-price-pair { flex-direction: column; align-items: flex-start; gap: 0; }
+  body.ad-sale-mode .ad-card-sale-note { font-size: .63rem; }
+}

@@ -1,18 +1,4 @@
 (() => {
-  const offer = window.JONEZIE_PROMO?.getActivePromo?.();
-  if (offer?.code && Number.isFinite(Number(offer.rate))) {
-    const headline = document.querySelector('.ad-offer strong');
-    const detail = document.querySelector('.ad-offer > div > span:last-child');
-    if (headline) headline.textContent = `${Math.round(Number(offer.rate) * 100)}% off eligible products`;
-    if (detail) {
-      detail.textContent = '';
-      detail.append('Use code ');
-      const code = document.createElement('b');
-      code.textContent = String(offer.code);
-      detail.append(code, ' at checkout. Shipping is excluded.');
-    }
-  }
-
   // Keep this campaign page's navigation focused after the shared nav script runs.
   const focusNavigation = () => {
     const links = [
@@ -42,7 +28,7 @@
   const campaign = new URLSearchParams(location.search);
   const allowed = Array.from(campaign.entries()).filter(([key]) =>
     /^utm_[a-z0-9_]+$/i.test(key) || ['ttclid', 'gclid', 'fbclid'].includes(key.toLowerCase()));
-  if (!allowed.length) return;
+
   document.addEventListener('click', (event) => {
     const link = event.target.closest('a[href]');
     if (!link || link.getAttribute('href')?.startsWith('#')) return;
@@ -51,6 +37,6 @@
     allowed.forEach(([key, value]) => {
       if (!destination.searchParams.has(key)) destination.searchParams.set(key, value);
     });
-    link.href = destination.href;
+    link.href = window.JONEZIE_PROMO?.withAdSale?.(destination.href) || destination.href;
   }, true);
 })();

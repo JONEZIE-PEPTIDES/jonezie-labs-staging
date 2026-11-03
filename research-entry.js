@@ -1,12 +1,4 @@
 (() => {
-  const offer = window.JONEZIE_PROMO?.getActivePromo?.();
-  if (offer?.code && Number.isFinite(Number(offer.rate))) {
-    const headline = document.querySelector('[data-entry-offer]');
-    const code = document.querySelector('[data-entry-code]');
-    if (headline) headline.textContent = `${Math.round(Number(offer.rate) * 100)}% off eligible products`;
-    if (code) code.textContent = String(offer.code);
-  }
-
   const link = document.querySelector('[data-entry-link]');
   if (!link) return;
   const destination = new URL(link.href, location.href);

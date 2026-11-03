@@ -15,6 +15,12 @@ const successCard = document.querySelector('[data-checkout-success]');
 const clearCartButton = document.querySelector('[data-clear-cart]');
 const promoCodeInput = document.querySelector('[data-promo-code]');
 const activePromoCopy = document.querySelector('[data-active-promo-copy]');
+const AD_SALE_MODE = Boolean(window.JONEZIE_PROMO?.isAdSaleContext?.());
+if (AD_SALE_MODE && promoCodeInput) {
+  promoCodeInput.value = '';
+  promoCodeInput.disabled = true;
+  promoCodeInput.closest('.checkout-promo')?.querySelector('label')?.replaceChildren('Automatic Fall Sale');
+}
 const shippingMethodInput = document.querySelector('[data-shipping-method]');
 const shippingHelp = document.querySelector('[data-shipping-help]');
 const PRODUCT_FALLBACK_IMAGE = 'product-placeholder.svg';
@@ -457,6 +463,11 @@ function getInventoryLabel(status) {
 }
 
 function getPromoDetails() {
+  if (AD_SALE_MODE) {
+    return { code: 'FALL40-AUTO', rate: 0.40, freeShipping: false,
+      firstOrderOnly: false, eligiblePackKeys: null, eligibleVariants: null,
+      auto: true, isValid: true };
+  }
   const rawCode = String(promoCodeInput?.value || '').trim().toUpperCase();
   const promo = PROMO_CODES[rawCode] || null;
   const isValid = Boolean(promo) && isPromoCurrentlyActive(promo);
@@ -469,6 +480,29 @@ function getPromoDetails() {
     eligibleVariants: isValid ? promo?.eligibleVariants || null : null,
     isValid
   };
+}
+
+function isAdSaleEligibleItem(item) {
+  const product = window.JONEZIE_CATALOG?.products?.find((entry) => entry.slug === item.slug);
+  if (!product || product.hideUntilNewImage) return false;
+  const option = product.options?.find((entry) => entry.code === item.code)
+    || product.options?.find((entry) => entry.mgOption === item.mgOption);
+  const packKey = item.packKey || ({ 'single vial': 'singleVialPrice', '8-kit': 'eightVialPrice',
+    '8-vial kit': 'eightVialPrice', 'full 10-kit': 'tenVialPrice',
+    '10-vial pack': 'tenVialPrice' })[String(item.packLabel || '').toLowerCase()];
+  if (!option || !packKey || !option[packKey]) return false;
+  const regularCents = Math.round(Number(String(option[packKey]).replace(/[$,]/g, '')) * 100);
+  return regularCents > 0 && regularCents === Math.round(Number(item.unitPrice) * 100);
+}
+
+function getAdSaleLineTotal(item, quantity = item.quantity) {
+  return window.JONEZIE_PROMO.getAdSaleUnitPrice(item.unitPrice) * quantity;
+}
+
+function renderCheckoutItemPrice(item, quantity = 1) {
+  if (!AD_SALE_MODE || !isAdSaleEligibleItem(item)) return formatMoney(item.unitPrice * quantity);
+  return '<span class="ad-checkout-price"><s>' + formatMoney(item.unitPrice * quantity)
+    + '</s><strong>' + formatMoney(getAdSaleLineTotal(item, quantity)) + '</strong></span>';
 }
 
 function isPromoEligibleItem(item, promo) {
@@ -490,6 +524,15 @@ function isPromoEligibleItem(item, promo) {
 
 function getPromoDiscount(cart, promo) {
   if (!promo?.isValid) return 0;
+  if (promo.auto) {
+    const discountCents = cart.reduce((sum, item) => {
+      if (!isAdSaleEligibleItem(item)) return sum;
+      const regularCents = Math.round(item.unitPrice * 100);
+      const saleCents = Math.round(window.JONEZIE_PROMO.getAdSaleUnitPrice(item.unitPrice) * 100);
+      return sum + (regularCents - saleCents) * item.quantity;
+    }, 0);
+    return discountCents / 100;
+  }
   if (!promo.eligibleVariants) {
     return cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) * promo.rate;
   }
@@ -504,6 +547,11 @@ function getPromoDiscount(cart, promo) {
 
 function renderPromoStatus(promo, cart = []) {
   if (!activePromoCopy) return;
+  if (promo.auto) {
+    activePromoCopy.innerHTML = '<strong>40% off products in this store is applied automatically.</strong> No code needed; additional offers cannot be combined.';
+    activePromoCopy.dataset.state = 'valid';
+    return;
+  }
   if (!promo.code) {
     const activePromo = window.JONEZIE_PROMO?.getActivePromo?.();
     const activeCode = activePromo?.code || 'FALL25';
@@ -796,7 +844,7 @@ function renderCart() {
       <div class="empty-cart-card">
         <h2>Your cart is empty.</h2>
         <p>Go back to the catalog, choose a product option, and add it to cart to begin checkout.</p>
-        <a class="button primary" href="catalog.html">Browse Catalog</a>
+        <a class="button primary" href="${AD_SALE_MODE ? 'research-store.html?ad=fall40#full-catalog' : 'catalog.html'}">Browse Catalog</a>
       </div>`;
     renderSummaryValues({
       itemCount: 0,
@@ -832,9 +880,9 @@ function renderCart() {
     <article class="checkout-item-card">
       <div class="checkout-item-visual"><img src="${escapeHtml(getCartImage(item))}" alt="${escapeHtml(getCartDisplayName(item))} product image" onerror="this.onerror=null;this.src='${PRODUCT_FALLBACK_IMAGE}'" /></div>
       <div class="checkout-item-copy">
-        <div class="checkout-item-topline"><h2>${escapeHtml(getCartDisplayName(item))}</h2><strong>${formatMoney(item.unitPrice * item.quantity)}</strong></div>
+        <div class="checkout-item-topline"><h2>${escapeHtml(getCartDisplayName(item))}</h2><strong>${renderCheckoutItemPrice(item, item.quantity)}</strong></div>
         <p class="checkout-item-variant">${escapeHtml(item.mgOption)} · ${escapeHtml(item.packLabel)}</p>
-        <p class="checkout-item-unit">${formatMoney(item.unitPrice)} each · ${escapeHtml(getInventoryLabel(item.inventoryStatus))}</p>
+        <p class="checkout-item-unit">${renderCheckoutItemPrice(item)} each · ${escapeHtml(getInventoryLabel(item.inventoryStatus))}</p>
         ${item.backorderNote ? `<p class="checkout-item-note">${escapeHtml(item.backorderNote)}</p>` : ''}
       </div>
       <div class="checkout-item-controls">
@@ -919,7 +967,8 @@ function buildOrderRequestPayload({
       shippingZip: String(zipCode || '').trim(),
       shippingAddress
     },
-    promoCode: promo.isValid && (!promo.eligibleVariants || discountAmount > 0) ? promo.code : '',
+    promoCode: promo.isValid && (!promo.auto || discountAmount > 0) &&
+      (!promo.eligibleVariants || discountAmount > 0) ? promo.code : '',
     notes: String(notes || '').trim(),
     shippingMethod: shippingOption ? {
       id: shippingOption.id,
@@ -940,20 +989,25 @@ function buildOrderRequestPayload({
       estimatedTotal: total,
       estimatedTotalDisplay: formatMoney(total)
     },
-    items: cart.map((item) => ({
-      slug: item.slug,
-      name: item.name,
-      code: item.code,
-      mgOption: item.mgOption,
-      packLabel: item.packLabel,
-      quantity: item.quantity,
-      inventoryStatus: getInventoryLabel(item.inventoryStatus),
-      backorderNote: String(item.backorderNote || '').trim(),
-      unitPrice: item.unitPrice,
-      unitPriceDisplay: item.unitPriceDisplay,
-      lineTotal: item.unitPrice * item.quantity,
-      lineTotalDisplay: formatMoney(item.unitPrice * item.quantity)
-    })),
+    items: cart.map((item) => {
+      const saleUnitPrice = promo.auto && isAdSaleEligibleItem(item)
+        ? window.JONEZIE_PROMO.getAdSaleUnitPrice(item.unitPrice) : item.unitPrice;
+      return {
+        slug: item.slug,
+        name: item.name,
+        code: item.code,
+        mgOption: item.mgOption,
+        packLabel: item.packLabel,
+        quantity: item.quantity,
+        inventoryStatus: getInventoryLabel(item.inventoryStatus),
+        backorderNote: String(item.backorderNote || '').trim(),
+        unitPrice: saleUnitPrice,
+        unitPriceDisplay: formatMoney(saleUnitPrice),
+        regularUnitPrice: promo.auto ? item.unitPrice : undefined,
+        lineTotal: saleUnitPrice * item.quantity,
+        lineTotalDisplay: formatMoney(saleUnitPrice * item.quantity)
+      };
+    }),
     includedWithOrder: [
       'Free vial cap cover',
     ],

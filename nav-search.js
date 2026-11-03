@@ -201,7 +201,8 @@
   }
 
   function navigateToSlug(slug) {
-    window.location.href = library?.getProductUrl ? library.getProductUrl(slug) : `products/${encodeURIComponent(slug)}.html`;
+    const url = library?.getProductUrl ? library.getProductUrl(slug) : `products/${encodeURIComponent(slug)}.html`;
+    window.location.href = window.JONEZIE_PROMO?.withAdSale?.(url) || url;
   }
 
   function escapeHtml(value) {

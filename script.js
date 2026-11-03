@@ -190,7 +190,7 @@ function normalizeCardPromo(promo) {
   const code = String(promo?.code || '').trim();
   const rate = Number(promo?.rate || 0);
   if (!code || !Number.isFinite(rate) || rate <= 0) return null;
-  return { code, rate };
+  return { code, rate, auto: Boolean(promo?.auto) };
 }
 
 function getActiveCardPromo() {
@@ -208,6 +208,13 @@ function renderCardPricing(product, selectedPrice) {
   const price = selectedPrice || getLowestOfferedPrice(product);
   if (!price) return '<span class="catalog-price-rule">View all pricing</span>';
   const promo = getActiveCardPromo();
+  if (promo?.auto) {
+    const original = parsePrice(price);
+    const sale = window.JONEZIE_PROMO.getAdSaleUnitPrice(original);
+    return '<div class="card-pricing ad-card-pricing"><span class="ad-card-original">Regular <s>'
+      + escapeHtml(price) + '</s></span><strong class="ad-card-sale">$' + sale.toFixed(2)
+      + '</strong><span class="ad-card-sale-note">40% off · applied automatically</span></div>';
+  }
   const promoPrice = promo ? formatDiscountedPrice(price, promo.rate) : '';
   const promoLine = promoPrice
     ? `<span class="card-promo-price">${escapeHtml(promoPrice)} with code ${escapeHtml(promo.code)}</span>`

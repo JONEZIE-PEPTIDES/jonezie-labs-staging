@@ -117,8 +117,14 @@
   font: 700 clamp(2.25rem, 4.5vw, 4.2rem)/1.02 "Space Grotesk", sans-serif;
   letter-spacing: -.055em;
 }
+.entry-offer strong em {
+  color: #96efd1;
+  font-style: normal;
+  text-shadow: 0 4px 24px rgba(146, 239, 210, .28);
+}
 .entry-offer p { margin: 0; color: #c5d9dc; font-size: .9rem; }
 .entry-offer b { color: #ffa1c8; }
+.entry-offer small { color: #a7bdc1; font-size: .72rem; }
 .entry-button {
   display: flex;
   align-items: center;

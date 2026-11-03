@@ -296,6 +296,14 @@ function renderProductPage() {
     return;
   }
   const displayName = siteLibrary?.getProductDisplayName?.(product) || product.name;
+  const adSale = Boolean(window.JONEZIE_PROMO?.isAdSaleContext?.());
+  const adSalePrice = (price) => window.JONEZIE_PROMO.getAdSaleUnitPrice(price);
+  const adPriceMarkup = (price, quantity = 1) => {
+    const regular = parsePrice(price);
+    if (!adSale || regular === null) return escapeHtml(String(price));
+    return '<span class="ad-price-pair"><s>' + formatMoney(regular * quantity)
+      + '</s><strong>' + formatMoney(adSalePrice(regular) * quantity) + '</strong></span>';
+  };
 
   const firstAvailableOption = product.options.find((option) => getInventoryStatus(option) !== 'sold_out');
   let selectedOption = firstAvailableOption || product.options[0] || null;
@@ -307,6 +315,9 @@ function renderProductPage() {
   const titleNode = document.querySelector('[data-product-title]');
   const eyebrowNode = document.querySelector('[data-product-category]');
   const descriptionNode = document.querySelector('[data-product-description]');
+  if (adSale && descriptionNode) {
+    descriptionNode.insertAdjacentHTML('afterend', '<div class="ad-product-offer"><b>Fall sale · 40% off</b><span>Shown below and applied automatically at checkout. No code needed.</span></div>');
+  }
   const heroImageNode = document.querySelector('[data-product-hero-image]');
   const optionsGrid = document.querySelector('[data-product-options]');
   const highlightsGrid = document.querySelector('[data-product-highlights]');
@@ -561,7 +572,7 @@ function renderProductPage() {
     packPicker.innerHTML = packs.map((pack) => `
       <button type="button" class="pack-choice${pack.key === selectedPackKey ? ' is-selected' : ''}" data-pack-key="${pack.key}">
         <span>${pack.label}</span>
-        <strong>${escapeHtml(pack.price)}</strong>
+        <strong>${adPriceMarkup(pack.price)}</strong>
       </button>`).join('');
 
     packPicker.querySelectorAll('[data-pack-key]').forEach((button) => {
@@ -598,8 +609,14 @@ function renderProductPage() {
         selectedSubtitle.textContent = `${selectedOption.mgOption} · ${packLabel} · In stock`;
       }
     }
-    if (selectedPrice) selectedPrice.textContent = isSoldOut ? 'Sold Out' : (unitPrice !== null ? formatMoney(unitPrice) : 'Pending');
-    if (selectedTotal) selectedTotal.textContent = isSoldOut ? 'Sold Out' : (total !== null ? formatMoney(total) : 'Pending');
+    if (selectedPrice) {
+      if (adSale && !isSoldOut && unitPrice !== null) selectedPrice.innerHTML = adPriceMarkup(unitPrice);
+      else selectedPrice.textContent = isSoldOut ? 'Sold Out' : (unitPrice !== null ? formatMoney(unitPrice) : 'Pending');
+    }
+    if (selectedTotal) {
+      if (adSale && !isSoldOut && unitPrice !== null) selectedTotal.innerHTML = adPriceMarkup(unitPrice, quantity);
+      else selectedTotal.textContent = isSoldOut ? 'Sold Out' : (total !== null ? formatMoney(total) : 'Pending');
+    }
 
     const disabled = unitPrice === null || isSoldOut;
     if (addToCartButton) addToCartButton.disabled = disabled;
@@ -652,7 +669,7 @@ function renderProductPage() {
   function syncStickyBar() {
     const item = getSelectedCartItem();
     if (stickySelection) stickySelection.textContent = item ? `${item.mgOption} · ${item.packLabel} · Qty ${item.quantity}` : 'Choose an available option';
-    if (stickyTotal) stickyTotal.textContent = item ? formatMoney(item.unitPrice * item.quantity) : 'Unavailable';
+    if (stickyTotal) stickyTotal.textContent = item ? formatMoney((adSale ? adSalePrice(item.unitPrice) : item.unitPrice) * item.quantity) : 'Unavailable';
     if (stickyAction) {
       stickyAction.disabled = !item;
       stickyAction.textContent = item && lastAddedSelectionKey === cartSelectionKey(item) ? 'Go to checkout' : 'Add to cart';
@@ -717,7 +734,7 @@ function renderProductPage() {
       window.JONEZIE_ANALYTICS?.addToCart(item);
     }
     window.JONEZIE_ANALYTICS?.beginCheckout(getCart());
-    window.location.href = 'checkout.html';
+    window.location.href = window.JONEZIE_PROMO?.withAdSale?.('checkout.html') || 'checkout.html';
   });
 
   if (highlightsGrid) {
@@ -755,7 +772,7 @@ function renderProductPage() {
               </a>
               <div class="product-related-content">
                 <a class="product-related-name" href="${escapeHtml(href)}">${escapeHtml(name)}</a>
-                ${pack ? `<p class="product-related-selection">${escapeHtml(option.mgOption)} · ${escapeHtml(pack.label)}<strong>${escapeHtml(pack.price)}</strong></p>` : '<p class="product-related-selection">View available options</p>'}
+                ${pack ? `<p class="product-related-selection">${escapeHtml(option.mgOption)} · ${escapeHtml(pack.label)}<strong>${adPriceMarkup(pack.price)}</strong></p>` : '<p class="product-related-selection">View available options</p>'}
                 <div class="product-related-actions">
                   ${pack ? `<button type="button" data-related-add="${escapeHtml(relatedProduct.slug)}">+ Add to cart</button>` : ''}
                   <a href="${escapeHtml(href)}">View options &rarr;</a>

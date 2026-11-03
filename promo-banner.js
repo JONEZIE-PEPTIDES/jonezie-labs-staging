@@ -5,6 +5,75 @@
     freeShipping: false,
     message: 'Use code FALL25 for 25% off'
   };
+  const AD_FALL_SALE = {
+    code: 'FALL40-AUTO',
+    rate: 0.40,
+    freeShipping: false,
+    auto: true,
+    message: 'Fall sale · 40% off automatically'
+  };
+
+  function isAdSaleContext() {
+    const path = window.location.pathname;
+    if (/(^|\/)research-(entry|store)\.html$/.test(path)) return true;
+    if (new URLSearchParams(window.location.search).get('ad') !== 'fall40') return false;
+    return /\/products\/[^/]+\.html$|\/product\.html$|\/checkout\.html$/.test(path);
+  }
+
+  function withAdSale(url) {
+    if (!isAdSaleContext()) return url;
+    const target = new URL(url, document.baseURI);
+    if (target.origin !== window.location.origin) return url;
+    if (!/\/products\/[^/]+\.html$|\/product\.html$|\/checkout\.html$|\/research-store\.html$/.test(target.pathname)) return url;
+    target.searchParams.set('ad', 'fall40');
+    const current = new URLSearchParams(window.location.search);
+    for (const [key, value] of current) {
+      if (/^utm_[a-z0-9_]+$/i.test(key) || ['ttclid', 'gclid', 'fbclid'].includes(key.toLowerCase())) {
+        if (!target.searchParams.has(key)) target.searchParams.set(key, value);
+      }
+    }
+    return target.href;
+  }
+
+  function getAdSaleUnitPrice(price) {
+    const unitCents = Math.round(Number(price) * 100);
+    if (!Number.isFinite(unitCents) || unitCents < 0) return 0;
+    return Math.round(unitCents * (1 - AD_FALL_SALE.rate)) / 100;
+  }
+
+  if (isAdSaleContext()) {
+    document.body.classList.add('ad-sale-mode');
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = 'ad-sale.css?v=20261103adfall40';
+    document.head.appendChild(style);
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest?.('a[href]');
+      if (!link) return;
+      link.href = withAdSale(link.href);
+    }, true);
+    if (/\/products\/[^/]+\.html$|\/product\.html$|\/checkout\.html$/.test(window.location.pathname)) {
+      const focusAdLinks = () => {
+        document.querySelectorAll('a[href]').forEach((link) => {
+          const target = new URL(link.href, document.baseURI);
+          if (target.origin !== window.location.origin) return;
+          if (/\/(research-guides|comparison)\.html$/.test(target.pathname)) {
+            link.remove();
+          } else if (/\/catalog\.html$/.test(target.pathname)) {
+            link.href = withAdSale('research-store.html#full-catalog');
+          } else if (/\/index\.html$/.test(target.pathname) &&
+            ['', '#top', '#featured', '#full-catalog'].includes(target.hash)) {
+            link.href = withAdSale('research-store.html');
+          }
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(focusAdLinks), { once: true });
+      } else {
+        requestAnimationFrame(focusAdLinks);
+      }
+    }
+  }
 
   const USA250_PROMO = {
     code: 'USA250',
@@ -33,6 +102,7 @@
   }
 
   function getActivePromo(now = Date.now()) {
+    if (isAdSaleContext()) return AD_FALL_SALE;
     if (isPromoActive(USA250_PROMO, now)) return USA250_PROMO;
     if (isPromoActive(MEMORIAL_DAY_PROMO, now)) return MEMORIAL_DAY_PROMO;
     return applyTemporaryRate(DEFAULT_PROMO, now);
@@ -68,13 +138,15 @@
   function renderPromoCopy() {
     const activePromo = getActivePromo();
     document.querySelectorAll('.promo-track span').forEach((span) => {
-      if (span.textContent.includes('Use code') || span.textContent.includes('Memorial Day sale')) {
+      if (span.textContent.includes('Use code') || span.textContent.includes('Memorial Day sale') || span.textContent.includes('Fall sale')) {
         span.textContent = activePromo.message;
       }
     });
 
     const checkoutPromoCopy = document.querySelector('[data-active-promo-copy]');
-    if (checkoutPromoCopy) {
+    if (checkoutPromoCopy && activePromo.auto) {
+      checkoutPromoCopy.innerHTML = '<strong>Fall sale: 40% off automatically applied.</strong> Other codes cannot be combined.';
+    } else if (checkoutPromoCopy) {
       checkoutPromoCopy.innerHTML = `Active code: <strong>${activePromo.code}</strong> (${Math.round(activePromo.rate * 100)}% off)`;
     }
 
@@ -83,19 +155,24 @@
         code: activePromo.code,
         rate: activePromo.rate,
         message: activePromo.message,
-        freeShipping: activePromo.freeShipping
+        freeShipping: activePromo.freeShipping,
+        auto: Boolean(activePromo.auto)
       }
     }));
   }
 
   window.JONEZIE_PROMO = {
     DEFAULT_PROMO,
+    AD_FALL_SALE,
     USA250_PROMO,
     MEMORIAL_DAY_PROMO,
     getActivePromo,
     getPromoByCode,
     isPromoActive,
-    applyTemporaryRate
+    applyTemporaryRate,
+    isAdSaleContext,
+    withAdSale,
+    getAdSaleUnitPrice
   };
 
   if (document.readyState === 'loading') {
