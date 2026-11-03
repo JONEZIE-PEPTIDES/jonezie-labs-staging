@@ -50,34 +50,26 @@
   aspect-ratio: 3 / 1;
   object-fit: contain;
 }
-.entry-kicker {
-  margin: 18px 0 17px;
-  color: #397271;
-  font-size: .74rem;
-  font-weight: 800;
-  letter-spacing: .17em;
+.entry-panel h1 {
+  margin: 22px 0 0;
+  color: #28494d;
+  font: 800 clamp(.92rem, 1.55vw, 1.18rem)/1.35 "Manrope", sans-serif;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
-.entry-panel h1 {
-  margin: 0;
-  color: #18272e;
-  font: 700 clamp(3rem, 6.3vw, 6rem)/.99 "Space Grotesk", sans-serif;
-  letter-spacing: -.07em;
-}
-.entry-panel h1 em { color: #ec5ba1; font-style: normal; }
 .entry-lead {
   max-width: 640px;
-  margin: 22px auto 0;
+  margin: 13px auto 0;
   color: #5b6a70;
-  font-size: clamp(.94rem, 1.25vw, 1.08rem);
-  line-height: 1.65;
+  font-size: clamp(.88rem, 1.15vw, 1rem);
+  line-height: 1.55;
 }
 .entry-details {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 9px;
-  margin: 28px 0;
+  margin: 25px 0 30px;
 }
 .entry-details > div {
   display: inline-flex;
@@ -156,42 +148,6 @@
   font-size: .75rem;
   line-height: 1.6;
 }
-.entry-payment {
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  margin-top: 35px;
-  padding-top: 26px;
-  border-top: 1px solid #e5e6df;
-}
-.entry-payment > span {
-  color: #50646b;
-  font-size: .71rem;
-  font-weight: 800;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-}
-.entry-payment > div {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 9px;
-}
-.entry-payment b {
-  display: inline-flex;
-  align-items: center;
-  min-height: 35px;
-  padding: 7px 14px;
-  border: 1px solid #d6e4df;
-  border-radius: 10px;
-  background: #fff;
-  color: #23383d;
-  font-size: .76rem;
-  font-weight: 800;
-}
-.entry-payment b:nth-child(2) { border-color: #bfded9; background: #effbf6; }
-.entry-payment b:nth-child(3) { border-color: #ecd1df; background: #fff2f7; }
-.entry-payment small { color: #718185; font-size: .69rem; }
 .entry-footer {
   display: flex;
   justify-content: space-between;
@@ -210,12 +166,11 @@
   .entry-topline { font-size: .58rem; letter-spacing: .1em; }
   .entry-panel { padding: 28px 20px; }
   .entry-brand img { width: min(86%, 300px); }
-  .entry-panel h1 { font-size: clamp(2.7rem, 10vw, 4rem); }
-  .entry-details { margin: 23px 0; }
+  .entry-panel h1 { font-size: .78rem; letter-spacing: .11em; }
+  .entry-details { margin: 22px 0 25px; }
   .entry-details > div { font-size: .67rem; min-height: 32px; }
   .entry-offer { border-radius: 20px; }
   .entry-button { min-height: 54px; }
-  .entry-payment { margin-top: 27px; }
   .entry-footer { justify-content: center; text-align: center; }
   .entry-footer nav { justify-content: center; }
 }

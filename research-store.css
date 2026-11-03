@@ -50,7 +50,7 @@
   flex-wrap: wrap;
   gap: 12px;
   width: 100%;
-  margin-top: 32px;
+  margin-top: 24px;
 }
 .ad-entry-actions a {
   display: inline-flex;
@@ -252,7 +252,7 @@
   .ad-entry-kicker { margin-bottom: 16px; font-size: .65rem; }
   .ad-entry h1 { max-width: 12ch; font-size: clamp(2.6rem, 10vw, 4.2rem); }
   .ad-entry-lead { margin-top: 19px; font-size: .9rem; line-height: 1.6; }
-  .ad-entry-actions { margin-top: 22px; }
+  .ad-entry-actions { margin-top: 20px; }
   .ad-entry-actions a { width: 100%; min-height: 49px; }
   .ad-entry-note { margin-top: 17px; }
   .ad-entry-visual { min-height: 320px; }
@@ -268,61 +268,39 @@
   .ad-entry-actions a { transition: none; }
   .ad-entry-actions a:hover { transform: none; }
 }
-.ad-payment-methods {
+.ad-entry-payment {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 11px 30px;
-  align-items: center;
+  gap: 9px;
+  width: 100%;
   margin-top: 22px;
-  padding: clamp(24px, 3vw, 38px);
-  border: 1px solid rgba(146, 239, 210, .18);
-  border-radius: 26px;
-  background:
-    radial-gradient(circle at right center, rgba(146, 239, 210, .08), transparent 45%),
-    #0b1c25;
+  padding: 15px 17px;
+  border: 1px solid #d7e6df;
+  border-radius: 16px;
+  background: #f1f8f3;
 }
-.ad-payment-methods > div:first-child { display: grid; gap: 6px; }
-.ad-payment-methods > div:first-child > span {
-  color: #97ebd2;
-  font-size: .7rem;
+.ad-entry-payment > span {
+  color: #3d6866;
+  font-size: .65rem;
   font-weight: 800;
   letter-spacing: .14em;
   text-transform: uppercase;
 }
-.ad-payment-methods strong {
-  color: #f6fbfc;
-  font: 700 clamp(1.25rem, 2vw, 1.85rem)/1.15 "Space Grotesk", sans-serif;
-  letter-spacing: -.035em;
-}
-.ad-payment-methods p { margin: 0; color: #a8c4c8; font-size: .84rem; }
-.ad-payment-pills {
+.ad-entry-payment > div {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
+  gap: 7px;
 }
-.ad-payment-pills span {
+.ad-entry-payment b {
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
-  padding: 8px 13px;
-  border: 1px solid rgba(181, 232, 221, .23);
-  border-radius: 10px;
-  background: rgba(151, 235, 210, .07);
-  color: #e7f7f2;
-  font-size: .76rem;
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 1px solid #d0e0da;
+  border-radius: 8px;
+  background: #fff;
+  color: #21383c;
+  font-size: .69rem;
   font-weight: 800;
 }
-.ad-payment-pills span:last-child {
-  border-color: rgba(255, 136, 189, .3);
-  background: rgba(255, 136, 189, .08);
-}
-.ad-payment-methods small {
-  grid-column: 1 / -1;
-  color: #9bb5b9;
-  font-size: .68rem;
-}
-@media (max-width: 820px) {
-  .ad-payment-methods { grid-template-columns: 1fr; }
-  .ad-payment-pills { justify-content: flex-start; }
-}
+.ad-entry-payment b:last-child { border-color: #efc6d8; background: #fff4f8; }
+.ad-entry-payment small { color: #607579; font-size: .67rem; line-height: 1.45; }
