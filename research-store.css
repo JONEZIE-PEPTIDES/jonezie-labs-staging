@@ -1,0 +1,270 @@
+/* Research store landing: scoped layout layered over the shared catalog design. */
+.ad-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  min-height: 590px;
+  overflow: hidden;
+  border: 1px solid rgba(207, 243, 235, .16);
+  border-radius: 36px;
+  background: #f9f7f2;
+  box-shadow: 0 28px 75px rgba(0, 0, 0, .24);
+}
+.ad-entry-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(34px, 5vw, 78px);
+  color: #17242a;
+}
+.ad-entry-kicker {
+  margin: 0 0 22px;
+  color: #bb377b;
+  font: 800 .73rem/1.4 "Manrope", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.ad-entry h1 {
+  max-width: 11ch;
+  margin: 0;
+  color: #17242a;
+  font: 700 clamp(3.3rem, 5.6vw, 6.8rem)/.99 "Space Grotesk", sans-serif;
+  letter-spacing: -.069em;
+}
+.ad-entry h1 em {
+  color: #e9549a;
+  font-style: normal;
+}
+.ad-entry-lead {
+  max-width: 57ch;
+  margin: 28px 0 0;
+  color: #4f6267;
+  font-size: clamp(.96rem, 1.15vw, 1.09rem);
+  line-height: 1.72;
+}
+.ad-entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  margin-top: 32px;
+}
+.ad-entry-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 54px;
+  padding: 13px 23px;
+  border-radius: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.ad-entry-actions a:hover,
+.ad-entry-actions a:focus-visible { transform: translateY(-2px); }
+.ad-entry-primary {
+  background: #91eacf;
+  box-shadow: inset 0 1px rgba(255,255,255,.7), 0 8px 20px rgba(71, 176, 143, .19);
+  color: #142b2c;
+}
+.ad-entry-secondary {
+  border: 1px solid #cad8d5;
+  background: #fff;
+  color: #26373c;
+}
+.ad-entry-note {
+  margin: 24px 0 0;
+  color: #69787b;
+  font-size: .75rem;
+  line-height: 1.55;
+}
+.ad-entry-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 57% 51%, rgba(137, 239, 213, .22), transparent 43%),
+    radial-gradient(circle at 80% 22%, rgba(255, 110, 183, .2), transparent 39%),
+    linear-gradient(145deg, #09202a, #08151d 64%, #132431);
+}
+.ad-entry-visual::before,
+.ad-entry-visual::after {
+  content: "";
+  position: absolute;
+  width: 390px;
+  height: 390px;
+  border: 1px solid rgba(182, 234, 222, .13);
+  border-radius: 50%;
+  transform: rotate(-18deg) scaleX(1.3);
+}
+.ad-entry-visual::after { width: 560px; height: 560px; opacity: .5; }
+.ad-entry-visual-glow {
+  position: absolute;
+  right: -20%;
+  bottom: -34%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 95, 169, .16);
+  filter: blur(70px);
+}
+.ad-vial {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.23);
+  border-radius: 24px;
+  box-shadow: 0 22px 65px rgba(0,0,0,.38);
+  background: #dce1e8;
+}
+.ad-vial img { width: 100%; height: 100%; object-fit: cover; }
+.ad-vial-back {
+  top: 12%;
+  right: 5%;
+  width: 44%;
+  aspect-ratio: 1;
+  transform: rotate(8deg);
+}
+.ad-vial-front {
+  left: 12%;
+  bottom: 14%;
+  width: 59%;
+  aspect-ratio: 1;
+  transform: rotate(-7deg);
+}
+.ad-visual-label {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid rgba(162, 232, 215, .2);
+  border-radius: 999px;
+  background: rgba(5, 19, 26, .8);
+  color: #d7eee9;
+  font-size: .69rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  backdrop-filter: blur(10px);
+}
+.ad-visual-label span { color: #f47bac; padding: 0 5px; }
+.ad-offer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 22px;
+  padding: clamp(24px, 3vw, 38px);
+  border: 1px solid rgba(150, 231, 207, .22);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at right top, rgba(249, 104, 170, .1), transparent 45%),
+    linear-gradient(120deg, #0b2630, #0d1822);
+}
+.ad-offer > div { display: grid; gap: 8px; }
+.ad-offer-overline {
+  color: #98ecd1;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.ad-offer strong {
+  color: #fff8f4;
+  font: 700 clamp(1.6rem, 2.4vw, 2.5rem)/1.12 "Space Grotesk", sans-serif;
+  letter-spacing: -.045em;
+}
+.ad-offer span:last-child { color: #bbd0d0; font-size: .89rem; }
+.ad-offer b { color: #fff6f7; }
+.ad-offer > a {
+  flex: none;
+  padding: 13px 18px;
+  border: 1px solid rgba(255, 123, 184, .55);
+  border-radius: 12px;
+  color: #ff9bc6;
+  font-weight: 800;
+  text-decoration: none;
+}
+.ad-offer > a:hover { background: rgba(255, 123, 184, .1); }
+.ad-ordering {
+  display: grid;
+  grid-template-columns: .75fr 1.25fr;
+  gap: clamp(24px, 4vw, 58px);
+  align-items: start;
+  margin-top: 22px;
+  padding: clamp(28px, 3.4vw, 48px);
+  border: 1px solid rgba(193, 234, 226, .13);
+  border-radius: 26px;
+  background: #0b1c25;
+}
+.ad-ordering .ad-entry-kicker { margin-bottom: 12px; color: #ff8fbd; }
+.ad-ordering h2 {
+  max-width: 11ch;
+  margin: 0;
+  font: 700 clamp(2rem, 3vw, 3.2rem)/1.08 "Space Grotesk", sans-serif;
+  letter-spacing: -.055em;
+}
+.ad-ordering ol {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ad-ordering li {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 18px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(193, 234, 226, .12);
+}
+.ad-ordering li:first-child { padding-top: 0; }
+.ad-ordering li:last-child { border-bottom: 0; padding-bottom: 0; }
+.ad-ordering li > span {
+  color: #94e9cf;
+  font: 700 .88rem "Space Grotesk", sans-serif;
+}
+.ad-ordering h3 { margin: 0 0 4px; font: 700 1.06rem "Space Grotesk", sans-serif; }
+.ad-ordering p { margin: 0; color: #abc4c8; font-size: .86rem; line-height: 1.55; }
+#full-catalog { scroll-margin-top: 150px; }
+#ad-ordering { scroll-margin-top: 150px; }
+.catalog-page .section-heading h2 {
+  margin: 0 0 8px;
+  font: 700 clamp(2.2rem, 3.4vw, 3.3rem)/1.1 "Space Grotesk", sans-serif;
+  letter-spacing: -.045em;
+}
+@media (max-width: 900px) {
+  .ad-entry { grid-template-columns: 1fr; }
+  .ad-entry-copy { padding: clamp(28px, 6vw, 48px); }
+  .ad-entry h1 { max-width: 14ch; }
+  .ad-entry-visual { min-height: 420px; }
+  .ad-ordering { grid-template-columns: 1fr; }
+  .ad-ordering h2 { max-width: none; }
+}
+@media (max-width: 600px) {
+  .ad-entry { min-height: 0; border-radius: 24px; }
+  .ad-entry-copy { padding: 31px 24px 25px; }
+  .ad-entry-kicker { margin-bottom: 16px; font-size: .65rem; }
+  .ad-entry h1 { max-width: 12ch; font-size: clamp(2.6rem, 10vw, 4.2rem); }
+  .ad-entry-lead { margin-top: 19px; font-size: .9rem; line-height: 1.6; }
+  .ad-entry-actions { margin-top: 22px; }
+  .ad-entry-actions a { width: 100%; min-height: 49px; }
+  .ad-entry-note { margin-top: 17px; }
+  .ad-entry-visual { min-height: 320px; }
+  .ad-vial-back { right: 8%; top: 9%; width: 43%; }
+  .ad-vial-front { left: 9%; bottom: 13%; width: 58%; }
+  .ad-visual-label { bottom: 12px; right: 12px; font-size: .58rem; }
+  .ad-offer { align-items: flex-start; flex-direction: column; border-radius: 21px; }
+  .ad-offer > a { width: 100%; text-align: center; }
+  .ad-ordering { border-radius: 21px; }
+  #full-catalog, #ad-ordering { scroll-margin-top: 100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ad-entry-actions a { transition: none; }
+  .ad-entry-actions a:hover { transform: none; }
+}
