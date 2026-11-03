@@ -13,6 +13,31 @@
     }
   }
 
+  // Keep this campaign page's navigation focused after the shared nav script runs.
+  const focusNavigation = () => {
+    const links = [
+      ['Products', '#full-catalog'],
+      ['Shipping', 'shipping-policy.html'],
+      ['Policies', 'terms.html'],
+      ['Contact', 'mailto:customerservice@jonezielabs.com']
+    ];
+    const menu = document.querySelector('.brand-menu-panel');
+    if (menu) menu.innerHTML = links.map(([name, href]) => `<a href="${href}">${name}</a>`).join('');
+    const nav = document.querySelector('.site-nav');
+    if (nav) {
+      nav.querySelectorAll('.site-nav-mobile-link').forEach((link) => link.remove());
+      const pill = nav.querySelector('.nav-products-pill');
+      if (pill) {
+        pill.insertAdjacentHTML('beforebegin', links.map(([name, href]) => `<a class="site-nav-mobile-link" href="${href}">${name}</a>`).join(''));
+        pill.href = '#full-catalog';
+      }
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', focusNavigation, { once: true });
+  } else {
+    focusNavigation();
+  }
   // Carry common campaign parameters to product and checkout links on the same site.
   const campaign = new URLSearchParams(location.search);
   const allowed = Array.from(campaign.entries()).filter(([key]) =>
