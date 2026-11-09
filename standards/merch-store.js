@@ -4,6 +4,7 @@
   const cartKey = config.cartKey || 'jonezie_standards_merch_cart';
   const orderKey = config.orderKey || 'jonezie_standards_merch_last_order';
   const shippingOptions = config.shippingOptions || [];
+  const gift = config.gift || {};
   const promotionRate = config.promotion?.enabled === true
     ? Math.min(1, Math.max(0, Number(config.promotion.rate) || 0))
     : 0;
@@ -27,12 +28,12 @@
     const specialOffers = products.filter((product) => productPromotionRate(product) > promotionRate);
     if (!promotionRate && !specialOffers.length) return;
     const offers = [
-      promotionRate ? `${Math.round(promotionRate * 100)}% off ${specialOffers.length ? 'other Standards Store products' : 'every Standards Store item'}` : '',
+      promotionRate ? `${Math.round(promotionRate * 100)}% off every Standards Store item` : '',
       ...specialOffers.map((product) => `${product.promotionLabel || product.name}: ${Math.round(productPromotionRate(product) * 100)}% off`)
     ].filter(Boolean).join('. ');
     all('[data-merch-promo-announcement]').forEach((node) => {
       node.hidden = false;
-      node.textContent = `${offers}. Sale prices are applied automatically in your cart. Ships same day.`;
+      node.textContent = `${offers}. Sale prices are applied automatically in your cart. Same-day shipping on eligible orders.`;
     });
     all('[data-merch-promo-message]').forEach((node) => {
       node.hidden = false;
@@ -75,10 +76,27 @@
   function writeCart(cart) {
     localStorage.setItem(cartKey, JSON.stringify(cart));
     updateCartCount();
+    renderGift(cart);
   }
 
   function cartQuantity(cart = readCart()) {
     return cart.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+  }
+
+  function giftQualified(cart = readCart()) {
+    return cartQuantity(cart) >= (Number(gift.threshold) || 3);
+  }
+
+  function renderGift(cart = readCart()) {
+    const panel = by('[data-merch-gift]');
+    if (!panel) return;
+    const count = cartQuantity(cart);
+    const remaining = Math.max(0, (Number(gift.threshold) || 3) - count);
+    const status = by('[data-merch-gift-status]', panel);
+    if (status) status.textContent = remaining
+      ? `Add ${remaining} more ${remaining === 1 ? 'item' : 'items'} to include the free empty Jonezie case.`
+      : 'Your free empty Jonezie case is included.';
+    panel.classList.toggle('is-qualified', !remaining);
   }
 
   function updateCartCount() {
@@ -235,6 +253,9 @@
       const label = by('[data-summary-discount-label]', discountLine);
       if (label) label.textContent = 'Standards Store savings';
     }
+    const giftLine = by('[data-summary-gift-line]');
+    if (giftLine) giftLine.hidden = !giftQualified(cart);
+    renderGift(cart);
   }
 
   function renderCheckoutItems() {
@@ -300,16 +321,25 @@
       customer: {
         firstName: String(formData.get('firstName') || '').trim(),
         lastName: String(formData.get('lastName') || '').trim(),
+        name: [formData.get('firstName'), formData.get('lastName')].map((part) => String(part || '').trim()).filter(Boolean).join(' '),
         email: String(formData.get('email') || '').trim(),
         phone: String(formData.get('phone') || '').trim(),
-        street: String(formData.get('street') || '').trim(),
-        city: String(formData.get('city') || '').trim(),
-        state: String(formData.get('state') || '').trim().toUpperCase(),
-        zip: String(formData.get('zip') || '').trim()
+        shippingStreetAddress: String(formData.get('street') || '').trim(),
+        shippingCity: String(formData.get('city') || '').trim(),
+        shippingState: String(formData.get('state') || '').trim().toUpperCase(),
+        shippingZip: String(formData.get('zip') || '').trim()
       },
       notes: String(formData.get('notes') || '').trim(),
       shippingMethod: shipping,
-      totals,
+      promoCode: promotionRate ? `STANDARDS${Math.round(promotionRate * 100)}` : '',
+      includedWithOrder: giftQualified(cart) ? [gift.name] : [],
+      totals: {
+        ...totals,
+        subtotalDisplay: money(totals.subtotal),
+        discountDisplay: money(totals.discount),
+        shippingDisplay: money(totals.shipping),
+        estimatedTotalDisplay: money(totals.total)
+      },
       items: cart.map((item) => ({
         sku: item.sku,
         name: item.name,
@@ -318,19 +348,24 @@
         regularUnitPrice: basePrice(item),
         promotionRate: productPromotionRate(item),
         unitPrice: salePriceCents(item) / 100,
-        lineTotal: salePriceCents(item) * Number(item.quantity) / 100
+        lineTotal: salePriceCents(item) * Number(item.quantity) / 100,
+        mgOption: item.option,
+        packLabel: 'Standard',
+        inventoryStatus: 'Order review',
+        unitPriceDisplay: money(salePriceCents(item) / 100),
+        lineTotalDisplay: money(salePriceCents(item) * Number(item.quantity) / 100)
       })),
       pageUrl: location.href
     };
   }
 
-  function renderSuccess(payload) {
+  function renderSuccess(payload, previewOnly) {
     const success = by('[data-merch-checkout-success]');
     if (!success) return;
     success.hidden = false;
     success.innerHTML = `
-      <h2>Merchandise order request staged.</h2>
-      <p>This staging checkout captured the request locally and did not send a live payment or production order.</p>
+      <h2>${previewOnly ? 'Merchandise order request previewed.' : 'Order request sent.'}</h2>
+      <p>${previewOnly ? 'This preview saved the request in this browser only. No order email was sent.' : 'Check your inbox and spam folder for your order request confirmation. A secure invoice will follow after review. No payment was collected here.'}</p>
       <div class="order-reference">
         <span>Order ID</span>
         <strong>${payload.orderId}</strong>
@@ -339,6 +374,7 @@
         ${payload.items.map((item) => `<li>${item.name} | ${item.option} | Qty ${item.quantity} | ${money(item.lineTotal)}</li>`).join('')}
       </ul>
       ${payload.totals.discount ? `<p>Standards Store promotion saved ${money(payload.totals.discount)}.</p>` : ''}
+      ${payload.includedWithOrder.length ? `<p>Included at no charge: ${gift.name}.</p>` : ''}
       <p>Shipping: ${payload.shippingMethod?.label || 'Not selected'} | ${payload.shippingMethod?.window || ''} | ${money(payload.totals.shipping)}</p>
       <p>Estimated due before tax: ${money(payload.totals.total)}. Tax is ${payload.taxBehavior.toLowerCase()}.</p>
       <p>Payment flow: ${payload.paymentFlow}.</p>
@@ -354,7 +390,7 @@
     renderCheckoutItems();
     renderSummary();
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const feedback = by('[data-merch-checkout-feedback]');
       const cart = readCart();
@@ -365,13 +401,35 @@
       if (!form.reportValidity()) return;
 
       const payload = buildOrderPayload(new FormData(form));
+      const submitButton = by('button[type="submit"]', form);
+      const previewOnly = !/^(www\.)?jonezielabs\.com$/i.test(location.hostname);
+      if (submitButton) submitButton.disabled = true;
+      if (!previewOnly) {
+        const endpoint = window.JONEZIE_ORDER_REQUEST_CONFIG?.endpoint;
+        if (!endpoint) {
+          if (feedback) feedback.textContent = 'Order submission is unavailable. Please email orders@jonezielabs.com.';
+          if (submitButton) submitButton.disabled = false;
+          return;
+        }
+        try {
+          await fetch(endpoint, {
+            method: 'POST', mode: 'no-cors', cache: 'no-store', credentials: 'omit', keepalive: true,
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+        } catch (error) {
+          if (feedback) feedback.textContent = 'Could not send your request. Please try again or email orders@jonezielabs.com.';
+          if (submitButton) submitButton.disabled = false;
+          return;
+        }
+      }
       localStorage.setItem(orderKey, JSON.stringify(payload));
       writeCart([]);
       renderCheckoutItems();
       renderSummary();
       form.hidden = true;
       if (feedback) feedback.textContent = '';
-      renderSuccess(payload);
+      renderSuccess(payload, previewOnly);
     });
   }
 

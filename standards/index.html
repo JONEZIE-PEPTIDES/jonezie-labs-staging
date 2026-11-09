@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jonezie Labs | Standards</title>
   <meta name="description" content="Learn about Jonezie Labs standards for packaging, support, transparency, and fulfillment." />
-  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
   <link rel="canonical" href="https://www.jonezielabs.com/standards/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Jonezie Labs" />
@@ -23,7 +23,7 @@
   <link rel="icon" type="image/png" href="../favicon.png?v=20260728a" />
   <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=20260728a" />
 <script src="landing-config.js?v=20260920entryoff1"></script>
-<script src="merch-data.js?v=20261028redirecton1"></script>
+<script src="merch-data.js?v=20261109fall40"></script>
   <script>
     const standardsRedirect = window.JONEZIE_STANDARDS_MERCH?.redirect || {};
     const hideMainSiteEntrances = window.JONEZIE_RESEARCH_STANDARDS_CONFIG?.showMainSiteEntrances === false ||
@@ -34,7 +34,7 @@
     }
 
     if (standardsRedirect.enabled) {
-      const redirectTarget = standardsRedirect.target || '../index.html#featured';
+      const redirectTarget = standardsRedirect.target || 'https://www.jonezielabs.com/research-store.html?ad=fall40';
       const redirectDelayMs = Number(standardsRedirect.delayMs) || 0;
 
       if (redirectDelayMs <= 0) {
@@ -62,7 +62,7 @@
       "@type": "Organization",
       "name": "Jonezie Labs",
       "url": "https://www.jonezielabs.com/",
-      "logo": "https://jonezie-peptides.github.io/jonezie-labs-staging/jonezie-labs-logo.webp?v=20261029"
+      "logo": "https://www.jonezielabs.com/jonezie-labs-logo.webp?v=20261029"
     }
   }
   </script>  
@@ -287,6 +287,31 @@
       font-weight: 800;
       text-align: center;
     }
+
+    .standards-campaign {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(230px, 0.7fr);
+      align-items: center;
+      gap: clamp(18px, 4vw, 48px);
+      margin-top: 26px;
+      padding: clamp(26px, 5vw, 54px);
+      overflow: hidden;
+      border: 1px solid rgba(104, 236, 221, 0.32);
+      border-radius: 30px;
+      background: radial-gradient(circle at 86% 12%, rgba(8, 172, 194, 0.27), transparent 43%), linear-gradient(135deg, #061823, #102b39 64%, #12212f);
+      color: #fff;
+      box-shadow: 0 28px 70px rgba(5, 21, 31, 0.2);
+    }
+
+    .standards-campaign-kicker { margin: 0 0 12px; color: #9deedc; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase; }
+    .standards-campaign h2 { margin: 0; font-family: "Space Grotesk", sans-serif; font-size: clamp(4.5rem, 13vw, 9rem); line-height: 0.86; letter-spacing: -0.085em; }
+    .standards-campaign h2 span { color: #ff69ad; }
+    .standards-campaign-copy > p:not(.standards-campaign-kicker) { max-width: 39ch; margin: 16px 0 0; color: #d5e7ea; font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.5; }
+    .standards-campaign-perks { display: flex; flex-wrap: wrap; gap: 9px; margin: 22px 0 26px; }
+    .standards-campaign-perks span { padding: 9px 12px; border: 1px solid rgba(157, 238, 220, 0.28); border-radius: 999px; background: rgba(255,255,255,0.06); color: #e5f5f2; font-size: 0.78rem; font-weight: 800; }
+    .standards-campaign .standards-button { border-color: #ff69ad; background: #f23894; color: #061823; }
+    .standards-campaign-case { margin: 0; display: grid; place-items: center; }
+    .standards-campaign-case img { display: block; width: min(100%, 420px); height: auto; filter: drop-shadow(0 28px 22px rgba(0,0,0,0.38)); }
 
     .standards-header-wrap {
       position: sticky;
@@ -901,7 +926,7 @@
 
     .standards-merch-checkout-link {
       justify-self: start;
-      color: var(--ad-teal-dark);
+      color: #b41a68;
       font-size: 0.86rem;
       font-weight: 900;
       text-decoration: underline;
@@ -955,7 +980,7 @@
     }
 
     .standards-footer-nav a span {
-      color: var(--ad-teal-dark);
+      color: #b41a68;
     }
 
     .standards-footer-disclaimer {
@@ -986,7 +1011,7 @@
     }
 
     .standards-footer-policies a {
-      color: var(--ad-teal-dark);
+      color: #b41a68;
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -1048,6 +1073,9 @@
     }
 
     @media (max-width: 739px) {
+      .standards-campaign { grid-template-columns: 1fr; margin-top: 12px; padding: 28px 22px; border-radius: 24px; }
+      .standards-campaign h2 { font-size: clamp(4.6rem, 24vw, 7rem); }
+      .standards-campaign-case img { width: min(100%, 270px); }
       .standards-shell {
         width: min(100% - 22px, 1180px);
       }
@@ -1143,7 +1171,7 @@
         transition-duration: 0.001ms !important;
       }
     }
-  </style>  <meta name="robots" content="noindex,nofollow,noarchive" />
+  </style>
   <script src="/jonezie-labs-staging/preview-guard.js"></script>
 </head>
 <body>
@@ -1159,13 +1187,22 @@
           <a href="faq/">FAQ</a>
           <a href="contact/">Contact</a>
         </nav>
-        <a class="standards-explore" href="../index.html" data-main-site-entry>Explore Jonezie Labs</a>
       </header>
     </div>
 
     <aside class="standards-promo-bar" aria-label="Standards Store promotion" data-merch-promo-announcement hidden></aside>
 
     <main class="standards-main">
+      <section class="standards-campaign standards-shell" aria-labelledby="standards-campaign-title">
+        <div class="standards-campaign-copy">
+          <p class="standards-campaign-kicker">Jonezie Labs promotion</p>
+          <h2 id="standards-campaign-title">40<span>%</span> OFF</h2>
+          <p>Sale prices appear on every Standards Store product and apply automatically at checkout.</p>
+          <div class="standards-campaign-perks"><span>Same-day shipping on eligible orders</span><span>Buy 3+ units · free empty Jonezie case</span></div>
+          <a class="standards-button" href="#merchandise">Shop Standards products</a>
+        </div>
+        <figure class="standards-campaign-case"><img src="../assets/promos/jonezie-empty-case-fall40.webp" alt="Empty teal Jonezie case with four upright vial wells and one horizontal 10 mL slot" width="1536" height="1024" /></figure>
+      </section>
       <section class="standards-hero standards-shell">
         <div class="standards-hero-copy">
           <p class="standards-kicker">Research Supply</p>
@@ -1174,7 +1211,7 @@
           <p>Jonezie Labs provides carefully packed research-use-only materials with a focus on transparency, responsive support, and reliable fulfillment.</p>
           <div class="standards-actions" aria-label="Landing page actions">
             <a class="standards-button standards-learn-more-button" href="#standards">Learn More</a>
-            <a class="standards-button standards-button-secondary standards-enter-button" href="../index.html" data-main-site-entry><span>Enter</span><span>Jonezie Labs</span></a>
+            <a class="standards-button standards-button-secondary standards-enter-button" href="#merchandise"><span>Shop</span><span>Standards Store</span></a>
           </div>
         </div>
         <div class="standards-visual" aria-hidden="true">
@@ -1517,9 +1554,9 @@
               <svg viewBox="0 0 24 24"><path d="M8 3h8"/><path d="M10 3v5.5L5 18a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9.5V3"/><path d="M8 16h8"/></svg>
             </span>
             <div>
-              <h2>Learn More About Jonezie Labs</h2>
-              <p>Explore products, support information, and current site updates.</p>
-              <a class="standards-button" href="../index.html" data-main-site-entry>Explore Jonezie Labs</a>
+              <h2>Shop Standards products</h2>
+              <p>Explore the products on this page and review your cart in the dedicated Standards checkout.</p>
+              <a class="standards-button" href="#merchandise">Browse products</a>
             </div>
           </article>
         </div>
@@ -1542,7 +1579,7 @@
         <nav class="standards-footer-nav" aria-label="Footer support links">
           <a href="faq/"><span>FAQ</span>+</a>
           <a href="contact/"><span>Contact</span>+</a>
-          <a href="../index.html" data-main-site-entry><span>Explore Jonezie Labs</span>+</a>
+          <a href="checkout.html"><span>Checkout</span>+</a>
         </nav>
         <div>
           <p>Questions about orders, shipping, or availability can be sent to support.</p>
@@ -1562,7 +1599,8 @@
       </nav>
     </footer>
   </div>
-  <script src="merch-store.js?v=20261008promolabel1"></script>
+  <script src="merch-store.js?v=20261109fall40"></script>
+  <script src="../support-chat.js?v=20261013staging2" async></script>
 </body>
 </html>
 

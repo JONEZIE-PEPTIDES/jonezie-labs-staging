@@ -2,7 +2,7 @@ window.JONEZIE_STANDARDS_MERCH = {
   redirect: {
     // Light-switch control for /standards/: false shows this page, true redirects to target.
     enabled: false,
-    target: '../index.html#featured',
+    target: 'https://www.jonezielabs.com/research-store.html?ad=fall40',
     delayMs: 0,
     hideMainSiteLinksWhenDisabled: true
   },
@@ -10,7 +10,12 @@ window.JONEZIE_STANDARDS_MERCH = {
   orderKey: 'jonezie_standards_merch_last_order',
   promotion: {
     enabled: true,
-    rate: 0.25
+    rate: 0.40
+  },
+  gift: {
+    threshold: 3,
+    name: 'Empty Jonezie Labs research case',
+    image: '../assets/promos/jonezie-empty-case-fall40.webp'
   },
   products: [
     {
