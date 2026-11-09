@@ -425,8 +425,12 @@
       }
       localStorage.setItem(orderKey, JSON.stringify(payload));
       writeCart([]);
-      renderCheckoutItems();
-      renderSummary();
+      const cartItems = by('[data-merch-checkout-items]');
+      if (cartItems) cartItems.hidden = true;
+      const giftPanel = by('[data-merch-gift]');
+      if (giftPanel) giftPanel.hidden = true;
+      const heading = by('.checkout-main h1');
+      if (heading) heading.textContent = previewOnly ? 'Order request previewed.' : 'Order request submitted.';
       form.hidden = true;
       if (feedback) feedback.textContent = '';
       renderSuccess(payload, previewOnly);
