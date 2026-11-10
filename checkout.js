@@ -1442,14 +1442,13 @@ async function loadActivePartnerCodes() {
     const data = await response.json();
     if (!Array.isArray(data.activeCodes)) return;
     for (const value of data.activeCodes) {
-      const code = String(typeof value === 'string' ? value : value?.code || '').trim().toUpperCase();
-      const refCode = typeof value === 'object' && value !== null
-        ? String(value.refCode || '').trim() : '';
+      if (!value || typeof value !== 'object') continue;
+      const code = String(value.code || '').trim().toUpperCase();
+      const refCode = String(value.refCode || '').trim();
       if (!/^[A-Z0-9_-]{4,32}$/.test(code)) continue;
-      if (typeof value === 'object' && !refCode) continue;
-      if (refCode && !/^[A-Za-z0-9_-]{4,128}$/.test(refCode)) continue;
+      if (!/^[A-Za-z0-9_-]{4,128}$/.test(refCode)) continue;
       activePartnerCodes.add(code);
-      if (refCode) partnerRefCodes.set(code, refCode);
+      partnerRefCodes.set(code, refCode);
     }
     renderCart();
   } catch (error) {
