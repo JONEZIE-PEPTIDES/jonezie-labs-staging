@@ -43,19 +43,29 @@ const paid = {
   verifiedAt: '2026-11-10T17:10:00.000Z'
 };
 
-test('verified paid invoice sends history before purchase and returns event ID', () => {
+test('verified paid invoice creates the participant before submitting paid history', () => {
   const { context, calls, grants } = harness([
-    { body: { success: true } },
-    { body: { success: true, eventId: 'evt-test', processingState: 'pending' } }
+    { body: { success: true, eventId: 'evt-test', processingState: 'pending' } },
+    { body: { success: true } }
   ]);
   const result = context.recordJoneziePaidInvoiceSandbox(paid);
   assert.equal(result.eventId, 'evt-test');
-  assert.match(calls[0].url, /\/v1\/evidence\/paid-history$/);
-  assert.match(calls[1].url, /\/v1\/track\/events$/);
-  assert.equal(JSON.parse(calls[1].options.payload).purchase.externalResourceId, paid.invoiceId);
+  assert.match(calls[0].url, /\/v1\/track\/events$/);
+  assert.match(calls[1].url, /\/v1\/evidence\/paid-history$/);
+  assert.equal(JSON.parse(calls[0].options.payload).purchase.externalResourceId, paid.invoiceId);
   assert.equal(grants.length, 0);
   assert.throws(() => context.recordJoneziePaidInvoiceSandbox({ ...paid, fullyPaidVerified: false }), /Fully paid/);
   assert.equal(calls.length, 2);
+});
+
+test('a paid-history failure stops the flow before any credit grant', () => {
+  const { context, calls, grants } = harness([
+    { body: { success: true, eventId: 'evt-test', processingState: 'pending' } },
+    { status: 404, body: { message: 'not found' } }
+  ]);
+  assert.throws(() => context.recordJoneziePaidInvoiceSandbox(paid), /paid-history returned HTTP 404/);
+  assert.equal(calls.length, 2);
+  assert.equal(grants.length, 0);
 });
 
 test('confirmed reward is checked before the ledger grant and fulfillment', () => {

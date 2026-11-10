@@ -5,9 +5,9 @@ const JONEZIE_REFREF_API = 'https://api.refref.ai';
 function recordJoneziePaidInvoiceSandbox(input) {
   const event = buildJoneziePaidInvoiceEvent(input);
   const history = buildJoneziePaidHistory(input);
-  // RefRef needs complete paid history to evaluate the first-order bonus.
-  jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
+  // The purchase creates the participant; paid history completes reward evaluation.
   const recorded = jonezieRefRefRequest_('post', '/v1/track/events', event);
+  jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
   if (!recorded.eventId) throw new Error('RefRef did not return a purchase event ID');
   return {
     invoiceId: input.invoiceId,
