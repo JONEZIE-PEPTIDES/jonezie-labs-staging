@@ -10,7 +10,7 @@ const PARTNER_ORDER_HEADERS = [
   'Discounted Merchandise', 'Credit Requested', 'Review Status', 'Square Invoice ID',
   'Paid At', 'Paid Merchandise', 'Paid Total', 'Prior Paid Invoice IDs',
   'First Paid Order Verified', 'RefRef Event ID', 'Jonezie Cash Granted',
-  'Jonezie Cash Redeemed'
+  'Jonezie Cash Redeemed', 'RefRef Tracking Code'
 ];
 const LEAD_SHEET_HEADERS = [
   'Captured At',
@@ -197,7 +197,8 @@ function appendPartnerOrderRequest(payload) {
     payload.referralHandle || '',
     Math.round(merchandise * 100) / 100,
     Number(getValue(payload, ['creditRequest', 'amountRequested']) || 0),
-    'Awaiting owner review', '', '', '', '', '', '', '', '', ''
+    'Awaiting owner review', '', '', '', '', '', '', '', '', '',
+    getValue(payload, ['partnerOffer', 'refCode']) || ''
   ]);
   return { ok: true, url: spreadsheet.getUrl() };
 }
@@ -285,6 +286,7 @@ function buildAdminEmail(payload, partnerOrderLog) {
     `Promo Code: ${payload.promoCode || 'None'}`,
     ...(payload.partnerOffer ? [
       `Partner Code: ${payload.partnerOffer.code || 'Not provided'}`,
+      `RefRef Tracking Code: ${payload.partnerOffer.refCode || 'Not provided'}`,
       'Partner offer: verify active code and 30% discount before creating the invoice.',
       'Partner credit: issue only after the Square invoice is fully paid.'
     ] : []),

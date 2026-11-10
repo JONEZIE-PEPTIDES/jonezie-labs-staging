@@ -11,7 +11,7 @@ const invoice = {
   customerId: 'square-customer-1', invoiceId: 'square-invoice-2',
   paidAt: '2026-11-10T17:00:00.000Z', paidAmountCents: 16000,
   taxCents: 0, commissionableCents: 14000,
-  sourceOrderIndex: 2, partnerCode: 'JONEZIE1'
+  sourceOrderIndex: 2, refCode: 'u9vj3ea82z'
 };
 
 test('paid invoice uses actual cents, Square identity, and verified order index', () => {
@@ -22,7 +22,7 @@ test('paid invoice uses actual cents, Square identity, and verified order index'
   assert.equal(event.purchase.paidAmountMinor, '16000');
   assert.equal(event.purchase.commissionableAmountMinor, '14000');
   assert.equal(event.purchase.sourceOrderIndex, 2);
-  assert.equal(event.refCode, 'JONEZIE1');
+  assert.equal(event.refCode, 'u9vj3ea82z');
   assert.throws(() => context.buildJoneziePaidInvoiceEvent({ ...invoice, fullyPaidVerified: false }), /Fully paid/);
   assert.throws(() => context.buildJoneziePaidInvoiceEvent({ ...invoice, commissionableCents: 16001 }), /exceeds/);
 });

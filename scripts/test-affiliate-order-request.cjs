@@ -47,7 +47,7 @@ const request = {
   orderId: 'JL-TEST-1',
   requestedAt: '2026-11-10T16:00:00.000Z',
   customer: { name: 'Test Customer', email: 'customer@example.com' },
-  partnerOffer: { code: 'PARTNER1' },
+  partnerOffer: { code: 'ZLEONARD', refCode: 'u9vj3ea82z' },
   referralHandle: 'sample-handle',
   creditRequest: { amountRequested: 20, amountRequestedDisplay: '$20.00' },
   totals: { subtotal: 200, discount: 60, estimatedTotalDisplay: '$120.00' },
@@ -60,11 +60,14 @@ test('partner requests reach the owner email and review sheet', () => {
   assert.equal(JSON.parse(result.value).ok, true);
   assert.equal(rows.length, 2);
   assert.deepEqual(Array.from(rows[1]).slice(0, 8), [
-    request.requestedAt, request.orderId, 'customer@example.com', 'PARTNER1',
+    request.requestedAt, request.orderId, 'customer@example.com', 'ZLEONARD',
     'sample-handle', 140, 20, 'Awaiting owner review'
   ]);
   assert.match(emails[0].body, /Partner order log: https:\/\/docs\.google\.com/);
   assert.match(emails[0].body, /Partner credit: issue only after the Square invoice is fully paid/);
+  assert.equal(rows[1].length, rows[0].length);
+  assert.equal(rows[1][rows[0].indexOf('RefRef Tracking Code')], 'u9vj3ea82z');
+  assert.match(emails[0].body, /RefRef Tracking Code: u9vj3ea82z/);
 });
 
 test('sheet failure never suppresses the order request email', () => {

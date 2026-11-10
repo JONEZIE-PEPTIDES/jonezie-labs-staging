@@ -30,7 +30,7 @@ function buildJoneziePaidInvoiceEvent(input) {
       sourceOrderIndex: input.sourceOrderIndex
     }
   };
-  if (input.partnerCode) event.refCode = requiredPaidText_(input.partnerCode, 'Partner code');
+  if (input.refCode) event.refCode = requiredPaidText_(input.refCode, 'RefRef tracking code');
   return event;
 }
 

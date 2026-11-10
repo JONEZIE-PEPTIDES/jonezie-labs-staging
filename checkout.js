@@ -26,6 +26,7 @@ const summaryCashRow = document.querySelector('[data-summary-cash-row]');
 const summaryCash = document.querySelector('[data-summary-cash]');
 const affiliatePricing = window.JONEZIE_AFFILIATE_PRICING;
 const activePartnerCodes = new Set();
+const partnerRefCodes = new Map();
 const affiliatePreview = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)
   && new URLSearchParams(window.location.search).has('affiliatePreview');
 if (affiliatePreview) activePartnerCodes.add('JONEZIE30');
@@ -498,6 +499,7 @@ function getPromoDetails() {
   const rawCode = String(promoCodeInput?.value || '').trim().toUpperCase();
   if (affiliatePricing && activePartnerCodes.has(rawCode)) {
     return { code: rawCode, rate: 0.30, freeShipping: false, partnerCode: true,
+      refCode: partnerRefCodes.get(rawCode) || '',
       firstOrderOnly: false, eligiblePackKeys: null, eligibleVariants: null, isValid: true };
   }
   const promo = PROMO_CODES[rawCode] || null;
@@ -1075,6 +1077,7 @@ function buildOrderRequestPayload({
       (!promo.eligibleVariants || discountAmount > 0) ? promo.code : '',
     partnerOffer: promo.partnerCode ? {
       code: promo.code,
+      refCode: promo.refCode,
       discountRate: 0.30,
       reviewStatus: 'Verify active partner code before invoicing',
       rewardNote: 'Partner credit is earned only after full invoice payment'
@@ -1165,6 +1168,7 @@ function buildOrderRequestLines(payload) {
     `Shipping Method: ${shippingLine}`,
     `Promo code: ${payload.promoCode || 'None'}`,
     ...(payload.partnerOffer ? [`Partner offer: 30% off; verify code ${payload.partnerOffer.code} before invoicing`,
+      ...(payload.partnerOffer.refCode ? [`RefRef tracking code: ${payload.partnerOffer.refCode}`] : []),
       'Partner reward: confirm full invoice payment before issuing Jonezie Cash'] : []),
     ...(payload.creditRequest ? [`Jonezie Cash code: ${payload.creditRequest.code}`,
       `Jonezie Cash requested: ${payload.creditRequest.amountRequestedDisplay}; verify balance before invoicing`] : []),
@@ -1433,13 +1437,19 @@ renderCart();
 
 async function loadActivePartnerCodes() {
   try {
-    const response = await fetch('affiliate-codes.json?v=20261110a', { cache: 'no-store' });
+    const response = await fetch('affiliate-codes.json?v=20261110b', { cache: 'no-store' });
     if (!response.ok) return;
     const data = await response.json();
     if (!Array.isArray(data.activeCodes)) return;
     for (const value of data.activeCodes) {
-      const code = String(value || '').trim().toUpperCase();
-      if (/^[A-Z0-9_-]{4,32}$/.test(code)) activePartnerCodes.add(code);
+      const code = String(typeof value === 'string' ? value : value?.code || '').trim().toUpperCase();
+      const refCode = typeof value === 'object' && value !== null
+        ? String(value.refCode || '').trim() : '';
+      if (!/^[A-Z0-9_-]{4,32}$/.test(code)) continue;
+      if (typeof value === 'object' && !refCode) continue;
+      if (refCode && !/^[A-Za-z0-9_-]{4,128}$/.test(refCode)) continue;
+      activePartnerCodes.add(code);
+      if (refCode) partnerRefCodes.set(code, refCode);
     }
     renderCart();
   } catch (error) {
