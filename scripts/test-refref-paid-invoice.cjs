@@ -46,3 +46,26 @@ test('first-purchase proof includes all prior paid invoices and the current one'
     verifiedAt: '2026-11-10T17:15:00.000Z'
   }), /include the current/);
 });
+
+test('only a matching, unadjusted RefRef partner reward becomes Jonezie Cash', () => {
+  const reward = {
+    id: 'rwd-1', projectId: 'prj_q191fewr9ma7n', eventId: 'evt-paid-1',
+    beneficiaryRole: 'referrer', beneficiary: { partnerId: 'partner-1' },
+    benefitKind: 'cash', fulfillmentStatus: 'pending',
+    delivery: { method: 'manual' },
+    money: { amountMinor: '700', netAmountMinor: '700', currency: 'USD', currencyExponent: 2 }
+  };
+  const input = {
+    fullyPaidVerified: true, reward, eventId: 'evt-paid-1', partnerId: 'partner-1',
+    partnerCode: 'ZLEONARD', invoiceId: 'square-invoice-2', verifiedBy: 'Jonezie owner'
+  };
+  const grant = context.buildJonezieConfirmedCreditGrant(input);
+  assert.equal(grant.rewardId, 'rwd-1');
+  assert.equal(grant.amountCents, 700);
+  assert.equal(grant.invoiceId, 'square-invoice-2');
+  assert.throws(() => context.buildJonezieConfirmedCreditGrant({ ...input, fullyPaidVerified: false }), /Fully paid/);
+  assert.throws(() => context.buildJonezieConfirmedCreditGrant({ ...input, eventId: 'different' }), /eligible confirmed/);
+  assert.throws(() => context.buildJonezieConfirmedCreditGrant({ ...input, reward: { ...reward, void: { reasonCode: 'fraud' } } }), /eligible confirmed/);
+  assert.throws(() => context.buildJonezieConfirmedCreditGrant({ ...input, reward: { ...reward, money: { ...reward.money, netAmountMinor: '500' } } }), /adjusted/);
+  assert.throws(() => context.buildJonezieConfirmedCreditGrant({ ...input, reward: { ...reward, beneficiary: { partnerId: 'another-partner' } } }), /eligible confirmed/);
+});

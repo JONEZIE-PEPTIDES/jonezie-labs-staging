@@ -69,6 +69,39 @@ function buildJoneziePaidHistory(input) {
   };
 }
 
+// Convert a RefRef reward into an owner-reviewed ledger grant. The caller must
+// fetch the reward from RefRef and match its event ID to the recorded paid
+// Square invoice event; browser or order-request data is never trusted here.
+function buildJonezieConfirmedCreditGrant(input) {
+  if (!input || input.fullyPaidVerified !== true) {
+    throw new Error('Fully paid Square invoice must be verified');
+  }
+  const reward = input.reward;
+  if (!reward || reward.projectId !== JONEZIE_REFREF_SANDBOX_PROJECT ||
+      reward.eventId !== requiredPaidText_(input.eventId, 'RefRef event ID') ||
+      reward.beneficiaryRole !== 'referrer' ||
+      reward.beneficiary?.partnerId !== requiredPaidText_(input.partnerId, 'RefRef partner ID') ||
+      reward.benefitKind !== 'cash' || reward.void ||
+      !['pending', 'fulfilled'].includes(reward.fulfillmentStatus) ||
+      !['manual', 'operator'].includes(reward.delivery?.method) ||
+      reward.money?.currency !== 'USD' || reward.money?.currencyExponent !== 2) {
+    throw new Error('RefRef reward is not an eligible confirmed partner reward');
+  }
+  const rawAmount = reward.money.netAmountMinor;
+  if (!/^\d+$/.test(String(rawAmount)) || !Number.isSafeInteger(Number(rawAmount)) ||
+      Number(rawAmount) <= 0 || String(reward.money.amountMinor) !== String(rawAmount)) {
+    throw new Error('RefRef reward amount is invalid or adjusted');
+  }
+  return {
+    partnerId: input.partnerId,
+    partnerCode: requiredPaidText_(input.partnerCode, 'Partner code'),
+    invoiceId: requiredPaidText_(input.invoiceId, 'Square invoice ID'),
+    rewardId: requiredPaidText_(reward.id, 'RefRef reward ID'),
+    amountCents: Number(rawAmount),
+    verifiedBy: requiredPaidText_(input.verifiedBy, 'Verifier')
+  };
+}
+
 function requiredPaidText_(value, label) {
   const text = String(value || '').trim();
   if (!text || /[\r\n]/.test(text)) throw new Error(label + ' is missing or invalid');
