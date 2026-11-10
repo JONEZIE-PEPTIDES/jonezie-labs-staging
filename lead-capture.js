@@ -7,6 +7,7 @@
   if (isCheckout) return;
   const searchParams = new URLSearchParams(window.location.search);
   const forcePreview = searchParams.get('showLeadCapture') === '1';
+  const inlineOnly = document.currentScript?.hasAttribute('data-inline-only');
 
   const STORAGE_KEY = 'jonezie_lead_capture_state';
   const WELCOME_CODE = 'TRIBE';
@@ -19,6 +20,7 @@
   const hasSignup = Boolean(existingState.email);
 
   bindInlineForms();
+  if (inlineOnly) return;
   if (!forcePreview && (hasSignup || hasRecentExposure)) return;
 
   const modal = injectModal();
@@ -41,17 +43,18 @@
       const phoneInput = form.querySelector('input[name="updatesPhone"], input[name="phone"]');
       const feedback = ensureInlineFeedback(form);
 
-      trigger?.addEventListener('click', async () => {
+      const submitInlineForm = async () => {
         const email = String(emailInput?.value || '').trim();
         if (!isValidEmail(email)) {
           feedback.textContent = 'Enter a valid email to sign up.';
+          emailInput?.focus();
           return;
         }
 
         const state = {
           email,
           phone: String(phoneInput?.value || '').trim(),
-          source: 'Inline signup',
+          source: form.dataset.leadSource || 'Inline signup',
           trigger: 'Inline form',
           subscribedAt: Date.now()
         };
@@ -67,7 +70,18 @@
         window.JONEZIE_ANALYTICS?.generateLead('inline_signup', {
           lead_source: state.source
         });
-        feedback.textContent = 'You are set. Thanks for signing up.';
+        feedback.textContent = 'Thanks! Your signup was sent.';
+      };
+
+      trigger?.addEventListener('click', submitInlineForm);
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!trigger?.disabled) submitInlineForm();
+      });
+      form.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' || !(event.target instanceof HTMLInputElement)) return;
+        event.preventDefault();
+        if (!trigger?.disabled) submitInlineForm();
       });
     });
   }
