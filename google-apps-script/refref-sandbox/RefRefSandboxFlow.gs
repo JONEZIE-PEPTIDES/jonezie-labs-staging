@@ -41,6 +41,58 @@ function grantJonezieConfirmedRewardSandbox(input) {
     balance: result.balance };
 }
 
+// One owner action after checking the Square invoice and the customer's full
+// paid history. RefRef can evaluate rewards asynchronously, so a pending result
+// is normal; rerun reconcileJoneziePaidInvoiceSandbox with the returned event ID.
+function completeJoneziePaidInvoiceSandbox(input) {
+  requiredPaidText_(input && input.partnerCode, 'Partner code');
+  requiredPaidText_(input && input.refCode, 'RefRef tracking code');
+  const recorded = recordJoneziePaidInvoiceSandbox(input);
+  return reconcileJoneziePaidInvoiceSandbox({
+    fullyPaidVerified: input.fullyPaidVerified,
+    invoiceId: input.invoiceId,
+    eventId: recorded.eventId,
+    partnerCode: input.partnerCode,
+    verifiedBy: input.verifiedBy
+  });
+}
+
+function reconcileJoneziePaidInvoiceSandbox(input) {
+  if (!input || input.fullyPaidVerified !== true) {
+    throw new Error('Fully paid Square invoice must be verified');
+  }
+  const eventId = requiredPaidText_(input.eventId, 'RefRef event ID');
+  const invoiceId = requiredPaidText_(input.invoiceId, 'Square invoice ID');
+  const partnerCode = requiredPaidText_(input.partnerCode, 'Partner code');
+  const verifiedBy = requiredPaidText_(input.verifiedBy, 'Verifier');
+  let cursor = '';
+  let pageCount = 0;
+  const matching = [];
+  do {
+    const path = '/v1/rewards?projectId=' + encodeURIComponent(JONEZIE_REFREF_SANDBOX_PROJECT) +
+      '&limit=100' + (cursor ? '&after=' + encodeURIComponent(cursor) : '');
+    const page = jonezieRefRefRequest_('get', path);
+    if (!Array.isArray(page.rewards)) throw new Error('RefRef reward list is invalid');
+    matching.push(...page.rewards.filter((reward) => reward.eventId === eventId &&
+      reward.beneficiaryRole === 'referrer' && reward.benefitKind === 'cash' &&
+      reward.void == null));
+    cursor = page.next || '';
+    if (++pageCount > 100) throw new Error('RefRef reward list exceeded the review limit');
+  } while (cursor);
+
+  const grants = matching.map((reward) => {
+    if (!['pending', 'fulfilled'].includes(reward.fulfillmentStatus)) {
+      throw new Error('Matching RefRef reward is not ready for Jonezie Cash');
+    }
+    return grantJonezieConfirmedRewardSandbox({
+      fullyPaidVerified: true, invoiceId, eventId, partnerCode, verifiedBy,
+      partnerId: requiredPaidText_(reward.beneficiary?.partnerId, 'RefRef partner ID'),
+      rewardId: requiredPaidText_(reward.id, 'RefRef reward ID')
+    });
+  });
+  return { invoiceId, eventId, status: matching.length ? 'credited' : 'pending_refref', grants };
+}
+
 function jonezieRefRefRequest_(method, path, body) {
   const key = PropertiesService.getScriptProperties().getProperty('REFREF_SANDBOX_API_KEY');
   if (!key) throw new Error('Missing Sandbox RefRef API key');

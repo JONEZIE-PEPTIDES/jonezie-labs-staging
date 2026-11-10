@@ -36,7 +36,7 @@ function harness(responses) {
 const paid = {
   fullyPaidVerified: true, customerId: 'square-test-customer',
   invoiceId: 'square-test-invoice', paidAt: '2026-11-10T17:00:00.000Z',
-  paidAmountCents: 10800, taxCents: 0, commissionableCents: 10000,
+  paidAmountCents: 10800, taxCents: 0, shippingCents: 800, commissionableCents: 10000,
   sourceOrderIndex: 1, refCode: 'refref-test-code',
   coverageFrom: '2026-01-01T00:00:00.000Z', completeHistoryVerified: true,
   paidInvoiceIds: ['square-test-invoice'], verifiedBy: 'Jonezie owner',
@@ -96,4 +96,44 @@ test('confirmed reward is checked before the ledger grant and fulfillment', () =
   assert.throws(() => bad.context.grantJonezieConfirmedRewardSandbox(input), /eligible confirmed/);
   assert.equal(bad.grants.length, 0);
   assert.equal(bad.calls.length, 1);
+});
+
+test('one paid-invoice action discovers both first-order rewards without typed reward IDs', () => {
+  const reward = (id, cents) => ({
+    id, projectId: 'prj_q191fewr9ma7n', eventId: 'evt-test',
+    beneficiaryRole: 'referrer', beneficiary: { partnerId: 'partner-test' },
+    benefitKind: 'cash', fulfillmentStatus: 'pending',
+    delivery: { method: 'manual' },
+    money: { amountMinor: String(cents), netAmountMinor: String(cents),
+      currency: 'USD', currencyExponent: 2 }
+  });
+  const bonus = reward('rwd-bonus', 1300);
+  const base = reward('rwd-base', 700);
+  const { context, calls, grants } = harness([
+    { body: { eventId: 'evt-test' } }, { body: { success: true } },
+    { body: { rewards: [bonus, base], next: '' } },
+    { body: bonus }, { body: { success: true } },
+    { body: base }, { body: { success: true } }
+  ]);
+  const result = context.completeJoneziePaidInvoiceSandbox({ ...paid, partnerCode: 'ZLEONARD' });
+  assert.equal(result.status, 'credited');
+  assert.equal(result.grants.length, 2);
+  assert.deepEqual(grants.map((grant) => grant.amountCents), [1300, 700]);
+  assert.match(calls[2].url, /\/v1\/rewards\?projectId=/);
+});
+
+test('pending rewards do not issue credit and can be reconciled later', () => {
+  const { context, calls, grants } = harness([
+    { body: { eventId: 'evt-test' } }, { body: { success: true } },
+    { body: { rewards: [], next: '' } }, { body: { rewards: [], next: '' } }
+  ]);
+  const first = context.completeJoneziePaidInvoiceSandbox({ ...paid, partnerCode: 'ZLEONARD' });
+  assert.equal(first.status, 'pending_refref');
+  const retry = context.reconcileJoneziePaidInvoiceSandbox({
+    fullyPaidVerified: true, invoiceId: paid.invoiceId, eventId: first.eventId,
+    partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
+  });
+  assert.equal(retry.status, 'pending_refref');
+  assert.equal(grants.length, 0);
+  assert.equal(calls.length, 4);
 });

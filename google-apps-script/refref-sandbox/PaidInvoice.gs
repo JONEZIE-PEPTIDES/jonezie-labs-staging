@@ -11,9 +11,10 @@ function buildJoneziePaidInvoiceEvent(input) {
   const paidAt = requiredPaidTimestamp_(input.paidAt, 'Paid at');
   const paidCents = nonnegativePaidCents_(input.paidAmountCents, 'Paid amount');
   const taxCents = nonnegativePaidCents_(input.taxCents, 'Tax');
+  const shippingCents = nonnegativePaidCents_(input.shippingCents, 'Shipping');
   const commissionableCents = nonnegativePaidCents_(input.commissionableCents, 'Commissionable merchandise');
-  if (!paidCents || commissionableCents > paidCents - taxCents) {
-    throw new Error('Commissionable merchandise exceeds the paid amount before tax');
+  if (!paidCents || commissionableCents > paidCents - taxCents - shippingCents) {
+    throw new Error('Commissionable merchandise exceeds paid merchandise after tax and shipping');
   }
   if (!Number.isSafeInteger(input.sourceOrderIndex) || input.sourceOrderIndex < 1) {
     throw new Error('Verified customer paid-order number is required');
@@ -47,13 +48,13 @@ function buildJoneziePaidHistory(input) {
     throw new Error('Complete paid invoice IDs are required');
   }
   const ids = input.paidInvoiceIds.map((id) => requiredPaidText_(id, 'Paid invoice ID'));
-  if (new Set(ids).size !== ids.length || !ids.includes(invoiceId)) {
-    throw new Error('Paid invoice history must be unique and include the current invoice');
+  if (new Set(ids).size !== ids.length || ids[ids.length - 1] !== invoiceId) {
+    throw new Error('Paid invoice history must be unique and end with the current invoice');
   }
   if (!Number.isSafeInteger(input.sourceOrderIndex) || input.sourceOrderIndex !== ids.length) {
     throw new Error('Paid invoice history must match the verified order number');
   }
-  return {
+  const evidence = {
     projectId: JONEZIE_REFREF_SANDBOX_PROJECT,
     sourceEvidenceId: 'square-paid-history:' + customerId + ':' + invoiceId,
     participant: { kind: 'individual', externalId: customerId },
@@ -67,6 +68,13 @@ function buildJoneziePaidHistory(input) {
       verifiedAt: requiredPaidTimestamp_(input.verifiedAt, 'Verified at')
     }
   };
+  // RefRef requires successive complete snapshots for the same participant to
+  // form a version chain. The previous invoice is the last item in the prior
+  // verified snapshot, which this workflow submitted when it was paid.
+  if (ids.length > 1) {
+    evidence.supersedesEvidenceId = 'square-paid-history:' + customerId + ':' + ids[ids.length - 2];
+  }
+  return evidence;
 }
 
 // Convert a RefRef reward into an owner-reviewed ledger grant. The caller must

@@ -10,7 +10,7 @@ const invoice = {
   fullyPaidVerified: true,
   customerId: 'square-customer-1', invoiceId: 'square-invoice-2',
   paidAt: '2026-11-10T17:00:00.000Z', paidAmountCents: 16000,
-  taxCents: 0, commissionableCents: 14000,
+  taxCents: 0, shippingCents: 2000, commissionableCents: 14000,
   sourceOrderIndex: 2, refCode: 'u9vj3ea82z'
 };
 
@@ -25,6 +25,7 @@ test('paid invoice uses actual cents, Square identity, and verified order index'
   assert.equal(event.refCode, 'u9vj3ea82z');
   assert.throws(() => context.buildJoneziePaidInvoiceEvent({ ...invoice, fullyPaidVerified: false }), /Fully paid/);
   assert.throws(() => context.buildJoneziePaidInvoiceEvent({ ...invoice, commissionableCents: 16001 }), /exceeds/);
+  assert.throws(() => context.buildJoneziePaidInvoiceEvent({ ...invoice, shippingCents: 2001 }), /exceeds/);
 });
 
 test('first-purchase proof includes all prior paid invoices and the current one', () => {
@@ -38,13 +39,14 @@ test('first-purchase proof includes all prior paid invoices and the current one'
   assert.equal(history.coverage.complete, true);
   assert.equal(history.coverage.purchaseKeys.length, 2);
   assert.equal(history.coverage.purchaseKeys[0].externalResourceId, 'square-invoice-1');
+  assert.equal(history.supersedesEvidenceId, 'square-paid-history:square-customer-1:square-invoice-1');
   assert.throws(() => context.buildJoneziePaidHistory({
     customerId: invoice.customerId, invoiceId: invoice.invoiceId,
     paidAt: invoice.paidAt, coverageFrom: '2025-01-01T00:00:00.000Z',
     completeHistoryVerified: true, paidInvoiceIds: ['square-invoice-1'],
     sourceOrderIndex: 2, verifiedBy: 'owner@example.com',
     verifiedAt: '2026-11-10T17:15:00.000Z'
-  }), /include the current/);
+  }), /end with the current/);
 });
 
 test('only a matching, unadjusted RefRef partner reward becomes Jonezie Cash', () => {
