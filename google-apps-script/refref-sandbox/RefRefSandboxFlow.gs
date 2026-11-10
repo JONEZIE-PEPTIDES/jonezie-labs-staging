@@ -7,8 +7,15 @@ function recordJoneziePaidInvoiceSandbox(input) {
   const history = buildJoneziePaidHistory(input);
   // The purchase creates the participant; paid history completes reward evaluation.
   const recorded = jonezieRefRefRequest_('post', '/v1/track/events', event);
-  jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
   if (!recorded.eventId) throw new Error('RefRef did not return a purchase event ID');
+  try {
+    jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
+  } catch (error) {
+    // Keep the event ID so an owner can inspect the partial submission. Never
+    // automatically send the purchase again after a paid-history failure.
+    error.jonezieEventId = recorded.eventId;
+    throw error;
+  }
   return {
     invoiceId: input.invoiceId,
     eventId: recorded.eventId,
@@ -38,7 +45,7 @@ function grantJonezieConfirmedRewardSandbox(input) {
     externalReference: result.entryKey
   });
   return { rewardId, entryKey: result.entryKey, duplicate: result.duplicate,
-    balance: result.balance };
+    amountCents: grant.amountCents, balance: result.balance };
 }
 
 // One owner action after checking the Square invoice and the customer's full
