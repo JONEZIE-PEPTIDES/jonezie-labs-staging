@@ -960,8 +960,8 @@ function renderCart() {
   const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
   const promo = getPromoDetails();
   renderPromoStatus(promo, cart);
-  renderPartnerOffer(cart, promo);
   const shippingOption = renderShippingOptions(cart, promo);
+  renderPartnerOffer(cart, promo);
   const shippingCost = getEffectiveShippingCost(shippingOption, promo);
   const discountAmount = getPromoDiscount(cart, promo);
   const beforeCashCents = Math.round((subtotal - discountAmount + shippingCost) * 100);
