@@ -15,7 +15,22 @@ const successCard = document.querySelector('[data-checkout-success]');
 const clearCartButton = document.querySelector('[data-clear-cart]');
 const promoCodeInput = document.querySelector('[data-promo-code]');
 const activePromoCopy = document.querySelector('[data-active-promo-copy]');
+const partnerOfferCard = document.querySelector('[data-partner-offer]');
+const partnerShippingStatus = document.querySelector('[data-partner-shipping-status]');
+const partnerProgress = document.querySelector('[data-partner-progress]');
+const cashCard = document.querySelector('.checkout-cash');
+const cashCodeInput = document.querySelector('[data-cash-code]');
+const cashAmountInput = document.querySelector('[data-cash-amount]');
+const cashStatus = document.querySelector('[data-cash-status]');
+const summaryCashRow = document.querySelector('[data-summary-cash-row]');
+const summaryCash = document.querySelector('[data-summary-cash]');
+const affiliatePricing = window.JONEZIE_AFFILIATE_PRICING;
+const activePartnerCodes = new Set();
+const affiliatePreview = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)
+  && new URLSearchParams(window.location.search).has('affiliatePreview');
+if (affiliatePreview) activePartnerCodes.add('JONEZIE30');
 const AD_SALE_MODE = Boolean(window.JONEZIE_PROMO?.isAdSaleContext?.());
+if (cashCard) cashCard.hidden = AD_SALE_MODE;
 if (AD_SALE_MODE && promoCodeInput) {
   promoCodeInput.value = '';
   promoCodeInput.disabled = true;
@@ -469,6 +484,10 @@ function getPromoDetails() {
       auto: true, isValid: true };
   }
   const rawCode = String(promoCodeInput?.value || '').trim().toUpperCase();
+  if (affiliatePricing && activePartnerCodes.has(rawCode)) {
+    return { code: rawCode, rate: 0.30, freeShipping: false, partnerCode: true,
+      firstOrderOnly: false, eligiblePackKeys: null, eligibleVariants: null, isValid: true };
+  }
   const promo = PROMO_CODES[rawCode] || null;
   const isValid = Boolean(promo) && isPromoCurrentlyActive(promo);
   return {
@@ -524,6 +543,10 @@ function isPromoEligibleItem(item, promo) {
 
 function getPromoDiscount(cart, promo) {
   if (!promo?.isValid) return 0;
+  if (promo.partnerCode && affiliatePricing) {
+    const subtotalCents = cart.reduce((sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity, 0);
+    return affiliatePricing.percentCents(subtotalCents, affiliatePricing.PARTNER_DISCOUNT_BPS) / 100;
+  }
   if (promo.auto) {
     const discountCents = cart.reduce((sum, item) => {
       if (!isAdSaleEligibleItem(item)) return sum;
@@ -552,6 +575,11 @@ function renderPromoStatus(promo, cart = []) {
     activePromoCopy.dataset.state = 'valid';
     return;
   }
+  if (promo.partnerCode) {
+    activePromoCopy.innerHTML = `Partner code <strong>${escapeHtml(promo.code)}</strong> applied · 30% off`;
+    activePromoCopy.dataset.state = 'valid';
+    return;
+  }
   if (!promo.code) {
     const activePromo = window.JONEZIE_PROMO?.getActivePromo?.();
     const activeCode = activePromo?.code || 'FALL25';
@@ -571,6 +599,22 @@ function renderPromoStatus(promo, cart = []) {
   }
   activePromoCopy.innerHTML = `Code <strong>${escapeHtml(promo.code)}</strong> is not active.`;
   activePromoCopy.dataset.state = 'invalid';
+}
+
+function renderPartnerOffer(cart, promo) {
+  if (!partnerOfferCard) return;
+  partnerOfferCard.hidden = !promo.partnerCode || !cart.length;
+  if (partnerOfferCard.hidden || !affiliatePricing) return;
+  const subtotalCents = cart.reduce((sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity, 0);
+  const discountedMerchandiseCents = subtotalCents
+    - affiliatePricing.percentCents(subtotalCents, affiliatePricing.PARTNER_DISCOUNT_BPS);
+  const remainingCents = Math.max(0, affiliatePricing.FREE_GROUND_THRESHOLD_CENTS - discountedMerchandiseCents);
+  partnerShippingStatus.textContent = remainingCents
+    ? `${formatMoney(remainingCents / 100)} more after discount unlocks free USPS Ground Advantage.`
+    : (shippingMethodInput?.value === 'ground-advantage'
+      ? 'Free USPS Ground Advantage is included with this order.'
+      : 'Free USPS Ground Advantage unlocked. Select it below to use it.');
+  partnerProgress.style.width = `${Math.min(100, discountedMerchandiseCents / affiliatePricing.FREE_GROUND_THRESHOLD_CENTS * 100)}%`;
 }
 
 function normalizePromoEmail(value) {
@@ -671,9 +715,19 @@ function getSelectedShipping(cart) {
   return defaultOption;
 }
 
-function getEffectiveShippingCost(shippingOption, promo) {
+function hasFreeShipping(cart, shippingOption, promo) {
+  if (!shippingOption) return false;
+  if (promo?.partnerCode && affiliatePricing) {
+    const subtotalCents = cart.reduce((sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity, 0);
+    return affiliatePricing.quote({ subtotalCents, shippingMethodId: shippingOption.id,
+      shippingCostCents: Math.round(shippingOption.price * 100) }).freeGroundShipping;
+  }
+  return Boolean(promo?.freeShipping);
+}
+
+function getEffectiveShippingCost(shippingOption, promo, cart = getCart()) {
   if (!shippingOption) return 0;
-  return promo?.freeShipping ? 0 : (shippingOption.price || 0);
+  return hasFreeShipping(cart, shippingOption, promo) ? 0 : (shippingOption.price || 0);
 }
 
 function renderShippingOptions(cart, promo = null) {
@@ -683,7 +737,7 @@ function renderShippingOptions(cart, promo = null) {
 
   shippingMethodInput.innerHTML = availableOptions.map((option) => `
     <option value="${option.id}">
-      ${option.label} - ${option.window} - ${promo?.freeShipping ? 'FREE' : formatMoney(option.price)}
+      ${option.label} - ${option.window} - ${hasFreeShipping(cart, option, promo) ? 'FREE' : formatMoney(option.price)}
     </option>`).join('');
 
   if (!availableOptions.length) {
@@ -698,7 +752,7 @@ function renderShippingOptions(cart, promo = null) {
   }
   const selected = getSelectedShipping(cart);
   if (shippingHelp && selected) {
-    shippingHelp.textContent = promo?.freeShipping
+    shippingHelp.textContent = hasFreeShipping(cart, selected, promo)
       ? `Free shipping applied with ${promo.code}. ${selected.window} delivery window.`
       : `${selected.note}. ${selected.window} delivery window.`;
   }
@@ -717,11 +771,38 @@ function buildShippingAddressDisplay(streetAddress, city, state, zipCode) {
   return [street, localityWithZip].filter(Boolean).join(', ');
 }
 
-function renderSummaryValues({ itemCount, subtotal, discountAmount, shippingCost, total, isFreeShipping = false }) {
+function getCashRequest(availableCents) {
+  if (AD_SALE_MODE) return { code: '', requestedCents: 0, appliedCents: 0, error: '' };
+  const code = String(cashCodeInput?.value || '').trim().toUpperCase();
+  const rawAmount = String(cashAmountInput?.value || '').trim();
+  const amount = Number(rawAmount);
+  if (!code && !rawAmount) return { code: '', requestedCents: 0, appliedCents: 0, error: '' };
+  if (!code) return { code: '', requestedCents: 0, appliedCents: 0, error: 'Enter your private credit code.' };
+  if (!/^[A-Z0-9_-]{4,40}$/.test(code)) return { code, requestedCents: 0, appliedCents: 0, error: 'Check your credit code and try again.' };
+  if (!rawAmount || !Number.isFinite(amount) || amount <= 0 || !/^\d+(?:\.\d{1,2})?$/.test(rawAmount)
+    || !Number.isSafeInteger(Math.round(amount * 100))) {
+    return { code, requestedCents: 0, appliedCents: 0, error: 'Enter a credit amount greater than $0, with no more than two decimal places.' };
+  }
+  const requestedCents = Math.round(amount * 100);
+  const appliedCents = Math.min(requestedCents, Math.max(0, availableCents));
+  return { code, requestedCents, appliedCents, error: '' };
+}
+
+function renderCashStatus(request) {
+  if (!cashStatus) return;
+  cashStatus.textContent = request.error || (request.appliedCents
+    ? `${formatMoney(request.appliedCents / 100)} requested${request.requestedCents > request.appliedCents ? ' (limited to this order total)' : ''}. Your balance will be verified before the invoice is sent.`
+    : '');
+  cashStatus.dataset.state = request.error ? 'error' : 'valid';
+}
+
+function renderSummaryValues({ itemCount, subtotal, discountAmount, shippingCost, cashAmount = 0, total, isFreeShipping = false }) {
   if (summaryItems) summaryItems.textContent = String(itemCount || 0);
   if (summarySubtotal) summarySubtotal.textContent = formatMoney(subtotal || 0);
   if (summaryDiscount) summaryDiscount.textContent = discountAmount ? `- ${formatMoney(discountAmount)}` : '$0.00';
   if (summaryShipping) summaryShipping.textContent = isFreeShipping && itemCount ? 'FREE' : formatMoney(shippingCost || 0);
+  if (summaryCashRow) summaryCashRow.hidden = !cashAmount;
+  if (summaryCash) summaryCash.textContent = cashAmount ? `- ${formatMoney(cashAmount)}` : '$0.00';
   if (summaryTotal) summaryTotal.textContent = formatMoney(total || 0);
 }
 
@@ -734,6 +815,8 @@ function buildSubmittedOrderSnapshot(payload) {
     subtotal: payload.totals.subtotal,
     discountAmount: payload.totals.discount,
     shippingCost: payload.totals.shipping,
+    cashAmount: payload.totals.creditRequested || 0,
+    creditRequest: payload.creditRequest || null,
     total: payload.totals.estimatedTotal,
     isFreeShipping: payload.totals.shippingDisplay === 'FREE',
     shippingLabel: payload.shippingMethod
@@ -784,6 +867,7 @@ function renderSubmittedOrderPremium() {
           <p class="checkout-complete-thanks">Thanks, ${escapeHtml(submittedOrderSnapshot.customerFirstName)} - we're reviewing your order now.</p>
           <p class="checkout-complete-id">Request ID <strong>${escapeHtml(submittedOrderSnapshot.orderId)}</strong></p>
           <p>No payment was collected on this page. Once your order is reviewed and confirmed, Jonezie Labs will email a secure invoice link to the email address on your order. Please check your inbox and spam folder.</p>
+          ${submittedOrderSnapshot.creditRequest ? '<p>Your Jonezie Cash request is pending balance verification. The final invoice may differ.</p>' : ''}
           <p class="checkout-payment-options"><strong>Payment options include:</strong> credit or debit card, Apple Pay, Google Pay, Cash App Pay, ACH bank transfer, and Afterpay.</p>
         </div>
       </div>
@@ -840,6 +924,7 @@ function renderCart() {
 
   if (!cart.length) {
     renderPromoStatus(getPromoDetails());
+    if (partnerOfferCard) partnerOfferCard.hidden = true;
     cartRoot.innerHTML = `
       <div class="empty-cart-card">
         <h2>Your cart is empty.</h2>
@@ -861,10 +946,15 @@ function renderCart() {
   const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
   const promo = getPromoDetails();
   renderPromoStatus(promo, cart);
+  renderPartnerOffer(cart, promo);
   const shippingOption = renderShippingOptions(cart, promo);
   const shippingCost = getEffectiveShippingCost(shippingOption, promo);
   const discountAmount = getPromoDiscount(cart, promo);
-  const total = subtotal - discountAmount + shippingCost;
+  const beforeCashCents = Math.round((subtotal - discountAmount + shippingCost) * 100);
+  const cashRequest = getCashRequest(beforeCashCents);
+  renderCashStatus(cashRequest);
+  const cashAmount = cashRequest.appliedCents / 100;
+  const total = (beforeCashCents - cashRequest.appliedCents) / 100;
   trackBeginCheckoutOnce(cart, promo, shippingOption);
 
   renderSummaryValues({
@@ -872,8 +962,9 @@ function renderCart() {
     subtotal,
     discountAmount,
     shippingCost,
+    cashAmount,
     total,
-    isFreeShipping: promo.freeShipping && Boolean(shippingOption)
+    isFreeShipping: hasFreeShipping(cart, shippingOption, promo)
   });
 
   cartRoot.innerHTML = cart.map((item, index) => `
@@ -938,6 +1029,7 @@ function buildOrderRequestPayload({
   shippingCost,
   subtotal,
   discountAmount,
+  cashRequest,
   total
 }) {
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -969,6 +1061,18 @@ function buildOrderRequestPayload({
     },
     promoCode: promo.isValid && (!promo.auto || discountAmount > 0) &&
       (!promo.eligibleVariants || discountAmount > 0) ? promo.code : '',
+    partnerOffer: promo.partnerCode ? {
+      code: promo.code,
+      discountRate: 0.30,
+      reviewStatus: 'Verify active partner code before invoicing',
+      rewardNote: 'Partner credit is earned only after full invoice payment'
+    } : null,
+    creditRequest: cashRequest?.appliedCents ? {
+      code: cashRequest.code,
+      amountRequested: cashRequest.appliedCents / 100,
+      amountRequestedDisplay: formatMoney(cashRequest.appliedCents / 100),
+      reviewStatus: 'Pending balance and code verification before invoicing'
+    } : null,
     notes: String(notes || '').trim(),
     shippingMethod: shippingOption ? {
       id: shippingOption.id,
@@ -976,7 +1080,7 @@ function buildOrderRequestPayload({
       window: shippingOption.window,
       note: shippingOption.note,
       cost: shippingCost,
-      costDisplay: promo.freeShipping ? 'FREE' : formatMoney(shippingCost)
+      costDisplay: hasFreeShipping(cart, shippingOption, promo) ? 'FREE' : formatMoney(shippingCost)
     } : null,
     totals: {
       itemCount,
@@ -985,7 +1089,9 @@ function buildOrderRequestPayload({
       discount: discountAmount,
       discountDisplay: discountAmount > 0 ? `- ${formatMoney(discountAmount)}` : '$0.00',
       shipping: shippingCost,
-      shippingDisplay: shippingOption ? (promo.freeShipping ? 'FREE' : formatMoney(shippingCost)) : '$0.00',
+      shippingDisplay: shippingOption ? (hasFreeShipping(cart, shippingOption, promo) ? 'FREE' : formatMoney(shippingCost)) : '$0.00',
+      creditRequested: cashRequest?.appliedCents ? cashRequest.appliedCents / 100 : 0,
+      creditRequestedDisplay: cashRequest?.appliedCents ? `- ${formatMoney(cashRequest.appliedCents / 100)}` : '$0.00',
       estimatedTotal: total,
       estimatedTotalDisplay: formatMoney(total)
     },
@@ -1045,6 +1151,10 @@ function buildOrderRequestLines(payload) {
     `Shipping Address: ${payload.customer.shippingAddress || 'Not provided'}`,
     `Shipping Method: ${shippingLine}`,
     `Promo code: ${payload.promoCode || 'None'}`,
+    ...(payload.partnerOffer ? [`Partner offer: 30% off; verify code ${payload.partnerOffer.code} before invoicing`,
+      'Partner reward: confirm full invoice payment before issuing Jonezie Cash'] : []),
+    ...(payload.creditRequest ? [`Jonezie Cash code: ${payload.creditRequest.code}`,
+      `Jonezie Cash requested: ${payload.creditRequest.amountRequestedDisplay}; verify balance before invoicing`] : []),
     '',
     'Order items:'
   ];
@@ -1058,6 +1168,7 @@ function buildOrderRequestLines(payload) {
   lines.push(`Subtotal: ${payload.totals.subtotalDisplay}`);
   lines.push(`Discount: ${payload.promoCode ? `${payload.totals.discountDisplay} (${payload.promoCode})` : '$0.00'}`);
   lines.push(`Shipping: ${payload.shippingMethod ? `${payload.totals.shippingDisplay} (${payload.shippingMethod.label})` : '$0.00'}`);
+  if (payload.creditRequest) lines.push(`Jonezie Cash requested: ${payload.totals.creditRequestedDisplay} (pending verification)`);
   lines.push(`Estimated Total: ${payload.totals.estimatedTotalDisplay}`);
   lines.push('');
   lines.push(`Included with order: ${payload.includedWithOrder.join(' + ')}`);
@@ -1194,7 +1305,17 @@ form?.addEventListener('submit', async (event) => {
   const shippingCost = getEffectiveShippingCost(shippingOption, promo);
   const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
   const discountAmount = getPromoDiscount(cart, promo);
-  const total = subtotal - discountAmount + shippingCost;
+  const beforeCashCents = Math.round((subtotal - discountAmount + shippingCost) * 100);
+  const cashRequest = getCashRequest(beforeCashCents);
+  if (cashRequest.error) {
+    isSubmittingOrderRequest = false;
+    if (submitButton) submitButton.disabled = false;
+    if (clearCartButton) clearCartButton.disabled = false;
+    setFeedback(cashRequest.error, 'error');
+    cashAmountInput?.focus();
+    return;
+  }
+  const total = (beforeCashCents - cashRequest.appliedCents) / 100;
 
   const payload = buildOrderRequestPayload({
     cart,
@@ -1212,6 +1333,7 @@ form?.addEventListener('submit', async (event) => {
     shippingCost,
     subtotal,
     discountAmount,
+    cashRequest,
     total
   });
 
@@ -1290,4 +1412,26 @@ shippingMethodInput?.addEventListener('change', () => {
   renderCart();
 });
 
+[cashCodeInput, cashAmountInput].forEach((input) => input?.addEventListener('input', () => {
+  if (!submittedOrderSnapshot) renderCart();
+}));
+
 renderCart();
+
+async function loadActivePartnerCodes() {
+  try {
+    const response = await fetch('affiliate-codes.json?v=20261110a', { cache: 'no-store' });
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!Array.isArray(data.activeCodes)) return;
+    for (const value of data.activeCodes) {
+      const code = String(value || '').trim().toUpperCase();
+      if (/^[A-Z0-9_-]{4,32}$/.test(code)) activePartnerCodes.add(code);
+    }
+    renderCart();
+  } catch (error) {
+    console.warn('Partner offers are temporarily unavailable.', error);
+  }
+}
+
+if (!AD_SALE_MODE) loadActivePartnerCodes();

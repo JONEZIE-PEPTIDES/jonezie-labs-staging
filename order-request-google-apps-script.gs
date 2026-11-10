@@ -238,6 +238,16 @@ function buildAdminEmail(payload) {
     `Shipping Method: ${formatShippingMethod(shippingMethod)}`,
     '',
     `Promo Code: ${payload.promoCode || 'None'}`,
+    ...(payload.partnerOffer ? [
+      `Partner Code: ${payload.partnerOffer.code || 'Not provided'}`,
+      'Partner offer: verify active code and 30% discount before creating the invoice.',
+      'Partner credit: issue only after the Square invoice is fully paid.'
+    ] : []),
+    ...(payload.creditRequest ? [
+      `Jonezie Cash code: ${payload.creditRequest.code || 'Not provided'}`,
+      `Jonezie Cash requested: ${payload.creditRequest.amountRequestedDisplay || '$0.00'}`,
+      'Verify the available credit balance and mark the redemption before sending the Square invoice.'
+    ] : []),
     '',
     'Order items:'
   ];
@@ -254,13 +264,14 @@ function buildAdminEmail(payload) {
   lines.push(`Subtotal: ${totals.subtotalDisplay || '$0.00'}`);
   lines.push(`Discount: ${payload.promoCode ? `${totals.discountDisplay || '$0.00'} (${payload.promoCode})` : '$0.00'}`);
   lines.push(`Shipping: ${shippingMethod ? `${totals.shippingDisplay || '$0.00'} (${shippingMethod.label || 'Shipping'})` : '$0.00'}`);
+  if (payload.creditRequest) lines.push(`Jonezie Cash requested: ${totals.creditRequestedDisplay || '$0.00'} (pending verification)`);
   lines.push(`Estimated Total: ${totals.estimatedTotalDisplay || '$0.00'}`);
   lines.push('');
   lines.push(`Included with order: ${included.length ? included.join(' + ') : 'None listed'}`);
   lines.push('');
   lines.push(`Notes: ${payload.notes || 'None'}`);
   lines.push('');
-  lines.push('Invoice note: Review the order, then email a secure Stripe invoice. Payment must be completed before shipment.');
+  lines.push('Invoice note: Review the order, then email a secure Square invoice. Payment must be completed before shipment.');
   lines.push('');
   lines.push('RAW CHECKOUT PAYLOAD');
   lines.push(JSON.stringify(payload, null, 2));
@@ -283,6 +294,7 @@ function buildCustomerEmail(payload) {
     '',
     `Order ID: ${payload.orderId || 'Not provided'}`,
     `Estimated Total: ${totals.estimatedTotalDisplay || '$0.00'}`,
+    ...(payload.creditRequest ? [`Jonezie Cash requested: ${payload.creditRequest.amountRequestedDisplay || '$0.00'} (pending verification before invoicing)`] : []),
     `Shipping Method: ${formatShippingMethod(payload.shippingMethod)}`,
     '',
     'Order items:'

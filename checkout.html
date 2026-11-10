@@ -13,6 +13,7 @@
   <link rel="icon" type="image/png" href="favicon.png?v=20260728a" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260728a" />
   <link rel="stylesheet" href="styles.css?v=20261030confirmation1" />
+  <link rel="stylesheet" href="affiliate-checkout.css?v=20261110a" />
   <style>
     .checkout-complete-card {
       padding: 28px;
@@ -213,9 +214,20 @@
               </ul>
             </div>
             <div class="checkout-promo">
-              <label for="checkout-promo-code">Promo Code</label>
+              <label for="checkout-promo-code">Promo or Partner Code</label>
               <input id="checkout-promo-code" type="text" data-promo-code autocomplete="off" />
               <p data-active-promo-copy>Active code: <strong>FALL25</strong> (25% off)</p>
+            </div>
+            <div class="checkout-partner-offer" data-partner-offer hidden>
+              <div class="checkout-partner-offer-top">
+                <span class="checkout-partner-offer-icon" aria-hidden="true">✦</span>
+                <div>
+                  <span class="checkout-partner-offer-eyebrow">Jonezie Partner Offer</span>
+                  <strong>30% off your order</strong>
+                </div>
+              </div>
+              <p data-partner-shipping-status></p>
+              <div class="checkout-partner-progress" aria-hidden="true"><span data-partner-progress></span></div>
             </div>
             <div class="checkout-shipping">
               <label for="checkout-shipping-method">Shipping Method</label>
@@ -224,9 +236,23 @@
               </div>
               <p data-shipping-help>Select a shipping option to update your estimated total.</p>
             </div>
+            <details class="checkout-cash">
+              <summary class="checkout-cash-heading">
+                <span class="checkout-cash-icon" aria-hidden="true">✦</span>
+                <div><span>Jonezie Cash</span><strong>Use your earned credit</strong></div>
+                <span class="checkout-cash-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <p>Have a private credit code? Request an amount to use. We’ll verify your balance before sending the invoice.</p>
+              <div class="checkout-cash-fields">
+                <label for="checkout-cash-code">Credit code<input id="checkout-cash-code" type="text" data-cash-code autocomplete="off" spellcheck="false" /></label>
+                <label for="checkout-cash-amount">Amount to use<input id="checkout-cash-amount" type="number" data-cash-amount min="0" step="0.01" inputmode="decimal" /></label>
+              </div>
+              <p class="checkout-cash-status" data-cash-status aria-live="polite"></p>
+            </details>
             <div class="checkout-summary-totals">
               <div class="checkout-summary-row"><span>Discount</span><strong data-summary-discount>$0.00</strong></div>
               <div class="checkout-summary-row"><span>Shipping</span><strong data-summary-shipping>$0.00</strong></div>
+              <div class="checkout-summary-row" data-summary-cash-row hidden><span>Jonezie Cash requested</span><strong data-summary-cash>$0.00</strong></div>
               <div class="checkout-summary-row"><span>Estimated Total</span><strong data-summary-total>$0.00</strong></div>
             </div>
           </div>
@@ -316,7 +342,8 @@
   <script src="age-gate.js?v=20260427c"></script>
   <script src="order-request-config.js?v=20260527a"></script>
   <script src="site-library.js?v=20261030imagehide1"></script>
-  <script src="checkout.js?v=20261103adfall40"></script>
+  <script src="affiliate-pricing.js?v=20261110a"></script>
+  <script src="checkout.js?v=20261110affiliate1"></script>
   <script>
     (function polishCheckoutSuccess() {
       if (typeof renderSubmittedOrder !== 'function') return;
@@ -347,6 +374,7 @@
                 <h2>Order request received.</h2>
                 <p class="checkout-complete-thanks">Thanks, ${escapeHtml(firstName)} - we're reviewing your order now.</p>
                 <p>No payment was collected on this page. Once your order is reviewed and confirmed, Jonezie Labs will email a secure invoice link to the email address on your order. Please check your inbox and spam folder.</p>
+                ${submittedOrderSnapshot.creditRequest ? '<p>Your Jonezie Cash request is pending balance verification. The final invoice may differ.</p>' : ''}
                 <p class="checkout-payment-options"><strong>Payment options include:</strong> credit or debit card, Apple Pay, Google Pay, Cash App Pay, ACH bank transfer, and Afterpay.</p>
               </div>
             </div>
