@@ -18,6 +18,7 @@
           <a href="${ROOT}why-jonezie.html">Why Jonezie</a>
           <a href="${ROOT}research-guides.html">Research Guides</a>
           <a href="${ROOT}comparison.html">Comparisons</a>
+          <a href="${ROOT}partners.html">Partner Program</a>
         </nav>
 
         <nav class="footer-nav" aria-label="Help and policies">
