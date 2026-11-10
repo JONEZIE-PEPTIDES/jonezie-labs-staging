@@ -213,6 +213,7 @@ let submittedOrderSnapshot = null;
 let hasTrackedBeginCheckout = false;
 let lastTrackedPromoCode = '';
 let lastTrackedShippingId = '';
+let shippingChoiceTouched = false;
 
 if (menuToggle && siteNav && !menuToggle.dataset.menuBound) {
   menuToggle.dataset.menuBound = 'true';
@@ -729,14 +730,22 @@ function getSelectedShipping(cart) {
   return defaultOption;
 }
 
+function qualifiesForFreePriority(cart, promo) {
+  const subtotalCents = cart.reduce((sum, item) =>
+    sum + Math.round(Number(item.unitPrice) * 100) * Number(item.quantity), 0);
+  return subtotalCents - Math.round(getPromoDiscount(cart, promo) * 100) > 100000;
+}
+
 function hasFreeShipping(cart, shippingOption, promo) {
   if (!shippingOption) return false;
+  if (promo?.freeShipping) return true;
+  if (shippingOption.id === 'priority-mail' && qualifiesForFreePriority(cart, promo)) return true;
   if (promo?.partnerCode && affiliatePricing) {
     const subtotalCents = cart.reduce((sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity, 0);
     return affiliatePricing.quote({ subtotalCents, shippingMethodId: shippingOption.id,
       shippingCostCents: Math.round(shippingOption.price * 100) }).freeGroundShipping;
   }
-  return Boolean(promo?.freeShipping);
+  return false;
 }
 
 function getEffectiveShippingCost(shippingOption, promo, cart = getCart()) {
@@ -764,11 +773,17 @@ function renderShippingOptions(cart, promo = null) {
   if (previousValue && availableOptions.some((option) => option.id === previousValue)) {
     shippingMethodInput.value = previousValue;
   }
+  if (!shippingChoiceTouched && qualifiesForFreePriority(cart, promo)
+    && availableOptions.some((option) => option.id === 'priority-mail')) {
+    shippingMethodInput.value = 'priority-mail';
+  }
   const selected = getSelectedShipping(cart);
   if (shippingHelp && selected) {
-    shippingHelp.textContent = hasFreeShipping(cart, selected, promo)
-      ? `Free shipping applied with ${promo.code}. ${selected.window} delivery window.`
-      : `${selected.note}. ${selected.window} delivery window.`;
+    shippingHelp.textContent = selected.id === 'priority-mail' && qualifiesForFreePriority(cart, promo)
+      ? `Free USPS Priority Mail on orders over $1,000 after discounts. ${selected.window} delivery window.`
+      : hasFreeShipping(cart, selected, promo)
+        ? `Free shipping applied with ${promo.code}. ${selected.window} delivery window.`
+        : `${selected.note}. ${selected.window} delivery window. USPS Priority Mail is free on orders over $1,000 after discounts.`;
   }
   return selected;
 }
@@ -1424,6 +1439,7 @@ promoCodeInput?.addEventListener('input', () => {
 
 shippingMethodInput?.addEventListener('change', () => {
   if (submittedOrderSnapshot) return;
+  shippingChoiceTouched = true;
   const cart = getCart();
   trackShippingIfChanged(cart, getSelectedShipping(cart), getPromoDetails());
   renderCart();
