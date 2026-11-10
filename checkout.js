@@ -476,7 +476,7 @@ function getReferralHandle() {
   if (!cookie) return '';
   try {
     const handle = decodeURIComponent(cookie.slice('refref_handle='.length));
-    return /^[A-Za-z0-9_-]{8,512}$/.test(handle) ? handle : '';
+    return handle.length > 0 && handle.length <= 4096 && !/[\x00-\x1F\x7F]/.test(handle) ? handle : '';
   } catch {
     return '';
   }

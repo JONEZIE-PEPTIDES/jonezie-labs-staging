@@ -4,6 +4,14 @@ const FROM_NAME = 'Jonezie Labs';
 const REPLY_TO_EMAIL = 'orders@jonezielabs.com';
 const LEAD_SHEET_NAME = 'Jonezie Lead Capture Log';
 const LEAD_SHEET_PROPERTY = 'JONEZIE_LEAD_CAPTURE_SHEET_ID';
+const PARTNER_ORDER_SHEET_PROPERTY = 'JONEZIE_PARTNER_ORDER_SHEET_ID';
+const PARTNER_ORDER_HEADERS = [
+  'Requested At', 'Order ID', 'Customer Email', 'Partner Code', 'Referral Handle',
+  'Discounted Merchandise', 'Credit Requested', 'Review Status', 'Square Invoice ID',
+  'Paid At', 'Paid Merchandise', 'Paid Total', 'Prior Paid Invoice IDs',
+  'First Paid Order Verified', 'RefRef Event ID', 'Jonezie Cash Granted',
+  'Jonezie Cash Redeemed'
+];
 const LEAD_SHEET_HEADERS = [
   'Captured At',
   'Email',
@@ -33,11 +41,19 @@ function doPost(event) {
     const customerEmail = getValue(payload, ['customer', 'email']);
     const orderId = payload.orderId || 'Order request';
     const customerName = getValue(payload, ['customer', 'name']) || 'Customer';
+    let partnerOrderLog = null;
+    if (payload.partnerOffer || payload.referralHandle || payload.creditRequest) {
+      try {
+        partnerOrderLog = appendPartnerOrderRequest(payload);
+      } catch (error) {
+        partnerOrderLog = { ok: false, error: String(error) };
+      }
+    }
 
     MailApp.sendEmail({
       to: `${ADMIN_EMAIL},${BACKUP_ADMIN_EMAIL}`,
       subject: `New Jonezie order request - ${customerName} - ${orderId}`,
-      body: buildAdminEmail(payload),
+      body: buildAdminEmail(payload, partnerOrderLog),
       name: FROM_NAME,
       replyTo: customerEmail || REPLY_TO_EMAIL
     });
@@ -157,6 +173,35 @@ function getOrCreateLeadCaptureSheet(spreadsheet) {
   return spreadsheet.getSheetByName('Signups') || spreadsheet.insertSheet('Signups');
 }
 
+function appendPartnerOrderRequest(payload) {
+  const properties = PropertiesService.getScriptProperties();
+  let spreadsheet;
+  const existingId = properties.getProperty(PARTNER_ORDER_SHEET_PROPERTY);
+  if (existingId) spreadsheet = SpreadsheetApp.openById(existingId);
+  else {
+    spreadsheet = SpreadsheetApp.create('Jonezie Partner Orders');
+    properties.setProperty(PARTNER_ORDER_SHEET_PROPERTY, spreadsheet.getId());
+  }
+  const sheet = spreadsheet.getSheetByName('Order Requests') || spreadsheet.insertSheet('Order Requests');
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(PARTNER_ORDER_HEADERS);
+    sheet.setFrozenRows(1);
+  }
+  const totals = payload.totals || {};
+  const merchandise = Number(totals.subtotal || 0) - Number(totals.discount || 0);
+  sheet.appendRow([
+    payload.requestedAt || new Date().toISOString(),
+    payload.orderId || '',
+    getValue(payload, ['customer', 'email']) || '',
+    getValue(payload, ['partnerOffer', 'code']) || '',
+    payload.referralHandle || '',
+    Math.round(merchandise * 100) / 100,
+    Number(getValue(payload, ['creditRequest', 'amountRequested']) || 0),
+    'Awaiting owner review', '', '', '', '', '', '', '', '', ''
+  ]);
+  return { ok: true, url: spreadsheet.getUrl() };
+}
+
 function ensureLeadCaptureHeaders(sheet) {
   const currentHeaders = sheet
     .getRange(1, 1, 1, LEAD_SHEET_HEADERS.length)
@@ -192,7 +237,7 @@ function buildLeadCaptureAdminEmail(payload, sheetLog) {
   return lines.join('\n');
 }
 
-function buildAdminEmail(payload) {
+function buildAdminEmail(payload, partnerOrderLog) {
   const customer = payload.customer || {};
   const totals = payload.totals || {};
   const shippingMethod = payload.shippingMethod || null;
@@ -245,6 +290,10 @@ function buildAdminEmail(payload) {
     ] : []),
     ...(payload.referralHandle ? [
       'Partner referral link: captured with this request; reconcile with the paid Square invoice before recording a RefRef purchase.'
+    ] : []),
+    ...(partnerOrderLog ? [
+      `Partner order log: ${partnerOrderLog.ok ? partnerOrderLog.url : 'Could not save; use this email as the record'}`,
+      ...(partnerOrderLog.ok ? [] : [`Partner order log error: ${partnerOrderLog.error}`])
     ] : []),
     ...(payload.creditRequest ? [
       `Jonezie Cash code: ${payload.creditRequest.code || 'Not provided'}`,
