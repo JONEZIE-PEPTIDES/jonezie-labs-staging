@@ -117,6 +117,7 @@ test('one paid-invoice action discovers both first-order rewards without typed r
   ]);
   const result = context.completeJoneziePaidInvoiceSandbox({ ...paid, partnerCode: 'ZLEONARD' });
   assert.equal(result.status, 'credited');
+  assert.equal(result.expectedRewardCount, 2);
   assert.equal(result.grants.length, 2);
   assert.deepEqual(grants.map((grant) => grant.amountCents), [1300, 700]);
   assert.match(calls[2].url, /\/v1\/rewards\?projectId=/);
@@ -131,9 +132,28 @@ test('pending rewards do not issue credit and can be reconciled later', () => {
   assert.equal(first.status, 'pending_refref');
   const retry = context.reconcileJoneziePaidInvoiceSandbox({
     fullyPaidVerified: true, invoiceId: paid.invoiceId, eventId: first.eventId,
+    sourceOrderIndex: 1,
     partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
   });
   assert.equal(retry.status, 'pending_refref');
   assert.equal(grants.length, 0);
   assert.equal(calls.length, 4);
+});
+
+test('one of two first-order rewards stays partial until the bonus appears', () => {
+  const base = {
+    id: 'rwd-base', projectId: 'prj_q191fewr9ma7n', eventId: 'evt-test',
+    beneficiaryRole: 'referrer', beneficiary: { partnerId: 'partner-test' },
+    benefitKind: 'cash', fulfillmentStatus: 'pending', delivery: { method: 'manual' },
+    money: { amountMinor: '700', netAmountMinor: '700', currency: 'USD', currencyExponent: 2 }
+  };
+  const { context, grants } = harness([
+    { body: { rewards: [base], next: '' } }, { body: base }, { body: { success: true } }
+  ]);
+  const result = context.reconcileJoneziePaidInvoiceSandbox({
+    fullyPaidVerified: true, invoiceId: paid.invoiceId, eventId: 'evt-test',
+    sourceOrderIndex: 1, partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
+  });
+  assert.equal(result.status, 'partial_refref');
+  assert.equal(grants.length, 1);
 });

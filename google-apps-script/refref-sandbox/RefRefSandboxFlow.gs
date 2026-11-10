@@ -52,6 +52,7 @@ function completeJoneziePaidInvoiceSandbox(input) {
     fullyPaidVerified: input.fullyPaidVerified,
     invoiceId: input.invoiceId,
     eventId: recorded.eventId,
+    sourceOrderIndex: input.sourceOrderIndex,
     partnerCode: input.partnerCode,
     verifiedBy: input.verifiedBy
   });
@@ -65,17 +66,27 @@ function reconcileJoneziePaidInvoiceSandbox(input) {
   const invoiceId = requiredPaidText_(input.invoiceId, 'Square invoice ID');
   const partnerCode = requiredPaidText_(input.partnerCode, 'Partner code');
   const verifiedBy = requiredPaidText_(input.verifiedBy, 'Verifier');
+  if (!Number.isSafeInteger(input.sourceOrderIndex) || input.sourceOrderIndex < 1) {
+    throw new Error('Verified customer paid-order number is required');
+  }
+  const expectedRewardCount = input.sourceOrderIndex === 1 ? 2 : 1;
   let cursor = '';
   let pageCount = 0;
   const matching = [];
+  const seenRewardIds = new Set();
   do {
     const path = '/v1/rewards?projectId=' + encodeURIComponent(JONEZIE_REFREF_SANDBOX_PROJECT) +
       '&limit=100' + (cursor ? '&after=' + encodeURIComponent(cursor) : '');
     const page = jonezieRefRefRequest_('get', path);
     if (!Array.isArray(page.rewards)) throw new Error('RefRef reward list is invalid');
-    matching.push(...page.rewards.filter((reward) => reward.eventId === eventId &&
-      reward.beneficiaryRole === 'referrer' && reward.benefitKind === 'cash' &&
-      reward.void == null));
+    page.rewards.forEach((reward) => {
+      if (reward.eventId === eventId && reward.beneficiaryRole === 'referrer' &&
+          reward.benefitKind === 'cash' && reward.void == null &&
+          !seenRewardIds.has(reward.id)) {
+        matching.push(reward);
+        seenRewardIds.add(reward.id);
+      }
+    });
     cursor = page.next || '';
     if (++pageCount > 100) throw new Error('RefRef reward list exceeded the review limit');
   } while (cursor);
@@ -90,7 +101,12 @@ function reconcileJoneziePaidInvoiceSandbox(input) {
       rewardId: requiredPaidText_(reward.id, 'RefRef reward ID')
     });
   });
-  return { invoiceId, eventId, status: matching.length ? 'credited' : 'pending_refref', grants };
+  return {
+    invoiceId, eventId,
+    status: matching.length >= expectedRewardCount ? 'credited' :
+      matching.length ? 'partial_refref' : 'pending_refref',
+    expectedRewardCount, grants
+  };
 }
 
 function jonezieRefRefRequest_(method, path, body) {
