@@ -29,17 +29,18 @@ test('paid invoice uses actual cents, Square identity, and verified order index'
 });
 
 test('first-purchase proof includes all prior paid invoices and the current one', () => {
-  const history = context.buildJoneziePaidHistory({
+  const input = {
     customerId: invoice.customerId, invoiceId: invoice.invoiceId,
     paidAt: invoice.paidAt, coverageFrom: '2025-01-01T00:00:00.000Z',
     completeHistoryVerified: true, paidInvoiceIds: ['square-invoice-1', 'square-invoice-2'],
     sourceOrderIndex: 2, verifiedBy: 'owner@example.com',
     verifiedAt: '2026-11-10T17:15:00.000Z'
-  });
+  };
+  const history = context.buildJoneziePaidHistory(input);
   assert.equal(history.coverage.complete, true);
   assert.equal(history.coverage.purchaseKeys.length, 2);
   assert.equal(history.coverage.purchaseKeys[0].externalResourceId, 'square-invoice-1');
-  assert.equal(history.supersedesEvidenceId, 'square-paid-history:square-customer-1:square-invoice-1');
+  assert.equal(history.supersedesEvidenceId, undefined);
   assert.throws(() => context.buildJoneziePaidHistory({
     customerId: invoice.customerId, invoiceId: invoice.invoiceId,
     paidAt: invoice.paidAt, coverageFrom: '2025-01-01T00:00:00.000Z',

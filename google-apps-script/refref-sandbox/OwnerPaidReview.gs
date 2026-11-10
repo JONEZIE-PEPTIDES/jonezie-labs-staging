@@ -17,33 +17,56 @@ function prepareJoneziePaidReviewSandbox() {
 }
 
 function processJoneziePaidReviewsSandbox() {
-  const lock = LockService.getScriptLock();
+  // This private workflow runs as one owner. Keep its lock separate from the
+  // script lock used by the credit ledger during reconciliation.
+  const lock = LockService.getUserLock();
   lock.waitLock(30000);
   try {
     const sheet = joneziePaidReviewSheet_();
     const results = [];
-    for (let rowNumber = 2; rowNumber <= sheet.getLastRow(); rowNumber++) {
-      const row = sheet.getRange(rowNumber, 1, 1, JONEZIE_PAID_REVIEW_HEADERS.length).getValues()[0];
+    const rowCount = sheet.getLastRow() - 1;
+    if (rowCount < 1) return results;
+    const rows = sheet.getRange(2, 1, rowCount, JONEZIE_PAID_REVIEW_HEADERS.length).getValues();
+    for (let index = 0; index < rows.length; index++) {
+      const row = rows[index];
+      const rowNumber = index + 2;
       const action = String(row[15] || '').trim().toUpperCase();
       if (action !== 'APPROVE' && action !== 'RECHECK') continue;
       try {
         const input = joneziePaidReviewInput_(row);
         let eventId = String(row[17] || '').trim();
         if (action === 'APPROVE') {
-          if (eventId || String(row[16] || '').trim()) {
+          const status = String(row[16] || '').trim();
+          if (eventId || (status && status !== 'CHECK_INPUT')) {
             throw new Error('This invoice was already started; review its status before another approval');
           }
+          if (rows.some((other, otherIndex) => otherIndex !== index &&
+              String(other[0]).trim() === input.invoiceId)) {
+            throw new Error('Square invoice ID appears on more than one row');
+          }
+          const submittedInvoices = new Set(rows.filter((other) =>
+            String(other[1]).trim() === input.customerId &&
+            other[17] &&
+            ['CREDITED', 'PARTIAL_REFREF', 'PENDING_REFREF'].includes(String(other[16]))
+          ).map((other) => String(other[0]).trim()));
+          input.priorHistorySubmitted = input.paidInvoiceIds.slice(0, -1)
+            .some((id) => submittedInvoices.has(id));
+          buildJoneziePaidInvoiceEvent(input);
+          buildJoneziePaidHistory(input);
           sheet.getRange(rowNumber, 17).setValue('PROCESSING');
+          row[16] = 'PROCESSING';
           SpreadsheetApp.flush();
           const recorded = recordJoneziePaidInvoiceSandbox(input);
           eventId = recorded.eventId;
+          row[17] = eventId;
           sheet.getRange(rowNumber, 18).setValue(eventId);
           SpreadsheetApp.flush();
         } else if (!eventId || !['PENDING_REFREF', 'PARTIAL_REFREF'].includes(String(row[16] || ''))) {
           throw new Error('RECHECK requires an approved invoice with pending rewards');
         }
         const result = reconcileJoneziePaidInvoiceSandbox(Object.assign({}, input, { eventId }));
-        sheet.getRange(rowNumber, 17).setValue(result.status.toUpperCase());
+        row[16] = result.status.toUpperCase();
+        sheet.getRange(rowNumber, 17).setValue(row[16]);
         sheet.getRange(rowNumber, 19).setValue(
           (result.grants.reduce((sum, grant) => sum + grant.amountCents, 0) / 100).toFixed(2)
         );
@@ -51,7 +74,10 @@ function processJoneziePaidReviewsSandbox() {
         results.push({ rowNumber, status: result.status, eventId });
       } catch (error) {
         if (error.jonezieEventId) sheet.getRange(rowNumber, 18).setValue(error.jonezieEventId);
-        sheet.getRange(rowNumber, 17).setValue('NEEDS_REVIEW');
+        if (row[16] === 'PROCESSING' || !row[17] || action === 'RECHECK') {
+          const status = row[16] === 'PROCESSING' || row[17] ? 'NEEDS_REVIEW' : 'CHECK_INPUT';
+          sheet.getRange(rowNumber, 17).setValue(status);
+        }
         sheet.getRange(rowNumber, 20).setValue(String(error.message || error));
         results.push({ rowNumber, status: 'needs_review', error: String(error.message || error) });
       } finally {
@@ -92,18 +118,22 @@ function joneziePaidReviewInput_(row) {
   return {
     fullyPaidVerified: true, completeHistoryVerified: true,
     invoiceId, customerId: requiredPaidText_(row[1], 'Square customer ID'),
-    paidAt: requiredPaidTimestamp_(row[2], 'Paid at'),
+    paidAt: jonezieReviewTimestamp_(row[2], 'Paid at'),
     paidAmountCents: jonezieReviewMoney_(row[3], 'Paid total'),
     taxCents: jonezieReviewMoney_(row[4], 'Tax'),
     shippingCents: jonezieReviewMoney_(row[5], 'Shipping'),
     commissionableCents: jonezieReviewMoney_(row[6], 'Paid merchandise'),
     paidInvoiceIds, sourceOrderIndex: paidInvoiceIds.length,
-    coverageFrom: requiredPaidTimestamp_(row[8], 'History start'),
+    coverageFrom: jonezieReviewTimestamp_(row[8], 'History start'),
     partnerCode: requiredPaidText_(row[9], 'Partner code'),
     refCode: requiredPaidText_(row[10], 'RefRef tracking code'),
     verifiedBy: requiredPaidText_(row[14], 'Verifier'),
     verifiedAt: new Date().toISOString()
   };
+}
+
+function jonezieReviewTimestamp_(value, label) {
+  return requiredPaidTimestamp_(value instanceof Date ? value.toISOString() : value, label);
 }
 
 function jonezieReviewMoney_(value, label) {

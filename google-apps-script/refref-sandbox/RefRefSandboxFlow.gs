@@ -5,11 +5,14 @@ const JONEZIE_REFREF_API = 'https://api.refref.ai';
 function recordJoneziePaidInvoiceSandbox(input) {
   const event = buildJoneziePaidInvoiceEvent(input);
   const history = buildJoneziePaidHistory(input);
-  // The purchase creates the participant; paid history completes reward evaluation.
+  // The first review supplies the customer's paid history for first-order
+  // eligibility. Subsequent verified purchases already have a prior paid order.
   const recorded = jonezieRefRefRequest_('post', '/v1/track/events', event);
   if (!recorded.eventId) throw new Error('RefRef did not return a purchase event ID');
   try {
-    jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
+    if (!(input.priorHistorySubmitted === true && input.sourceOrderIndex > 1)) {
+      jonezieRefRefRequest_('post', '/v1/evidence/paid-history', history);
+    }
   } catch (error) {
     // Keep the event ID so an owner can inspect the partial submission. Never
     // automatically send the purchase again after a paid-history failure.
@@ -36,6 +39,9 @@ function grantJonezieConfirmedRewardSandbox(input) {
       '?projectId=' + encodeURIComponent(JONEZIE_REFREF_SANDBOX_PROJECT)
   );
   const grant = buildJonezieConfirmedCreditGrant(Object.assign({}, input, { reward }));
+  if (input.expectedAmountCents !== undefined && grant.amountCents !== input.expectedAmountCents) {
+    throw new Error('RefRef reward changed before approval');
+  }
   const result = jonezieCreditGrant(grant);
   // Record that Jonezie delivered the store credit after the ledger write.
   // If this call fails, rerunning is safe: the ledger grant is idempotent.
@@ -60,6 +66,7 @@ function completeJoneziePaidInvoiceSandbox(input) {
     invoiceId: input.invoiceId,
     eventId: recorded.eventId,
     sourceOrderIndex: input.sourceOrderIndex,
+    commissionableCents: input.commissionableCents,
     partnerCode: input.partnerCode,
     verifiedBy: input.verifiedBy
   });
@@ -76,7 +83,11 @@ function reconcileJoneziePaidInvoiceSandbox(input) {
   if (!Number.isSafeInteger(input.sourceOrderIndex) || input.sourceOrderIndex < 1) {
     throw new Error('Verified customer paid-order number is required');
   }
-  const expectedRewardCount = input.sourceOrderIndex === 1 ? 2 : 1;
+  const commissionable = nonnegativePaidCents_(input.commissionableCents, 'Commissionable merchandise');
+  const expectedAmounts = (input.sourceOrderIndex === 1 ? [7, 13] : [7])
+    .map((percent) => Math.round(commissionable * percent / 100))
+    .filter((amount) => amount > 0);
+  const expectedRewardCount = expectedAmounts.length;
   let cursor = '';
   let pageCount = 0;
   const matching = [];
@@ -98,14 +109,23 @@ function reconcileJoneziePaidInvoiceSandbox(input) {
     if (++pageCount > 100) throw new Error('RefRef reward list exceeded the review limit');
   } while (cursor);
 
-  const grants = matching.map((reward) => {
+  const remainingAmounts = expectedAmounts.slice();
+  const eligible = matching.map((reward) => {
     if (!['pending', 'fulfilled'].includes(reward.fulfillmentStatus)) {
       throw new Error('Matching RefRef reward is not ready for Jonezie Cash');
     }
+    const amount = Number(reward.money?.netAmountMinor);
+    const match = remainingAmounts.indexOf(amount);
+    if (match < 0) throw new Error('RefRef reward does not match the approved rate and paid merchandise');
+    remainingAmounts.splice(match, 1);
+    return { reward, amount };
+  });
+  const grants = eligible.map(({ reward, amount }) => {
     return grantJonezieConfirmedRewardSandbox({
       fullyPaidVerified: true, invoiceId, eventId, partnerCode, verifiedBy,
       partnerId: requiredPaidText_(reward.beneficiary?.partnerId, 'RefRef partner ID'),
-      rewardId: requiredPaidText_(reward.id, 'RefRef reward ID')
+      rewardId: requiredPaidText_(reward.id, 'RefRef reward ID'),
+      expectedAmountCents: amount
     });
   });
   return {

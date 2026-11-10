@@ -54,7 +54,7 @@ function buildJoneziePaidHistory(input) {
   if (!Number.isSafeInteger(input.sourceOrderIndex) || input.sourceOrderIndex !== ids.length) {
     throw new Error('Paid invoice history must match the verified order number');
   }
-  const evidence = {
+  return {
     projectId: JONEZIE_REFREF_SANDBOX_PROJECT,
     sourceEvidenceId: 'square-paid-history:' + customerId + ':' + invoiceId,
     participant: { kind: 'individual', externalId: customerId },
@@ -68,13 +68,6 @@ function buildJoneziePaidHistory(input) {
       verifiedAt: requiredPaidTimestamp_(input.verifiedAt, 'Verified at')
     }
   };
-  // RefRef requires successive complete snapshots for the same participant to
-  // form a version chain. The previous invoice is the last item in the prior
-  // verified snapshot, which this workflow submitted when it was paid.
-  if (ids.length > 1) {
-    evidence.supersedesEvidenceId = 'square-paid-history:' + customerId + ':' + ids[ids.length - 2];
-  }
-  return evidence;
 }
 
 // Convert a RefRef reward into an owner-reviewed ledger grant. The caller must

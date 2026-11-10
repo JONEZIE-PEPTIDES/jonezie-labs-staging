@@ -23,8 +23,8 @@ function harness(row) {
   const rows = [Array(20).fill(''), row];
   const sheet = {
     getLastRow: () => rows.length,
-    getRange: (r, c) => ({
-      getValues: () => [rows[r - 1].slice(c - 1)],
+    getRange: (r, c, height = 1) => ({
+      getValues: () => rows.slice(r - 1, r - 1 + height).map((values) => values.slice(c - 1)),
       setValue: (value) => { rows[r - 1][c - 1] = value; },
       clearContent: () => { rows[r - 1][c - 1] = ''; }
     })
@@ -33,7 +33,7 @@ function harness(row) {
     Date, String, Number, Array, Set, Object,
     PropertiesService: { getScriptProperties: () => ({ getProperty: () => 'ledger-id' }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: () => sheet }), flush: () => {} },
-    LockService: { getScriptLock: () => ({ waitLock: () => {}, releaseLock: () => {} }) },
+    LockService: { getUserLock: () => ({ waitLock: () => {}, releaseLock: () => {} }) },
     recordJoneziePaidInvoiceSandbox: (input) => {
       calls.push({ type: 'record', input });
       return { eventId: 'evt-2' };
@@ -68,7 +68,7 @@ test('unpaid or unverified history cannot submit an event', () => {
   const result = context.processJoneziePaidReviewsSandbox();
   assert.equal(result[0].status, 'needs_review');
   assert.equal(calls.length, 0);
-  assert.equal(rows[1][16], 'NEEDS_REVIEW');
+  assert.equal(rows[1][16], 'CHECK_INPUT');
 });
 
 test('an already started invoice cannot be submitted twice', () => {

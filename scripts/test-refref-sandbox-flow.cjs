@@ -133,6 +133,7 @@ test('pending rewards do not issue credit and can be reconciled later', () => {
   const retry = context.reconcileJoneziePaidInvoiceSandbox({
     fullyPaidVerified: true, invoiceId: paid.invoiceId, eventId: first.eventId,
     sourceOrderIndex: 1,
+    commissionableCents: 10000,
     partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
   });
   assert.equal(retry.status, 'pending_refref');
@@ -152,7 +153,7 @@ test('one of two first-order rewards stays partial until the bonus appears', () 
   ]);
   const result = context.reconcileJoneziePaidInvoiceSandbox({
     fullyPaidVerified: true, invoiceId: paid.invoiceId, eventId: 'evt-test',
-    sourceOrderIndex: 1, partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
+    sourceOrderIndex: 1, commissionableCents: 10000, partnerCode: 'ZLEONARD', verifiedBy: 'Jonezie owner'
   });
   assert.equal(result.status, 'partial_refref');
   assert.equal(grants.length, 1);
