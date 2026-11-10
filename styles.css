@@ -7534,6 +7534,16 @@ body.product-sticky-visible { padding-bottom: 100px; }
 }
 
 /* Keep the completed request focused on the confirmation, not checkout inputs. */
+.partner-home-invite { display: flex; justify-content: space-between; align-items: center; gap: 28px; padding: clamp(23px, 3vw, 36px); border: 1px solid rgba(150, 237, 214, .25); border-radius: 22px; background: radial-gradient(circle at 90% 0, rgba(255, 121, 188, .11), transparent 40%), #0d242c; }
+.partner-home-invite > div { max-width: 670px; }
+.partner-home-kicker { margin: 0 0 8px; color: #ff9fc7; font: 800 .73rem Manrope, sans-serif; letter-spacing: .17em; text-transform: uppercase; }
+.partner-home-invite h2 { margin: 0; color: #f5fbfb; font: 800 clamp(1.35rem, 2.5vw, 2.1rem)/1.16 'Space Grotesk', sans-serif; }
+.partner-home-invite p:last-child { margin: 10px 0 0; color: #bdcbd0; line-height: 1.55; }
+.partner-home-invite > a { display: inline-flex; justify-content: center; gap: 15px; align-items: center; flex: none; min-height: 50px; padding: 0 20px; border: 1px solid rgba(255, 143, 193, .46); border-radius: 12px; color: #ffd7e8; background: linear-gradient(130deg, #3b283d, #1a2c38); font-weight: 800; text-decoration: none; }
+.partner-home-invite > a:hover, .partner-home-invite > a:focus-visible { border-color: #ff8fc1; background: #4a2c45; }
+@media (max-width: 700px) { .partner-home-invite { display: grid; margin-inline: 0; padding: 22px 18px; } .partner-home-invite > a { width: 100%; } }
+
+/* Keep the completed request focused on the confirmation, not checkout inputs. */
 .checkout-order-complete .checkout-layout { display: block; }
 .checkout-order-complete .checkout-layout > div:first-child { max-width: 840px; margin-inline: auto; }
 .checkout-order-complete .checkout-layout .section-heading,
