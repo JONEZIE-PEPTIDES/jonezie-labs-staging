@@ -3,6 +3,7 @@
     ['catalog.html', 'Full Products'],
     ['index.html#featured', 'Popular Products'],
     ['why-jonezie.html', 'Why Jonezie'],
+    ['partners.html', 'Become an Affiliate'],
     ['research-guides.html', 'Research Guides'],
     ['comparison.html', 'Comparisons'],
     ['michigan-peptides.html', 'Michigan'],
@@ -215,6 +216,7 @@
   }
 
   function syncSiteNavigation() {
+    if (document.body.classList.contains('ad-store-page')) return;
     const isHome = /(^|\/)(index\.html)?$/.test(window.location.pathname);
     const normalizeHref = (href) => {
       if (!isHome) return href;
