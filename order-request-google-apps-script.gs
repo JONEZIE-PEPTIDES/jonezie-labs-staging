@@ -243,6 +243,9 @@ function buildAdminEmail(payload) {
       'Partner offer: verify active code and 30% discount before creating the invoice.',
       'Partner credit: issue only after the Square invoice is fully paid.'
     ] : []),
+    ...(payload.referralHandle ? [
+      'Partner referral link: captured with this request; reconcile with the paid Square invoice before recording a RefRef purchase.'
+    ] : []),
     ...(payload.creditRequest ? [
       `Jonezie Cash code: ${payload.creditRequest.code || 'Not provided'}`,
       `Jonezie Cash requested: ${payload.creditRequest.amountRequestedDisplay || '$0.00'}`,

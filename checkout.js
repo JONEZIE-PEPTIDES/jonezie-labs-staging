@@ -470,6 +470,18 @@ function createOrderId() {
   return `JL-${timestamp}-${suffix}`;
 }
 
+function getReferralHandle() {
+  if (AD_SALE_MODE) return '';
+  const cookie = document.cookie.split('; ').find((part) => part.startsWith('refref_handle='));
+  if (!cookie) return '';
+  try {
+    const handle = decodeURIComponent(cookie.slice('refref_handle='.length));
+    return /^[A-Za-z0-9_-]{8,512}$/.test(handle) ? handle : '';
+  } catch {
+    return '';
+  }
+}
+
 function getInventoryLabel(status) {
   const value = String(status || 'in_stock').toLowerCase();
   if (value === 'backorder') return 'Backorder';
@@ -1067,6 +1079,7 @@ function buildOrderRequestPayload({
       reviewStatus: 'Verify active partner code before invoicing',
       rewardNote: 'Partner credit is earned only after full invoice payment'
     } : null,
+    referralHandle: getReferralHandle() || null,
     creditRequest: cashRequest?.appliedCents ? {
       code: cashRequest.code,
       amountRequested: cashRequest.appliedCents / 100,
