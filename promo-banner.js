@@ -1,9 +1,9 @@
 (() => {
   const DEFAULT_PROMO = {
-    code: 'FALL25',
-    rate: 0.25,
+    code: 'FALL40',
+    rate: 0.40,
     freeShipping: false,
-    message: 'Use code FALL25 for 25% off'
+    message: 'Use code FALL40 for 40% off'
   };
   const AD_FALL_SALE = {
     code: 'FALL40-AUTO',

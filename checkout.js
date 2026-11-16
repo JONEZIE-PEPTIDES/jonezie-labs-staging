@@ -83,8 +83,8 @@ const PROMO_CODES = {
     rate: 0.30,
     freeShipping: false
   },
-  FALL25: {
-    rate: 0.25,
+  FALL40: {
+    rate: 0.40,
     freeShipping: false
   },
   VET40: {
@@ -597,8 +597,8 @@ function renderPromoStatus(promo, cart = []) {
   }
   if (!promo.code) {
     const activePromo = window.JONEZIE_PROMO?.getActivePromo?.();
-    const activeCode = activePromo?.code || 'FALL25';
-    const activeRate = Number(activePromo?.rate || 0.25);
+    const activeCode = activePromo?.code || 'FALL40';
+    const activeRate = Number(activePromo?.rate || 0.40);
     activePromoCopy.innerHTML = `Active code: <strong>${escapeHtml(activeCode)}</strong> (${Math.round(activeRate * 100)}% off)`;
     activePromoCopy.dataset.state = 'default';
     return;
@@ -1146,6 +1146,8 @@ function buildOrderRequestPayload({
       };
     }),
     includedWithOrder: [
+      'Free Jonezie case',
+      'Free bottle of H2O water',
       'Free vial cap cover',
     ],
     pageUrl: window.location.href,
